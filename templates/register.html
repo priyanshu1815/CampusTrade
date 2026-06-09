@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register - CampusTrade</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+        }
+
+        .group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #1e40af;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>Create Student Account 🚀</h2>
+        <form action="/register" method="POST">
+            <input type="hidden" name="referred_by" value="{{ ref }}">
+
+            <div class="group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Choose a unique username" required>
+            </div>
+
+            <div class="group">
+                <label>Mobile Number</label>
+                <input type="tel" name="phone" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required>
+            </div>
+
+            <div class="group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create strong password" required>
+            </div>
+
+            {% if ref %}
+            <p style="font-size: 13px; color: #10b981; text-align: center; font-weight: bold; margin-bottom: 15px;">🎉
+                You are invited by {{ ref }}!</p>
+            {% endif %}
+
+            <button type="submit" class="btn">Register</button>
+            <p style="text-align: center; margin-top: 20px; font-size: 14px;">Already have an account? <a href="/login"
+                    style="color: #1e3a8a; text-decoration: none; font-weight: bold;">Login</a></p>
+        </form>
+    </div>
+</body>
+
+</html>
