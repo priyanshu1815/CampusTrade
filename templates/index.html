@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusTrade - Student Essentials</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 18px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .item-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            border-top: 5px solid #1e3a8a;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .item-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .item-title {
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            color: #1f2937;
+        }
+
+        .item-price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #10b981;
+            margin: 10px 0;
+        }
+
+        .item-city {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .btn-chat {
+            display: block;
+            background-color: #1e3a8a;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-chat:hover {
+            background-color: #1e40af;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav
+        style="background-color: #1e3a8a; color: white; padding: 18px; text-align: center; border-radius: 8px; margin-bottom: 25px; position: relative;">
+        <span style="font-size: 26px; font-weight: bold;">📌 CampusTrade</span>
+        <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
+            <a href="/"
+                style="color: white; text-decoration: none; font-weight: bold; border-bottom: 2px solid white;">ESSENTIALS</a>
+            <a href="/bookstore" style="color: #cbd5e1; text-decoration: none; font-weight: bold;">BOOK STORE</a>
+            <a href="/rooms" style="color: #cbd5e1; text-decoration: none; font-weight: bold;">PG ROOMS</a>
+            <a href="/tiffin" style="color: #cbd5e1; text-decoration: none; font-weight: bold;">TIFFIN SERVICE</a>
+        </div>
+        <a href="/upload"
+            style="position: absolute; right: 20px; top: 25px; background-color: #10b981; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 16px;">+
+            Sell Item</a>
+    </nav>
+
+    {% if session.get('username') %}
+    <div style="max-width: 1200px; margin: 0 auto 25px auto;">
+
+        <div
+            style="font-size: 14px; color: #4b5563; background: #e5e7eb; padding: 8px 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>Logged in as: <strong>{{ session['username'] }}</strong></div>
+            <div>
+                <a href="/profile"
+                    style="color: #1e3a8a; text-decoration: none; font-weight: bold; margin-right: 15px;">👤 My
+                    Profile</a>
+                <a href="/logout" style="color: #ef4444; text-decoration: none; font-weight: bold;">Logout 🚪</a>
+            </div>
+        </div>
+
+        <div
+            style="background: linear-gradient(135deg, #e0e7ff, #eef2ff); padding: 20px; border-radius: 12px; border-left: 6px solid #1e3a8a; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+            <div>
+                <h4 style="margin: 0 0 5px 0; color: #1e3a8a; font-size: 18px;">🎁 Refer 3 Friends = Get 1 Month FREE
+                    Premium!</h4>
+                <p style="margin: 0; color: #4b5563; font-size: 14px;">Your Invite Link: <strong
+                        style="color: #10b981; background: white; padding: 4px 8px; border-radius: 4px; border: 1px dashed #10b981;">http://127.0.0.1:5000/register?ref={{
+                        session['username'] }}</strong></p>
+            </div>
+            <div style="text-align: right;">
+                <span
+                    style="background: #1e3a8a; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold;">Joined:
+                    {{ ref_count }} / 3 Friends</span>
+                <div style="margin-top: 8px; font-weight: bold; font-size: 15px;">
+                    Status: {% if is_premium == 1 %}<span style="color: #10b981;">👑 Premium Active</span>{% else
+                    %}<span style="color: #f59e0b;">⚠️ Regular Member</span>{% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+
+    <div style="max-width: 1200px; margin: 0 auto 20px auto; display: flex; align-items: center; gap: 10px;">
+        <form action="/" method="GET" style="display: flex; gap: 10px; align-items: center;">
+            <label style="font-weight: bold; color: #374151;">Filter by Location:</label>
+            <select name="city" style="padding: 8px 15px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px;">
+                <option value="">All Cities</option>
+                {% for city in cities %}
+                <option value="{{ city }}" {% if city==selected_city %}selected{% endif %}>{{ city }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit"
+                style="background-color: #1e3a8a; color: white; padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Apply</button>
+        </form>
+    </div>
+
+    <div class="container">
+        {% if items %}
+        {% for item in items %}
+        <div class="item-card">
+            <img src="/static/uploads/{{ item[7] if item[7] else 'default.jpg' }}" class="item-img">
+
+            <h2 class="item-title">{{ item[1] }}</h2>
+            <p style="color: #4b5563; font-size: 14px; margin: 5px 0;">{{ item[4] }}</p>
+            <p class="item-city">📍 {{ item[3] }}</p>
+            <p class="item-price">Template: ₹{{ item[2] }}</p>
+
+            <a href="/chat/{{ item[6] if item[6] else 'admin' }}/{{ item[0] }}" class="btn-chat">Chat with Seller 💬</a>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div style="text-align: center; grid-column: 1 / -1; color: #6b7280; margin-top: 60px;">
+            <h3>No items listed yet! Be the first to upload. 🚀</h3>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>
