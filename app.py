@@ -8,7 +8,6 @@ app.secret_key = "super_secret_key_for_campus_trade"
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Ek naya chaka-chak database taaki sabhi tables fresh aur sahi memory ke sath banein
 DB_NAME = "campustrade_global_final.db"
 
 def init_db():
@@ -31,7 +30,7 @@ def init_db():
         )
     ''')
     
-    # 3. Users Table (With permanent phone number)
+    # 3. Users Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, 
@@ -39,7 +38,7 @@ def init_db():
         )
     ''')
 
-    # 4. Messages Table (Chat System)
+    # 4. Messages Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT, sender TEXT NOT NULL, receiver TEXT NOT NULL, msg_text TEXT NOT NULL, item_id INTEGER
@@ -66,12 +65,17 @@ def init_db():
 
 init_db()
 
-# --- 1. HOME & MARKETPLACE (ESSENTIALS) WITH SESSION FILTER ---
+# --- GLOBAL CONTEXT PROCESSOR (Yeh error aane se rokega) ---
+@app.context_processor
+def inject_user():
+    return dict(logged_in_user=session.get("username", None), user_image=None)
+
+
+# --- 1. HOME & MARKETPLACE (ESSENTIALS) ---
 @app.route("/")
 def home():
     selected_city = request.args.get('city')
     
-    # Global Session Memory Logic
     if selected_city is not None:
         session['global_city'] = selected_city
     else:
@@ -86,13 +90,12 @@ def home():
         cursor.execute("SELECT * FROM items")
     all_items = cursor.fetchall()
     
-    # Saari unique cities nikalne ke liye jo dropdown me dikhengi
     cursor.execute("SELECT DISTINCT city FROM items UNION SELECT DISTINCT city FROM books UNION SELECT DISTINCT city FROM rooms UNION SELECT DISTINCT city FROM tiffin")
     all_cities = [row[0] for row in cursor.fetchall() if row[0]]
     
     ref_count = 0
     is_premium = 0
-    logged_in_user = session.get("username", None) # Safe way to get logged in user
+    logged_in_user = session.get("username", None)
 
     if logged_in_user:
         cursor.execute("SELECT subscribed FROM users WHERE username = ?", (logged_in_user,))
@@ -108,18 +111,9 @@ def home():
             is_premium = 1
             
     conn.close()
-    
-    # Pass direct variables to avoid undefined errors in index.html
-    return render_template("index.html", 
-                           items=all_items, 
-                           cities=all_cities, 
-                           selected_city=selected_city, 
-                           ref_count=ref_count, 
-                           is_premium=is_premium,
-                           logged_in_user=logged_in_user,
-                           user_image=None) # Abhi ke liye default image template handle karega
+    return render_template("index.html", items=all_items, cities=all_cities, selected_city=selected_city, ref_count=ref_count, is_premium=is_premium)
 
-# --- 2. SIMPLE REGISTER WITH PHONE ---
+# --- 2. SIMPLE REGISTER ---
 @app.route("/register", methods=["GET", "POST"])
 def register():
     ref = request.args.get('ref', '')
@@ -200,7 +194,10 @@ def upload():
         owner = session["username"]
         file = request.files['image']
         filename = file.filename if file else "default.jpg"
-        if file: file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if file: 
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO items (title, price, city, description, phone, owner_username, image) VALUES (?, ?, ?, ?, ?, ?, ?)", (title, price, city, description, phone, owner, filename))
@@ -225,7 +222,7 @@ def chat(receiver, item_id):
     conn.close()
     return render_template("chat.html", receiver=receiver, chat_history=chat_history, item_id=item_id)
 
-# --- 7. BOOKSTORE CATEGORY WITH SESSION FILTER ---
+# --- 7. BOOKSTORE CATEGORY ---
 @app.route("/bookstore")
 def bookstore():
     selected_city = request.args.get('city')
@@ -265,7 +262,10 @@ def upload_book():
         phone = request.form["phone"]
         file = request.files['image']
         filename = file.filename if file else "default_book.jpg"
-        if file: file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if file: 
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO books (book_title, author, price, city, shop_name, phone, image) VALUES (?, ?, ?, ?, ?, ?, ?)", (book_title, author, price, city, shop_name, phone, filename))
@@ -274,7 +274,7 @@ def upload_book():
         return redirect("/bookstore")
     return render_template("upload_book.html")
 
-# --- 8. PG ROOMS CATEGORY WITH SESSION FILTER ---
+# --- 8. PG ROOMS CATEGORY ---
 @app.route("/rooms")
 def rooms():
     selected_city = request.args.get('city')
@@ -314,7 +314,10 @@ def upload_room():
         phone = request.form["phone"]
         file = request.files['image']
         filename = file.filename if file else "default.jpg"
-        if file: file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if file: 
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO rooms (room_type, price, city, address, owner_name, phone, image) VALUES (?, ?, ?, ?, ?, ?, ?)", (room_type, price, city, address, owner_name, phone, filename))
@@ -323,7 +326,7 @@ def upload_room():
         return redirect("/rooms")
     return render_template("upload_room.html")
 
-# --- 9. TIFFIN SERVICES CATEGORY WITH SESSION FILTER ---
+# --- 9. TIFFIN SERVICES CATEGORY ---
 @app.route("/tiffin")
 def tiffin():
     selected_city = request.args.get('city')
@@ -362,7 +365,10 @@ def upload_tiffin():
         phone = request.form["phone"]
         file = request.files['image']
         filename = file.filename if file else "default.jpg"
-        if file: file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if file: 
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO tiffin (service_name, price, city, menu_details, phone, image) VALUES (?, ?, ?, ?, ?, ?)", (service_name, price, city, menu_details, phone, filename))
