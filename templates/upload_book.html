@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sell a Book - CampusTrade</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            background: #1e3a8a;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #1e40af;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: #1e3a8a;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>List Your Book for Sale 📚</h2>
+        <form action="/upload-book" method="POST" enctype="multipart/form-data">
+
+            <div class="group">
+                <label>Book Title</label>
+                <input type="text" name="book_title" placeholder="e.g., HC Verma Concepts of Physics" required>
+            </div>
+
+            <div class="group">
+                <label>Author Name</label>
+                <input type="text" name="author" placeholder="e.g., Dr. H.C. Verma" required>
+            </div>
+
+            <div class="group">
+                <label>Price (INR)</label>
+                <input type="number" name="price" placeholder="e.g., 250" required>
+            </div>
+
+            <div class="group">
+                <label>City / Location</label>
+                <input type="text" name="city" placeholder="e.g., Kota" required>
+            </div>
+
+            <div class="group">
+                <label>Shop or Owner Name</label>
+                <input type="text" name="shop_name" placeholder="e.g., Gupta Books or Your Name" required>
+            </div>
+
+            <div class="group">
+                <label>Contact Number</label>
+                <input type="tel" name="phone" placeholder="Enter 10-digit number" pattern="[0-9]{10}" required>
+            </div>
+
+            <div class="group">
+                <label>Upload Book Cover Image 📸</label>
+                <input type="file" name="image" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn">Publish Book 🚀</button>
+            <a href="/bookstore" class="back-link">← Cancel & Go Back</a>
+        </form>
+    </div>
+</body>
+
+</html>
