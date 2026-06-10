@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with {{ receiver }} - CampusTrade</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .chat-header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            border-radius: 12px 12px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 70%;
+            font-size: 15px;
+        }
+
+        .sent {
+            background-color: #1e3a8a;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .received {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            align-self: flex-start;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">💬 Chatting with: {{ receiver }}</div>
+
+        <div class="chat-box">
+            {% for msg in chat_history %}
+            <div class="message {% if msg[1] == session['username'] %}sent{% else %}received{% endif %}">
+                {{ msg[3] }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <form class="chat-input-area" method="POST">
+            <input type="text" name="msg_text" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit">Send 🚀</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
