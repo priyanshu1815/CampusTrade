@@ -92,21 +92,32 @@ def home():
     
     ref_count = 0
     is_premium = 0
-    if "username" in session:
-        cursor.execute("SELECT subscribed FROM users WHERE username = ?", (session["username"],))
+    logged_in_user = session.get("username", None) # Safe way to get logged in user
+
+    if logged_in_user:
+        cursor.execute("SELECT subscribed FROM users WHERE username = ?", (logged_in_user,))
         res = cursor.fetchone()
         if res: is_premium = res[0]
         
-        cursor.execute("SELECT COUNT(*) FROM users WHERE referred_by = ?", (session["username"],))
+        cursor.execute("SELECT COUNT(*) FROM users WHERE referred_by = ?", (logged_in_user,))
         ref_count = cursor.fetchone()[0]
         
         if ref_count >= 3 and is_premium == 0:
-            cursor.execute("UPDATE users SET subscribed = 1 WHERE username = ?", (session["username"],))
+            cursor.execute("UPDATE users SET subscribed = 1 WHERE username = ?", (logged_in_user,))
             conn.commit()
             is_premium = 1
             
     conn.close()
-    return render_template("index.html", items=all_items, cities=all_cities, selected_city=selected_city, ref_count=ref_count, is_premium=is_premium)
+    
+    # Pass direct variables to avoid undefined errors in index.html
+    return render_template("index.html", 
+                           items=all_items, 
+                           cities=all_cities, 
+                           selected_city=selected_city, 
+                           ref_count=ref_count, 
+                           is_premium=is_premium,
+                           logged_in_user=logged_in_user,
+                           user_image=None) # Abhi ke liye default image template handle karega
 
 # --- 2. SIMPLE REGISTER WITH PHONE ---
 @app.route("/register", methods=["GET", "POST"])
