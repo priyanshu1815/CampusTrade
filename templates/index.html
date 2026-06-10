@@ -6,55 +6,68 @@
     <title>CampusTrade - Essentials</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: #f3f4f6;
             margin: 0;
             padding: 0;
         }
 
-        /* Responsive Navbar Container */
+        /* Premium & Professional Navbar */
         .navbar {
             background: #1e3a8a;
-            padding: 15px 20px;
+            padding: 12px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
         }
 
         .nav-title {
             color: white;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 800;
             margin: 0;
-            text-align: center;
+            letter-spacing: -0.5px;
         }
 
-        /* Links block supporting wrapping on smaller screens */
+        /* Center Menu Links */
         .nav-links {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 12px;
-            width: 100%;
         }
 
         .nav-links a {
             color: #93c5fd;
             text-decoration: none;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
             text-transform: uppercase;
-            padding: 6px 8px;
-            transition: color 0.2s;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
         }
 
         .nav-links a:hover, .nav-links a.active {
             color: white;
-            border-bottom: 2px solid white;
+            background: rgba(255, 255, 255, 0.1);
         }
 
+        /* Right Side: User Profile & Auth Section */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Sell Button */
         .btn-sell {
             background-color: #10b981;
             color: white;
@@ -62,9 +75,8 @@
             border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             transition: background 0.2s;
-            text-align: center;
             white-space: nowrap;
         }
 
@@ -72,7 +84,74 @@
             background-color: #059669;
         }
 
-        /* Main Content Section */
+        /* Sign In / Sign Up Buttons */
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-login {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-register {
+            background: white;
+            color: #1e3a8a;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .btn-register:hover {
+            background: #f3f4f6;
+        }
+
+        /* User Profile Avatar Style */
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+
+        .user-profile-nav:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #93c5fd;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Main Content Container */
         .container {
             max-width: 1200px;
             margin: 30px auto;
@@ -117,25 +196,16 @@
             font-weight: 500;
         }
 
-        /* Desktop layout (Laptop par automatic side-by-side ho jayega) */
-        @media (min-width: 768px) {
+        /* Desktop Layout - Side-by-Side Magic */
+        @media (min-width: 992px) {
             .navbar {
                 flex-direction: row;
                 justify-content: space-between;
-                padding: 15px 40px;
+                padding: 12px 40px;
             }
             .nav-links {
                 width: auto;
-                gap: 25px;
-            }
-            .nav-links a {
-                font-size: 14px;
-            }
-            .btn-sell {
-                font-size: 14px;
-            }
-            .nav-title {
-                text-align: left;
+                gap: 10px;
             }
         }
     </style>
@@ -143,14 +213,32 @@
 <body>
 
     <div class="navbar">
-        <h1 class="nav-title">📌 CampusTrade</h1>
+        <div class="nav-left">
+            <h1 class="nav-title">📌 CampusTrade</h1>
+        </div>
+
         <div class="nav-links">
             <a href="/" class="active">Essentials</a>
             <a href="/bookstore">Book Store</a>
             <a href="/rooms">PG Rooms</a>
             <a href="/tiffin">Tiffin Service</a>
         </div>
-        <a href="/upload" class="btn-sell">+ Sell Item</a>
+
+        <div class="nav-right">
+            <a href="/upload" class="btn-sell">+ Sell Item</a>
+            
+            {% if session.get('user_id') or current_user.is_authenticated %}
+                <a href="/profile" class="user-profile-nav">
+                    <img src="{{ user_image or 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' }}" alt="Profile" class="user-avatar">
+                    <span class="user-name">My Profile</span>
+                </a>
+            {% else %}
+                <div class="auth-buttons">
+                    <a href="/login" class="btn-login">Sign In</a>
+                    <a href="/register" class="btn-register">Sign Up</a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <div class="container">
