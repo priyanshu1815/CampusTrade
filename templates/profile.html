@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - CampusTrade</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: #1e3a8a;
+            color: white;
+            font-size: 40px;
+            line-height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            font-weight: bold;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            color: #1f2937;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .premium {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .regular {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .info-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .info-item:last-child {
+            border: none;
+            padding: 0;
+        }
+
+        .label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .value {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .btn-box {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-home {
+            flex: 1;
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-logout {
+            flex: 1;
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="profile-container">
+        <div class="avatar">{{ username[0].upper() }}</div>
+        <h2>Welcome, {{ username }}! 👋</h2>
+
+        {% if is_premium == 1 %}
+        <span class="badge premium">👑 Premium Member</span>
+        {% else %}
+        <span class="badge regular">⚠️ Regular Member</span>
+        {% endif %}
+
+        <div class="info-box">
+            <div class="info-item">
+                <span class="label">Username</span>
+                <span class="value">{{ username }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Contact Number</span>
+                <span class="value">{{ phone }}</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Friends Referred</span>
+                <span class="value">{{ ref_count }} / 3 Users</span>
+            </div>
+            <div class="info-item" style="flex-direction: column; gap: 5px;">
+                <span class="label">Your Invite Link</span>
+                <input type="text" value="http://127.0.0.1:5000/register?ref={{ username }}" readonly
+                    style="width: 100%; padding: 8px; border: 1px dashed #10b981; border-radius: 6px; color: #10b981; font-weight: bold; background: #f0fdf4; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div class="btn-box">
+            <a href="/" class="btn-home">Back to Marketplace</a>
+            <a href="/logout" class="btn-logout">Logout Account 🚪</a>
+        </div>
+    </div>
+
+</body>
+
+</html>
