@@ -227,7 +227,7 @@
         <div class="nav-right">
             <a href="/upload" class="btn-sell">+ Sell Item</a>
             
-            {% if session.get('user_id') or current_user.is_authenticated %}
+            {% if logged_in_user %}
                 <a href="/profile" class="user-profile-nav">
                     <img src="{{ user_image or 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' }}" alt="Profile" class="user-avatar">
                     <span class="user-name">My Profile</span>
