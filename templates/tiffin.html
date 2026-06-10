@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CampusTrade - Tiffin Services</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 18px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid #10b981;
+        }
+
+        .img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            color: #10b981;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .premium-blur {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .btn-premium {
+            display: block;
+            background: #dc2626;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <span style="font-size: 26px; font-weight: bold;">📌 CampusTrade Tiffin Service</span>
+        <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
+            <a href="/" style="color: #cbd5e1; text-decoration: none; font-weight: bold;">ESSENTIALS</a>
+            <a href="/bookstore" style="color: #cbd5e1; text-decoration: none; font-weight: bold;">BOOK STORE</a>
+            <a href="/rooms" style="color: #cbd5e1; text-decoration: none; font-weight: bold;">PG ROOMS</a>
+            <a href="/tiffin"
+                style="color: white; text-decoration: none; font-weight: bold; border-bottom: 2px solid white;">TIFFIN
+                SERVICE</a>
+        </div>
+        <a href="/upload-tiffin"
+            style="position: absolute; right: 20px; top: 25px; background-color: #10b981; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px;">+
+            Add Tiffin Mess</a>
+    </nav>
+    <div class="container">
+        {% for tiffin in tiffins %}
+        <div class="card">
+            <img src="/static/uploads/{{ tiffin[6] }}" class="img">
+            <h2 style="margin:0;">🍱 {{ tiffin[1] }}</h2>
+            <p style="color: #6b7280; margin: 5px 0;">📍 City: {{ tiffin[3] }}</p>
+            <p style="color: #4b5563; font-size: 14px;">📝 <strong>Weekly Menu:</strong> {{ tiffin[4] }}</p>
+            <p class="price">₹{{ tiffin[2] }}/month</p>
+            {% if is_premium == 1 %}
+            <div style="background: #e0f2fe; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                <p style="margin:0; color:#0369a1;">📞 <strong>Contact Mess:</strong> {{ tiffin[5] }}</p>
+            </div>
+            {% else %}
+            <div class="premium-blur">🔒 Contact Number Locked</div>
+            <a href="/buy-premium" class="btn-premium">Unlock Mess Contact (₹51) 👑</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
