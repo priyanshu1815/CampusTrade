@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>List a Room</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .form-container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #10b981;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>List a New PG / Room 🏠</h2>
+        <form action="/upload-room" method="POST" enctype="multipart/form-data">
+            <div class="form-group"><label>Room Type (e.g., Single Room, 2BHK Flat, Double Sharing PG)</label><input
+                    type="text" name="room_type" required></div>
+            <div class="form-group"><label>Rent per Month (INR)</label><input type="number" name="price" required></div>
+            <div class="form-group"><label>City</label><input type="text" name="city" required></div>
+            <div class="form-group"><label>Full Address</label><textarea name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group"><label>Owner / Broker Name</label><input type="text" name="owner_name" required>
+            </div>
+            <div class="form-group"><label>Upload Room Image 📸</label><input type="file" name="image" accept="image/*"
+                    required></div>
+            <div class="form-group"><label>Contact Number</label><input type="text" name="phone" required></div>
+            <button type="submit" class="btn-submit">Publish Room 🚀</button>
+        </form>
+    </div>
+</body>
+
+</html>
