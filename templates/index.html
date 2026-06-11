@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="py-6 sm:py-12">
+    <div
+        class="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-3xl text-white p-6 sm:p-12 text-center shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-2xl"></div>
+
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight max-w-3xl mx-auto leading-tight">
+            The Ultimate Smart Campus Marketplace
+        </h1>
+        <p class="mt-4 text-sm sm:text-lg text-blue-100 max-w-2xl mx-auto font-medium">
+            Buy and sell textbooks, discover premium student rooms/PGs, find verified local tiffin services, and switch
+            essential gears smoothly.
+        </p>
+
+        <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a href="/bookstore"
+                class="w-full sm:w-auto bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-gray-100 transition shadow-md text-sm">
+                Browse Marketplace
+            </a>
+            {% if not session.get('user_id') %}
+            <a href="/register"
+                class="w-full sm:w-auto bg-blue-500/40 text-white border border-white/20 font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition text-sm">
+                Register as Student / Owner
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 sm:mt-12">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-3 text-xl">
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Used Books</h3>
+            <p class="text-xs text-gray-500 mt-1">Buy & sell syllabus books locally</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
+            <div
+                class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-3 text-xl">
+                <i class="fa-solid fa-bed"></i>
+            </div>
+            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Verified Rooms</h3>
+            <p class="text-xs text-gray-500 mt-1">Find nearby PGs & rooms easily</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
+            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-3 text-xl">
+                <i class="fa-solid fa-utensils"></i>
+            </div>
+            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Tiffin Services</h3>
+            <p class="text-xs text-gray-500 mt-1">Healthy home meals subscription</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
+            <div
+                class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-3 text-xl">
+                <i class="fa-solid fa-laptop"></i>
+            </div>
+            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Campus Essentials</h3>
+            <p class="text-xs text-gray-500 mt-1">Laptops, cycles, and lab gears</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

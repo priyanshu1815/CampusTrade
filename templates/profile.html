@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - CampusTrade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-container {
+            max-width: 550px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            border-top: 6px solid #1e3a8a;
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* --- USER AVATAR WITH STATUS BORDER --- */
+        .avatar-wrapper {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 15px auto;
+        }
+
+        .user-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #f3f4f6;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Premium vs Regular Border Color logic */
+        .avatar-wrapper.premium-border {
+            border: 4px solid #f59e0b;
+            /* Golden Ring */
+            padding: 2px;
+            border-radius: 50%;
+        }
+
+        .avatar-wrapper.regular-border {
+            border: 4px solid #10b981;
+            /* Emerald Ring */
+            padding: 2px;
+            border-radius: 50%;
+        }
+
+        .welcome-title {
+            margin: 10px 0 5px 0;
+            color: #111827;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        /* --- BADGES --- */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.premium {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .badge.regular {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+
+        /* --- INFO DASHBOARD BOX --- */
+        .info-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 10px 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .value {
+            font-size: 15px;
+            color: #111827;
+            font-weight: 700;
+        }
+
+        /* --- INVITE LINK BAR --- */
+        .invite-bar-wrapper {
+            width: 100%;
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .invite-input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px dashed #10b981;
+            border-radius: 8px;
+            color: #15803d;
+            font-weight: 700;
+            background: #f0fdf4;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .btn-copy {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: #059669;
+        }
+
+        /* --- ACTION NAVIGATION BUTTONS --- */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-nav-home {
+            background: #1e3a8a;
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.2);
+        }
+
+        .btn-nav-home:hover {
+            background: #1e40af;
+        }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #fca5a5;
+        }
+
+        .btn-logout:hover {
+            background: #fca5a5;
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+
+        <div class="avatar-wrapper {% if is_premium == 1 %}premium-border{% else %}regular-border{% endif %}">
+            <img src="/static/uploads/{{ photo }}" class="user-avatar" alt="User Avatar"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+        </div>
+
+        <div class="welcome-title">Welcome, {{ username }}! 👋</div>
+
+        {% if is_premium == 1 %}
+        <span class="badge premium"><i class="fa-solid fa-crown"></i> Premium Member</span>
+        {% else %}
+        <span class="badge regular"><i class="fa-solid fa-user"></i> Regular Member</span>
+        {% endif %}
+
+        <div class="info-box">
+            <div class="info-item">
+                <span class="label"><i class="fa-solid fa-signature"></i> Username</span>
+                <span class="value">{{ username }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="label"><i class="fa-solid fa-phone"></i> Registered Mobile</span>
+                <span class="value">+91 {{ phone }}</span>
+            </div>
+
+            <div class="info-item">
+                <span class="label"><i class="fa-solid fa-users"></i> Friends Referred</span>
+                <span class="value" style="color: #10b981;"><i class="fa-solid fa-circle-check"></i> {{ ref_count }} / 3
+                    Active</span>
+            </div>
+
+            <div class="info-item">
+                <span class="label"><i class="fa-solid fa-share-nodes"></i> Your Referral System Link</span>
+                <div class="invite-bar-wrapper">
+                    <input type="text" value="{{ referral_link }}" class="invite-input" id="profileRefLink" readonly>
+                    <button class="btn-copy" onclick="copyProfileLink()">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="/" class="btn-nav-home"><i class="fa-solid fa-house"></i> Go to Campus Marketplace</a>
+            <a href="/logout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout Account</a>
+        </div>
+    </div>
+
+    <script>
+        function copyProfileLink() {
+            var copyText = document.getElementById("profileRefLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+
+            var btn = document.querySelector('.btn-copy');
+            btn.innerText = "Copied!";
+            btn.style.background = "#14532d";
+            setTimeout(function () {
+                btn.innerText = "Copy";
+                btn.style.background = "#10b981";
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>

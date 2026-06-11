@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div
+    class="max-w-3xl mx-auto my-2 sm:my-6 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col h-[75vh]">
+
+    <div
+        class="bg-gradient-to-r from-blue-600 to-indigo-700 p-4 text-white flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div
+                class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-lg font-bold backdrop-blur-sm">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+                <h2 class="text-base font-black tracking-wide">Chat with {{ partner.name }}</h2>
+                <p class="text-[11px] text-blue-100 font-medium">Regarding Item: <b>{{ item.title }}</b> (₹{{ item.price
+                    }})</p>
+            </div>
+        </div>
+        <span
+            class="text-[9px] bg-blue-500/50 font-bold px-2 py-1 rounded-full uppercase tracking-wider border border-white/20">Secure
+            DM</span>
+    </div>
+
+    <div id="chatScrollArea" class="flex-grow p-4 overflow-y-auto space-y-3 bg-gray-50/50">
+        {% if chat_messages %}
+        {% for msg in chat_messages %}
+        <div
+            class="flex flex-col {% if msg.sender_id == session.get('user_id') %} items-end {% else %} items-start {% endif %}">
+            <div
+                class="max-w-[80%] rounded-2xl p-3 shadow-sm text-sm font-medium
+                        {% if msg.sender_id == session.get('user_id') %} bg-blue-600 text-white rounded-br-none {% else %} bg-white text-gray-800 border border-gray-100 rounded-bl-none {% endif %}">
+
+                <p class="break-words leading-relaxed">{{ msg.message }}</p>
+                <span
+                    class="block text-[9px] mt-1 text-right {% if msg.sender_id == session.get('user_id') %} text-blue-100 {% else %} text-gray-400 {% endif %}">
+                    {{ msg.timestamp }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-20 text-gray-400">
+            <i class="fa-solid fa-lock text-4xl mb-2 text-gray-300"></i>
+            <p class="text-xs font-bold">Start a secure chat conversation</p>
+            <p class="text-[11px] text-gray-400 max-w-xs mx-auto mt-0.5">Your phone numbers are hidden. Talk freely and
+                share details only when comfortable.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="p-3 bg-white border-t border-gray-200">
+        <form action="" method="POST" class="flex items-center gap-2">
+            <input type="text" name="message" required autocomplete="off"
+                placeholder="Type your offer or question safely here..."
+                class="flex-grow px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition">
+            <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-xl transition shadow-md flex items-center justify-center">
+                <i class="fa-solid fa-paper-plane text-sm"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chatScrollArea');
+    if (chatBox) { chatBox.scrollTop = chatBox.scrollHeight; }
+</script>
+{% endblock %}

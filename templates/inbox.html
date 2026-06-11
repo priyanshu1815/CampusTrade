@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto my-4">
+    <div class="border-b border-gray-200 pb-4 mb-6">
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-gray-900">Your Conversations</h1>
+        <p class="text-sm text-gray-500">Securely chat with buyers and sellers privately</p>
+    </div>
+
+    {% if threads %}
+    <div class="space-y-3">
+        {% for thread in threads %}
+        <a href="/chat/{{ thread.item_id }}/{{ thread.partner_id }}"
+            class="block bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div
+                    class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-900 text-base">{{ thread.partner_name }}</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Item: <span class="font-semibold text-blue-600">{{
+                            thread.title }}</span> ({{ thread.category }})</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span
+                    class="inline-flex items-center text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full">
+                    Open Chat &rarr;
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 bg-white rounded-3xl border border-gray-100 shadow-sm">
+        <div
+            class="w-16 h-16 bg-gray-50 text-gray-400 rounded-full flex items-center justify-center mx-auto text-2xl mb-3">
+            <i class="fa-solid fa-envelope-open text-gray-300"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Inbox is Empty</h3>
+        <p class="text-sm text-gray-400 max-w-xs mx-auto mt-1">When you click 'Chat with Seller' on any product, your
+            secure chat channels will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

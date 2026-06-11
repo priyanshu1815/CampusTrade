@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusTrade - Privacy Protected Campus Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            padding-top: 130px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding-top: 110px;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <div class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100">
+
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <a href="/" class="flex items-center space-x-2 text-xl sm:text-2xl font-black tracking-tight text-blue-600">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
+                    <path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path>
+                    <circle cx="8" cy="12" r="2"></circle>
+                </svg>
+                <span>Campus<span class="text-gray-900">Trade</span></span>
+            </a>
+
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                {% if session.get('user_id') %}
+                <div class="text-right hidden sm:block">
+                    <p class="text-xs text-gray-400 font-medium">Welcome,</p>
+                    <p class="text-sm font-bold text-gray-800">Hi, {{ session.get('user_name') }}</p>
+                </div>
+                <div class="text-right sm:hidden">
+                    <p class="text-xs font-bold text-gray-800">Hi, {{ session.get('user_name') }}</p>
+                </div>
+                {% else %}
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <a href="/login"
+                        class="text-xs sm:text-sm font-semibold text-gray-600 hover:text-blue-600 transition px-2 py-1">Sign
+                        In</a>
+                    <a href="/register"
+                        class="bg-blue-600 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-700 transition shadow-sm">Sign
+                        Up</a>
+                </div>
+                {% endif %}
+
+                <div class="relative inline-block text-left">
+                    <button id="menuButton"
+                        class="p-2 text-gray-500 hover:text-gray-800 rounded-full hover:bg-gray-100 transition focus:outline-none">
+                        <i class="fa-solid fa-ellipsis-vertical text-lg sm:text-xl"></i>
+                    </button>
+
+                    <div id="dropdownMenu"
+                        class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50">
+                        <div class="py-2">
+                            <span
+                                class="block px-4 py-1 text-[10px] font-bold tracking-wider text-gray-400 uppercase">Student
+                                Privileges</span>
+                            <a href="/upload_book"
+                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                                <i class="fa-solid fa-book mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell Books
+                            </a>
+                            <a href="/upload_essential"
+                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                                <i class="fa-solid fa-laptop mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell
+                                Essentials
+                            </a>
+                        </div>
+                        <div class="py-2">
+                            <span
+                                class="block px-4 py-1 text-[10px] font-bold tracking-wider text-purple-400 uppercase">Owner
+                                Privileges</span>
+                            <a href="/upload_room"
+                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
+                                <i class="fa-solid fa-house-user mr-3 text-gray-400 group-hover:text-purple-500"></i>
+                                List Rooms / PGs
+                            </a>
+                            <a href="/upload_tiffin"
+                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
+                                <i class="fa-solid fa-bowl-food mr-3 text-gray-400 group-hover:text-purple-500"></i>
+                                List Tiffin Center
+                            </a>
+                        </div>
+                        {% if session.get('user_id') %}
+                        <div class="py-1">
+                            <a href="/logout"
+                                class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                                <i class="fa-solid fa-right-from-bracket mr-3 text-red-400"></i> Logout
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="bg-gray-50 border-t border-gray-200">
+            <div
+                class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between overflow-x-auto whitespace-nowrap scrollbar-none">
+                <div class="flex items-center space-x-4 sm:space-x-6 text-xs sm:text-sm font-semibold text-gray-600">
+                    <a href="/bookstore" class="hover:text-blue-600 transition flex items-center"><i
+                            class="fa-solid fa-book-open mr-1 text-blue-500"></i> Bookstore</a>
+                    <a href="/rooms" class="hover:text-blue-600 transition flex items-center"><i
+                            class="fa-solid fa-bed mr-1 text-emerald-500"></i> Rooms</a>
+                    <a href="/tiffin" class="hover:text-blue-600 transition flex items-center"><i
+                            class="fa-solid fa-utensils mr-1 text-amber-500"></i> Tiffin</a>
+                    <a href="/essentials" class="hover:text-blue-600 transition flex items-center"><i
+                            class="fa-solid fa-box-open mr-1 text-purple-500"></i> Essentials</a>
+
+                    {% if session.get('user_id') %}
+                    <a href="/inbox"
+                        class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md hover:bg-blue-100 transition flex items-center"><i
+                            class="fa-solid fa-envelope mr-1"></i> My Inbox</a>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center space-x-1 pl-4">
+                    <i class="fa-solid fa-location-dot text-red-500 text-xs sm:text-sm"></i>
+                    <select id="locationSelector"
+                        class="bg-white border border-gray-300 rounded-md text-[11px] sm:text-xs font-semibold px-2 py-0.5 text-gray-700 focus:outline-none">
+                        <option value="all">All Locations</option>
+                        {% for city in available_cities %}
+                        <option value="{{ city | lower }}">{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="p-3 mb-3 text-sm rounded-lg {% if category == 'danger' %} bg-red-100 text-red-700 {% elif category == 'success' %} bg-green-100 text-green-700 {% else %} bg-blue-100 text-blue-700 {% endif %} font-medium shadow-sm">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="max-w-7xl mx-auto p-4 sm:p-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (dropdownMenu && !dropdownMenu.contains(e.target) && !menuButton.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

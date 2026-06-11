@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="py-4">
+    <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-4 mb-6 gap-2">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-gray-900">{{ title }}</h1>
+            <p class="text-sm text-gray-500">Live active listings around campus location</p>
+        </div>
+        <span class="text-xs font-bold bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg">
+            Total listings: {{ items|length }}
+        </span>
+    </div>
+
+    {% if items %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in items %}
+        <div
+            class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition duration-200 flex flex-col h-full">
+
+            <div class="relative bg-gray-100 h-48 w-full overflow-hidden flex items-center justify-center">
+                {% if item.image_url %}
+                <img src="{{ url_for('static', filename='uploads/' + item.image_url) }}" alt="{{ item.title }}"
+                    class="w-full h-full object-cover">
+                {% else %}
+                <div class="text-center text-gray-400">
+                    <i class="fa-solid fa-box-open text-4xl mb-1"></i>
+                    <p class="text-[11px] font-medium">No Image</p>
+                </div>
+                {% endif %}
+                <span
+                    class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white font-bold text-[10px] px-2 py-1 rounded-md uppercase tracking-wide">
+                    <i class="fa-solid fa-location-dot text-red-400 mr-1"></i> {{ item.city }}
+                </span>
+            </div>
+
+            <div class="p-4 flex flex-col flex-grow">
+                <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-600 mb-1">{{ item.category
+                    }}</span>
+                <h3 class="text-base font-bold text-gray-900 line-clamp-1" title="{{ item.title }}">{{ item.title }}
+                </h3>
+                <p class="text-xs text-gray-500 mt-1 line-clamp-2 flex-grow">{{ item.description or 'No description
+                    provided.' }}</p>
+
+                <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Price</p>
+                        <p class="text-lg font-black text-gray-900">₹{{ item.price }}</p>
+                    </div>
+
+                    {% if session.get('user_id') == item.user_id %}
+                    <form action="{{ url_for('delete_item', item_id=item.id) }}" method="POST"
+                        onsubmit="return confirm('Are you sure?');">
+                        <button type="submit"
+                            class="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="{{ url_for('private_chat', item_id=item.id, receiver_id=item.user_id) }}"
+                        class="bg-blue-600 text-white hover:bg-blue-700 font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-comments"></i> Chat
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div
+                class="bg-gray-50 px-4 py-2.5 text-[11px] text-gray-500 flex items-center justify-between border-t border-gray-50">
+                <span><i class="fa-solid fa-user text-gray-400 mr-1"></i> Seller: <b>{{ item.name }}</b></span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-16 bg-white rounded-3xl border border-gray-100 shadow-sm">
+        <div class="text-gray-400 text-4xl mb-3"><i class="fa-solid fa-folder-open"></i></div>
+        <h3 class="text-lg font-bold text-gray-900">No Ads Found</h3>
+        <p class="text-sm text-gray-400">Be the first to post a listing here!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
