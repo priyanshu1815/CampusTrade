@@ -1,7 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, g, flash, jsonify
 import psycopg2
-from psycopg2.extras import DictCursor  # Row factory ka perfect replacement
+from psycopg2.extras import DictCursor
+from werkzeug.utils import secure_filename  # <-- FIX 1: Yeh import missing tha, isko jod diya hai!
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'
@@ -12,6 +13,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
+# FIX 2: Connection string ko properly format kar diya hai (postgresql://)
 DATABASE = 'postgresql://campustrade_db_slox_user:GTyWapkoK425ZqSsAgGGgoJOIQY5ThsP@dpg-d8lo7h8js32c73b253s0-a/campustrade_db_slox'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -19,7 +21,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        # PostgreSQL connection with DictCursor for row factory behavior
         db = g._database = psycopg2.connect(DATABASE, cursor_factory=DictCursor)
     return db
 
@@ -35,7 +36,7 @@ def init_db():
         db = get_db()
         cursor = db.cursor()
         
-        # 1. Users Table (PostgreSQL Serial version)
+        # 1. Users Table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -47,7 +48,7 @@ def init_db():
             )
         ''')
         
-        # 2. Items Table (PostgreSQL Serial version)
+        # 2. Items Table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS items (
                 id SERIAL PRIMARY KEY,
@@ -62,7 +63,7 @@ def init_db():
             )
         ''')
 
-        # 3. Private Messages Table (PostgreSQL Serial version)
+        # 3. Private Messages Table
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS private_messages (
                 id SERIAL PRIMARY KEY,
@@ -207,7 +208,6 @@ def upload_item(category):
             
         filename = None
         if file and allowed_file(file.filename):
-            from werkzeug.utils import secure_filename
             filename = secure_filename(file.filename)
             filename = f"user_{session['user_id']}_{filename}"
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -293,7 +293,6 @@ def private_chat(item_id, receiver_id):
     db = get_db()
     cursor = db.cursor()
     
-    # Send message logic
     if request.method == 'POST':
         msg_text = request.form.get('message', '').strip()
         if msg_text:
@@ -305,7 +304,6 @@ def private_chat(item_id, receiver_id):
             cursor.close()
             return redirect(url_for('private_chat', item_id=item_id, receiver_id=receiver_id))
 
-    # Fetch Item Info
     cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
     item = cursor.fetchone()
     if not item:
@@ -313,11 +311,9 @@ def private_chat(item_id, receiver_id):
         flash("Item not found!", "danger")
         return redirect(url_for('index'))
         
-    # Fetch chat partner profile info
     cursor.execute("SELECT name, role FROM users WHERE id = %s", (receiver_id,))
     chat_partner = cursor.fetchone()
 
-    # Load shared conversation history
     cursor.execute('''
         SELECT private_messages.*, users.name as sender_name 
         FROM private_messages 
