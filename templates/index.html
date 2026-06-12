@@ -65,23 +65,31 @@
         </div>
     </div>
 </div>
+
+<!-- --- FOUNDER SECTION (Sirf Ek Baar Aur Ekdum Perfect) --- -->
 <div class="founder-section">
     <div class="founder-card">
+        <!-- Photo Name: founder.jpg (Agar aapne VS code me rename nahi kiya to ise founder.jpg.jpeg kar lena bhai) -->
         <img src="{{ url_for('static', filename='founder.jpg') }}" alt="Priyanshu Kumar" class="founder-img">
 
         <div class="founder-info">
             <p class="punchline">"Built by a Student, For the Students."</p>
-            <h2 class="founder-name">Priyanshu Kumar</h2>
+            <h2 class="founder-name">Priyanshu Kumar Kashyap</h2>
             <p class="founder-title">Founder & Lead Developer, CampusTrade</p>
-            <p class="founder-quote">
-                "Hum sab college life mein books, rooms aur essentials ke liye pareshan hote hain. CampusTrade banane ka
-                mera maqsad bas itna tha ki kisi bhi batchmate ko in cheezon ke liye bhatakna na pade. Yeh hamara apna
-                market hai—free, trustable aur hamesha hamare sath!"
-            </p>
+            <div class="founder-quote-block">
+                <p class="founder-quote">
+                    "I built Campus Trade to help students find books, essentials, food, and accommodation—all in one
+                    place."
+                </p>
+                <p class="founder-motivation">
+                    "The best way to predict the future is to create it." — Peter Drucker
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- --- FOUNDER STYLING (CSS) --- -->
 <style>
     .founder-section {
         background-color: #ffffff;
@@ -108,7 +116,6 @@
         border-radius: 50%;
         object-fit: cover;
         border: 4px solid #0056b3;
-        /* Aapki site ke blue theme se match karega */
     }
 
     .founder-info {
@@ -118,7 +125,6 @@
     .punchline {
         font-style: italic;
         color: #0056b3;
-        /* Theme Blue */
         font-weight: bold;
         font-size: 1.15rem;
         margin-bottom: 8px;
@@ -140,22 +146,30 @@
     }
 
     .founder-quote {
-        color: #444;
+        color: #333;
         line-height: 1.6;
-        font-size: 1.05rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 10px;
     }
 
-    /* Mobile standard responsive view */
+    .founder-motivation {
+        color: #555;
+        font-style: italic;
+        font-size: 1rem;
+        border-left: 3px solid #0056b3;
+        padding-left: 10px;
+    }
+
     @media (max-width: 650px) {
         .founder-card {
             flex-direction: column;
             text-align: center;
-            padding: 25px;
         }
 
-        .founder-img {
-            width: 140px;
-            height: 140px;
+        .founder-motivation {
+            border-left: none;
+            padding-left: 0;
         }
     }
 </style>
