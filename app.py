@@ -326,7 +326,6 @@ def inbox():
     ''', (current_user, current_user, current_user, current_user)).fetchall()
     
     return render_template('inbox.html', threads=threads)
-
 # ... aapke purane routes upar khatam ho jayenge ...
 
 @app.route('/delete_item/<int:item_id>', methods=['POST'])
