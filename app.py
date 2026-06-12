@@ -365,7 +365,23 @@ def delete_item(item_id):
     
     flash("Listing deleted successfully!", "success")
     return redirect(url_for('index'))
-
+# --- ADMIN DATABASE CHECKER ---
+@app.route('/secret-db-check')
+def secret_db_check():
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Registered users ka data nikalne ke liye
+    cursor.execute("SELECT id, name, mobile, city, role FROM users ORDER BY id DESC")
+    users = cursor.fetchall()
+    
+    cursor.close()
+    
+    # Screen par ekdam saaf list dikhegi
+    return jsonify({
+        "total_users_registered": len(users),
+        "users_list": [dict(u) for u in users]
+    })
 # <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
 if __name__ == '__main__':
     init_db() 
