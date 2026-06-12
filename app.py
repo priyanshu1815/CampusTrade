@@ -365,23 +365,58 @@ def delete_item(item_id):
     
     flash("Listing deleted successfully!", "success")
     return redirect(url_for('index'))
-# --- ADMIN DATABASE CHECKER ---
+# --- ADMIN DATABASE CHECKER (Table Format) ---
 @app.route('/secret-db-check')
 def secret_db_check():
     db = get_db()
     cursor = db.cursor()
-    
-    # Registered users ka data nikalne ke liye
     cursor.execute("SELECT id, name, mobile, city, role FROM users ORDER BY id DESC")
     users = cursor.fetchall()
-    
     cursor.close()
     
-    # Screen par ekdam saaf list dikhegi
-    return jsonify({
-        "total_users_registered": len(users),
-        "users_list": [dict(u) for u in users]
-    })
+    # HTML Table with Beautiful Styling
+    html = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 40px; background-color: #f4f6f9; }}
+            h1 {{ color: #333; }}
+            table {{ width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }}
+            th, td {{ padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }}
+            th {{ background-color: #4CAF50; color: white; }}
+            tr:hover {{ background-color: #f5f5f5; }}
+        </style>
+    </head>
+    <body>
+        <h1>Registered Users List</h1>
+        <h3>Total Users Registered: {len(users)}</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>City</th>
+                <th>Role</th>
+            </tr>
+    """
+    
+    for u in users:
+        html += f"""
+            <tr>
+                <td>{u['id']}</td>
+                <td>{u['name']}</td>
+                <td>{u['mobile']}</td>
+                <td>{u['city']}</td>
+                <td>{u['role']}</td>
+            </tr>
+        """
+        
+    html += """
+        </table>
+    </body>
+    </html>
+    """
+    return html
 # <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
 if __name__ == '__main__':
     init_db() 
