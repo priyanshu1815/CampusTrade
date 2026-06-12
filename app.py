@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, g, flash, jsonify
-import sqlite3
-from werkzeug.utils import secure_filename
+import psycopg2
+from psycopg2.extras import DictCursor  # Row factory ka perfect replacement
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'
@@ -12,15 +12,15 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-DATABASE = 'database.db'
+DATABASE = 'postgresql://campustrade_db_slox_user:GTyWapkoK425ZqSsAgGGgoJOIQY5ThsP@dpg-d8lo7h8js32c73b253s0-a/campustrade_db_slox'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-        db.row_factory = sqlite3.Row
+        # PostgreSQL connection with DictCursor for row factory behavior
+        db = g._database = psycopg2.connect(DATABASE, cursor_factory=DictCursor)
     return db
 
 @app.teardown_appcontext
@@ -35,10 +35,10 @@ def init_db():
         db = get_db()
         cursor = db.cursor()
         
-        # 1. Users Table (No changes)
+        # 1. Users Table (PostgreSQL Serial version)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 name TEXT NOT NULL,
                 mobile TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
@@ -47,10 +47,10 @@ def init_db():
             )
         ''')
         
-        # 2. Items Table (No changes)
+        # 2. Items Table (PostgreSQL Serial version)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS items (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 title TEXT NOT NULL,
                 category TEXT NOT NULL,
                 price REAL NOT NULL,
@@ -62,21 +62,22 @@ def init_db():
             )
         ''')
 
-        # 3. Private Messages Table (New Secure DM Table)
+        # 3. Private Messages Table (PostgreSQL Serial version)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS private_messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 sender_id INTEGER,
                 receiver_id INTEGER,
                 item_id INTEGER,
                 message TEXT NOT NULL,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(sender_id) REFERENCES users(id),
                 FOREIGN KEY(receiver_id) REFERENCES users(id),
                 FOREIGN KEY(item_id) REFERENCES items(id)
             )
         ''')
         db.commit()
+        cursor.close()
 
 init_db()
 
@@ -84,11 +85,11 @@ init_db()
 def inject_locations():
     cities = []
     try:
-        db = sqlite3.connect(DATABASE)
-        db.row_factory = sqlite3.Row
+        db = psycopg2.connect(DATABASE, cursor_factory=DictCursor)
         cursor = db.cursor()
         cursor.execute("SELECT DISTINCT city FROM items")
         cities = [row['city'] for row in cursor.fetchall()]
+        cursor.close()
         db.close()
     except:
         pass
@@ -121,15 +122,19 @@ def register():
             return redirect(url_for('register'))
             
         db = get_db()
+        cursor = db.cursor()
         try:
-            db.execute(
-                'INSERT INTO users (name, mobile, password, city, role) VALUES (?, ?, ?, ?, ?)',
+            cursor.execute(
+                'INSERT INTO users (name, mobile, password, city, role) VALUES (%s, %s, %s, %s, %s)',
                 (name, mobile, password, city, role)
             )
             db.commit()
+            cursor.close()
             flash("Registration Successful! Please Sign In.", "success")
             return redirect(url_for('login'))
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
+            db.rollback()
+            cursor.close()
             flash("Mobile number already registered!", "danger")
             return redirect(url_for('register'))
             
@@ -142,10 +147,13 @@ def login():
         password = request.form.get('password')
         
         db = get_db()
-        user = db.execute(
-            'SELECT * FROM users WHERE name = ? AND password = ?', 
+        cursor = db.cursor()
+        cursor.execute(
+            'SELECT * FROM users WHERE name = %s AND password = %s', 
             (name, password)
-        ).fetchone()
+        )
+        user = cursor.fetchone()
+        cursor.close()
         
         if user:
             session['user_id'] = user['id']
@@ -199,16 +207,19 @@ def upload_item(category):
             
         filename = None
         if file and allowed_file(file.filename):
+            from werkzeug.utils import secure_filename
             filename = secure_filename(file.filename)
             filename = f"user_{session['user_id']}_{filename}"
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
         db = get_db()
-        db.execute('''
+        cursor = db.cursor()
+        cursor.execute('''
             INSERT INTO items (title, category, price, city, description, image_url, user_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         ''', (title, mapped_category, price, city, description, filename, session['user_id']))
         db.commit()
+        cursor.close()
         
         flash(f"{mapped_category} has been posted successfully!", "success")
         
@@ -236,33 +247,42 @@ def upload_tiffin(): return redirect(url_for('upload_item', category='tiffin'))
 @app.route('/bookstore')
 def bookstore():
     db = get_db()
-    # Number (users.mobile) select query se hata diya hai taaki grid me leak na ho
-    items = db.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Book' ORDER BY items.id DESC").fetchall()
+    cursor = db.cursor()
+    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Book' ORDER BY items.id DESC")
+    items = cursor.fetchall()
+    cursor.close()
     return render_template('bookstore.html', items=items, title="Campus Bookstore")
 
 @app.route('/rooms')
 def rooms():
     db = get_db()
-    items = db.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Room' ORDER BY items.id DESC").fetchall()
+    cursor = db.cursor()
+    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Room' ORDER BY items.id DESC")
+    items = cursor.fetchall()
+    cursor.close()
     return render_template('rooms.html', items=items, title="Verified Rooms / PGs")
 
 @app.route('/tiffin')
 def tiffin():
     db = get_db()
-    items = db.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Tiffin' ORDER BY items.id DESC").fetchall()
+    cursor = db.cursor()
+    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Tiffin' ORDER BY items.id DESC")
+    items = cursor.fetchall()
+    cursor.close()
     return render_template('tiffin.html', items=items, title="Tiffin / Mess Services")
 
 @app.route('/essentials')
 def essentials():
     db = get_db()
-    items = db.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Essential' ORDER BY items.id DESC").fetchall()
-    # Explicitly fixed to seek essential.html (singular) template
+    cursor = db.cursor()
+    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Essential' ORDER BY items.id DESC")
+    items = cursor.fetchall()
+    cursor.close()
     return render_template('essential.html', items=items, title="Student Essentials")
 
 
 # --- NEW PRIVACY-SAFE DIRECT CHAT SYSTEM ---
 
-# 1. Personal DM Chat Screen between Buyer and Seller for a specific item
 @app.route('/chat/<int:item_id>/<int:receiver_id>', methods=['GET', 'POST'])
 def private_chat(item_id, receiver_id):
     if not session.get('user_id'):
@@ -271,40 +291,46 @@ def private_chat(item_id, receiver_id):
         
     current_user = session['user_id']
     db = get_db()
+    cursor = db.cursor()
     
     # Send message logic
     if request.method == 'POST':
         msg_text = request.form.get('message', '').strip()
         if msg_text:
-            db.execute('''
+            cursor.execute('''
                 INSERT INTO private_messages (sender_id, receiver_id, item_id, message)
-                VALUES (?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s)
             ''', (current_user, receiver_id, item_id, msg_text))
             db.commit()
+            cursor.close()
             return redirect(url_for('private_chat', item_id=item_id, receiver_id=receiver_id))
 
     # Fetch Item Info
-    item = db.execute("SELECT * FROM items WHERE id = ?", (item_id,)).fetchone()
+    cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
+    item = cursor.fetchone()
     if not item:
+        cursor.close()
         flash("Item not found!", "danger")
         return redirect(url_for('index'))
         
     # Fetch chat partner profile info
-    chat_partner = db.execute("SELECT name, role FROM users WHERE id = ?", (receiver_id,)).fetchone()
+    cursor.execute("SELECT name, role FROM users WHERE id = %s", (receiver_id,))
+    chat_partner = cursor.fetchone()
 
-    # Load shared conversation history between these two users for this product
-    messages = db.execute('''
+    # Load shared conversation history
+    cursor.execute('''
         SELECT private_messages.*, users.name as sender_name 
         FROM private_messages 
         JOIN users ON private_messages.sender_id = users.id
-        WHERE item_id = ? AND 
-        ((sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?))
+        WHERE item_id = %s AND 
+        ((sender_id = %s AND receiver_id = %s) OR (sender_id = %s AND receiver_id = %s))
         ORDER BY private_messages.id ASC
-    ''', (item_id, current_user, receiver_id, receiver_id, current_user)).fetchall()
+    ''', (item_id, current_user, receiver_id, receiver_id, current_user))
+    messages = cursor.fetchall()
+    cursor.close()
     
     return render_template('chat.html', chat_messages=messages, item=item, partner=chat_partner, receiver_id=receiver_id)
 
-# 2. Inbox Dashboard list showing who you are talking to
 @app.route('/inbox')
 def inbox():
     if not session.get('user_id'):
@@ -313,20 +339,21 @@ def inbox():
         
     current_user = session['user_id']
     db = get_db()
+    cursor = db.cursor()
     
-    # Subquery fetches unique active threads for recent chat list summary maps
-    threads = db.execute('''
+    cursor.execute('''
         SELECT DISTINCT pm.item_id, pm.sender_id, pm.receiver_id, items.title, items.category,
-        (SELECT name FROM users WHERE id = (CASE WHEN pm.sender_id = ? THEN pm.receiver_id ELSE pm.sender_id END)) as partner_name,
-        (CASE WHEN pm.sender_id = ? THEN pm.receiver_id ELSE pm.sender_id END) as partner_id
+        (SELECT name FROM users WHERE id = (CASE WHEN pm.sender_id = %s THEN pm.receiver_id ELSE pm.sender_id END)) as partner_name,
+        (CASE WHEN pm.sender_id = %s THEN pm.receiver_id ELSE pm.sender_id END) as partner_id
         FROM private_messages pm
         JOIN items ON pm.item_id = items.id
-        WHERE pm.sender_id = ? OR pm.receiver_id = ?
-        ORDER BY pm.id DESC
-    ''', (current_user, current_user, current_user, current_user)).fetchall()
+        WHERE pm.sender_id = %s OR pm.receiver_id = %s
+        ORDER BY pm.item_id DESC
+    ''', (current_user, current_user, current_user, current_user))
+    threads = cursor.fetchall()
+    cursor.close()
     
     return render_template('inbox.html', threads=threads)
-# ... aapke purane routes upar khatam ho jayenge ...
 
 @app.route('/delete_item/<int:item_id>', methods=['POST'])
 def delete_item(item_id):
@@ -334,14 +361,14 @@ def delete_item(item_id):
         return redirect(url_for('login'))
     
     db = get_db()
-    # Check aur delete karo
-    db.execute("DELETE FROM items WHERE id = ? AND user_id = ?", (item_id, session['user_id']))
-    db.execute("DELETE FROM private_messages WHERE item_id = ?", (item_id,))
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM items WHERE id = %s AND user_id = %s", (item_id, session['user_id']))
+    cursor.execute("DELETE FROM private_messages WHERE item_id = %s", (item_id,))
     db.commit()
+    cursor.close()
     
     flash("Listing deleted successfully!", "success")
     return redirect(url_for('index'))
 
-# YEH SABSE NEECHE HONA CHAHIYE
 if __name__ == '__main__':
     app.run(debug=True)
