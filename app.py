@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, g, flash, jsonify
 import psycopg2
 from psycopg2.extras import DictCursor
-from werkzeug.utils import secure_filename  # <-- FIX 1: Yeh import missing tha, isko jod diya hai!
+from werkzeug.utils import secure_filename 
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'
@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-# FIX 2: Connection string ko properly format kar diya hai (postgresql://)
+# Connection string properly formatted
 DATABASE = 'postgresql://campustrade_db_slox_user:GTyWapkoK425ZqSsAgGGgoJOIQY5ThsP@dpg-d8lo7h8js32c73b253s0-a/campustrade_db_slox'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -80,7 +80,7 @@ def init_db():
         db.commit()
         cursor.close()
 
-init_db()
+# <--- IMPROVEMENT 1: Render timeout se bachne ke liye yahan se init_db() hata diya hai --->
 
 @app.context_processor
 def inject_locations():
@@ -242,7 +242,7 @@ def upload_room(): return redirect(url_for('upload_item', category='room'))
 def upload_tiffin(): return redirect(url_for('upload_item', category='tiffin'))
 
 
-# --- CONTENT LISTING VIEWS (Privacy Protected) ---
+# --- CONTENT LISTING VIEWS ---
 
 @app.route('/bookstore')
 def bookstore():
@@ -281,7 +281,7 @@ def essentials():
     return render_template('essential.html', items=items, title="Student Essentials")
 
 
-# --- NEW PRIVACY-SAFE DIRECT CHAT SYSTEM ---
+# --- CHAT SYSTEM ROUTES ---
 
 @app.route('/chat/<int:item_id>/<int:receiver_id>', methods=['GET', 'POST'])
 def private_chat(item_id, receiver_id):
@@ -366,5 +366,7 @@ def delete_item(item_id):
     flash("Listing deleted successfully!", "success")
     return redirect(url_for('index'))
 
+# <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
 if __name__ == '__main__':
-    app.run(debug=True)
+    init_db() 
+    app.run(host='0.0.0.0', port=5000, debug=True)
