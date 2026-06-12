@@ -65,4 +65,98 @@
         </div>
     </div>
 </div>
+<div class="founder-section">
+    <div class="founder-card">
+        <img src="{{ url_for('static', filename='founder.jpg') }}" alt="Priyanshu Kumar" class="founder-img">
+
+        <div class="founder-info">
+            <p class="punchline">"Built by a Student, For the Students."</p>
+            <h2 class="founder-name">Priyanshu Kumar</h2>
+            <p class="founder-title">Founder & Lead Developer, CampusTrade</p>
+            <p class="founder-quote">
+                "Hum sab college life mein books, rooms aur essentials ke liye pareshan hote hain. CampusTrade banane ka
+                mera maqsad bas itna tha ki kisi bhi batchmate ko in cheezon ke liye bhatakna na pade. Yeh hamara apna
+                market hai—free, trustable aur hamesha hamare sath!"
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .founder-section {
+        background-color: #ffffff;
+        padding: 60px 20px;
+        margin-top: 50px;
+        border-top: 1px solid #eef2f5;
+    }
+
+    .founder-card {
+        max-width: 850px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 35px;
+        background: #f8f9fa;
+        padding: 35px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .founder-img {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #0056b3;
+        /* Aapki site ke blue theme se match karega */
+    }
+
+    .founder-info {
+        flex: 1;
+    }
+
+    .punchline {
+        font-style: italic;
+        color: #0056b3;
+        /* Theme Blue */
+        font-weight: bold;
+        font-size: 1.15rem;
+        margin-bottom: 8px;
+    }
+
+    .founder-name {
+        margin: 0;
+        color: #222;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    .founder-title {
+        margin: 2px 0 15px 0;
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .founder-quote {
+        color: #444;
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
+
+    /* Mobile standard responsive view */
+    @media (max-width: 650px) {
+        .founder-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .founder-img {
+            width: 140px;
+            height: 140px;
+        }
+    }
+</style>
 {% endblock %}
