@@ -14,7 +14,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
 # Connection string properly formatted
-DATABASE = 'postgresql://campustrade_db_slox_user:GTyWapkoK425ZqSsAgGGgoJOIQY5ThsP@dpg-d8lo7h8js32c73b253s0-a/campustrade_db_slox'
+# --- PURANI DATABASE VALI LINE KO HATAKAR YEH DO LINES LIKHO ---
+
+# 1. Jo aapne Render se copy kiya (External URL) use yahan paste karo:
+EXTERNAL_DATABASE = 'postgresql://campustrade_db_slox_user:GTyWapkoK425ZqSsAgGGgoJOIQY5ThsP@dpg-d8lo7h8js32c73b253s0-a.oregon-postgres.render.com/campustrade_db_slox' 
+
+# 2. Yeh line dono ko handle karegi (Laptop par external use karegi, Render par internal)
+DATABASE = os.environ.get('DATABASE_URL', EXTERNAL_DATABASE)
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -36,7 +42,7 @@ def init_db():
         db = get_db()
         cursor = db.cursor()
         
-        # 1. Users Table
+        # 1. Users Table (University aur Course columns default ke sath ready hain)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -44,7 +50,9 @@ def init_db():
                 mobile TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 city TEXT NOT NULL,
-                role TEXT DEFAULT 'Student'
+                role TEXT DEFAULT 'Student',
+                university_name TEXT DEFAULT 'Not Provided',
+                course_name TEXT DEFAULT 'Not Provided'
             )
         ''')
         
@@ -118,16 +126,33 @@ def register():
         city = request.form.get('city').strip()
         role = request.form.get('role')
         
-        if not name or not mobile or not password or not city:
-            flash("All fields are required!", "danger")
+        # Form se aa rha data catch karo
+        university_name = request.form.get('university_name', '').strip()
+        course_name = request.form.get('course_name', '').strip()
+        
+        # Pehle common fields check karo jo sabke liye required hain
+        if not name or not mobile or not password or not city or not role:
+            flash("All common fields are required!", "danger")
             return redirect(url_for('register'))
+            
+        # --- SMART VALIDATION BASED ON ROLE ---
+        if role == 'Student':
+            # Agar Student hai, toh University aur Course ka hona pakka zaroori hai
+            if not university_name or not course_name:
+                flash("University and Course details are required for Students!", "danger")
+                return redirect(url_for('register'))
+        else:
+            # YAHAN BADAL DIYA BHAI: Ab Property Owner ki jagah Vendor/Seller save hoga
+            university_name = "N/A (Vendor / Seller)"
+            course_name = "N/A (Vendor / Seller)"
             
         db = get_db()
         cursor = db.cursor()
         try:
+            # Table mein data save karwao
             cursor.execute(
-                'INSERT INTO users (name, mobile, password, city, role) VALUES (%s, %s, %s, %s, %s)',
-                (name, mobile, password, city, role)
+                'INSERT INTO users (name, mobile, password, city, role, university_name, course_name) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                (name, mobile, password, city, role, university_name, course_name)
             )
             db.commit()
             cursor.close()
@@ -365,12 +390,13 @@ def delete_item(item_id):
     
     flash("Listing deleted successfully!", "success")
     return redirect(url_for('index'))
-# --- ADMIN DATABASE CHECKER (Table Format) ---
+
+# --- ADMIN DATABASE CHECKER ---
 @app.route('/secret-db-check')
 def secret_db_check():
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT id, name, mobile, city, role FROM users ORDER BY id DESC")
+    cursor.execute("SELECT id, name, mobile, city, role, university_name, course_name FROM users ORDER BY id DESC")
     users = cursor.fetchall()
     cursor.close()
     
@@ -397,6 +423,8 @@ def secret_db_check():
                 <th>Mobile</th>
                 <th>City</th>
                 <th>Role</th>
+                <th>University / School</th>
+                <th>Course / Class</th>
             </tr>
     """
     
@@ -408,6 +436,8 @@ def secret_db_check():
                 <td>{u['mobile']}</td>
                 <td>{u['city']}</td>
                 <td>{u['role']}</td>
+                <td>{u['university_name']}</td>
+                <td>{u['course_name']}</td>
             </tr>
         """
         
@@ -417,7 +447,16 @@ def secret_db_check():
     </html>
     """
     return html
-# <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
+
 if __name__ == '__main__':
+    # ---- BAS YEH DO LINES 2 MINUTE KE LIYE JOD DO ----
+    with app.app_context():
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("DROP TABLE IF EXISTS users CASCADE;") # Purani table uda dega
+        db.commit()
+        cursor.close()
+    # --------------------------------------------------
+
     init_db() 
     app.run(host='0.0.0.0', port=5000, debug=True)

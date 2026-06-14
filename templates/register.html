@@ -8,9 +8,28 @@
     </div>
 
     <form action="/register" method="POST" class="space-y-4">
+
+        <div>
+            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Sign Up As:</label>
+            <div class="grid grid-cols-2 gap-4 mt-1">
+                <label id="student-label"
+                    class="flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-blue-500 bg-blue-50/50">
+                    <input type="radio" name="role" value="Student" checked onchange="toggleFields()"
+                        class="mr-2 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-semibold text-gray-700">Student</span>
+                </label>
+                <label id="owner-label"
+                    class="flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-gray-200">
+                    <input type="radio" name="role" value="Owner" onchange="toggleFields()"
+                        class="mr-2 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-semibold text-gray-700">Vendor / Seller</span>
+                </label>
+            </div>
+        </div>
+
         <div>
             <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Full Name</label>
-            <input type="text" name="name" required placeholder="Enter username / full name"
+            <input type="text" name="name" required placeholder="Enter full name"
                 class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
         </div>
 
@@ -20,10 +39,22 @@
                 class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
         </div>
 
-        <div>
-            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Password</label>
-            <input type="password" name="password" required placeholder="Create strong password"
-                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
+        <div id="student-only-fields" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">University / College
+                    / School</label>
+                <input type="text" name="university_name" id="university_name" required
+                    placeholder="e.g., IIT Delhi, BHU, LPU"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Course /
+                    Class</label>
+                <input type="text" name="course_name" id="course_name" required
+                    placeholder="e.g., B.Tech CSE, MBA, Class 12"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
+            </div>
         </div>
 
         <div>
@@ -33,20 +64,9 @@
         </div>
 
         <div>
-            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">I am a:</label>
-            <div class="grid grid-cols-2 gap-4 mt-1">
-                <label
-                    class="flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-blue-500 bg-blue-50/50">
-                    <input type="radio" name="role" value="Student" checked
-                        class="mr-2 text-blue-600 focus:ring-blue-500">
-                    <span class="text-sm font-semibold text-gray-700">Student</span>
-                </label>
-                <label
-                    class="flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-gray-200">
-                    <input type="radio" name="role" value="Owner" class="mr-2 text-blue-600 focus:ring-blue-500">
-                    <span class="text-sm font-semibold text-gray-700">Property Owner</span>
-                </label>
-            </div>
+            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Password</label>
+            <input type="password" name="password" required placeholder="Create strong password"
+                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
         </div>
 
         <button type="submit"
@@ -60,4 +80,41 @@
                 class="text-blue-600 font-bold hover:underline">Sign In</a></p>
     </div>
 </div>
+
+<script>
+    function toggleFields() {
+        const role = document.querySelector('input[name="role"]:checked').value;
+        const studentFields = document.getElementById('student-only-fields');
+        const uniInput = document.getElementById('university_name');
+        const courseInput = document.getElementById('course_name');
+
+        const studentLabel = document.getElementById('student-label');
+        const ownerLabel = document.getElementById('owner-label');
+
+        if (role === 'Student') {
+            // Student fields ko dikhao aur required karo
+            studentFields.style.display = 'block';
+            uniInput.required = true;
+            courseInput.required = true;
+
+            // UI Colors update karo
+            studentLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-blue-500 bg-blue-50/50";
+            ownerLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-gray-200";
+        } else {
+            // Owner ke liye fields chhupao aur required hatao
+            studentFields.style.display = 'none';
+            uniInput.required = false;
+            courseInput.required = false;
+            uniInput.value = ''; // value clear kar do
+            courseInput.value = '';
+
+            // UI Colors update karo
+            ownerLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-blue-500 bg-blue-50/50";
+            studentLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-gray-200";
+        }
+    }
+
+    // Page load hote hi ek baar run kar do taaki setting sahi rahe
+    window.onload = toggleFields;
+</script>
 {% endblock %}
