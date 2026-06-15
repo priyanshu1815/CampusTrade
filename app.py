@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-# --- PURANA DATABASE SETUP HATAKAR ISKO COPY-PASTE KARO ---
+# --- SAFE CONNECTION STRING WITH POOLER PROXY ---
 EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:%40Pksm887314@aws-0-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require'
 DATABASE = EXTERNAL_DATABASE
 
@@ -31,60 +31,63 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-# Initialize Database with Users, Items, and Private Messages Tables
+# Initialize Database safely
 def init_db():
     with app.app_context():
-        db = get_db()
-        cursor = db.cursor()
-        
-        # 1. Users Table (University aur Course columns default ke sath ready hain)
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                mobile TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL,
-                city TEXT NOT NULL,
-                role TEXT DEFAULT 'Student',
-                university_name TEXT DEFAULT 'Not Provided',
-                course_name TEXT DEFAULT 'Not Provided'
-            )
-        ''')
-        
-        # 2. Items Table
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS items (
-                id SERIAL PRIMARY KEY,
-                title TEXT NOT NULL,
-                category TEXT NOT NULL,
-                price REAL NOT NULL,
-                city TEXT NOT NULL,
-                description TEXT,
-                image_url TEXT,
-                user_id INTEGER,
-                FOREIGN KEY(user_id) REFERENCES users(id)
-            )
-        ''')
+        try:
+            db = get_db()
+            cursor = db.cursor()
+            
+            # 1. Users Table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                    id SERIAL PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    mobile TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL,
+                    city TEXT NOT NULL,
+                    role TEXT DEFAULT 'Student',
+                    university_name TEXT DEFAULT 'Not Provided',
+                    course_name TEXT DEFAULT 'Not Provided'
+                )
+            ''')
+            
+            # 2. Items Table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS items (
+                    id SERIAL PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    category TEXT NOT NULL,
+                    price REAL NOT NULL,
+                    city TEXT NOT NULL,
+                    description TEXT,
+                    image_url TEXT,
+                    user_id INTEGER,
+                    FOREIGN KEY(user_id) REFERENCES users(id)
+                )
+            ''')
 
-        # 3. Private Messages Table
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS private_messages (
-                id SERIAL PRIMARY KEY,
-                sender_id INTEGER,
-                receiver_id INTEGER,
-                item_id INTEGER,
-                message TEXT NOT NULL,
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY(sender_id) REFERENCES users(id),
-                FOREIGN KEY(receiver_id) REFERENCES users(id),
-                FOREIGN KEY(item_id) REFERENCES items(id)
-            )
-        ''')
-        db.commit()
-        cursor.close()
+            # 3. Private Messages Table
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS private_messages (
+                    id SERIAL PRIMARY KEY,
+                    sender_id INTEGER,
+                    receiver_id INTEGER,
+                    item_id INTEGER,
+                    message TEXT NOT NULL,
+                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(sender_id) REFERENCES users(id),
+                    FOREIGN KEY(receiver_id) REFERENCES users(id),
+                    FOREIGN KEY(item_id) REFERENCES items(id)
+                )
+            ''')
+            db.commit()
+            cursor.close()
+            print("Database Tables Initialized Successfully! 🎉")
+        except Exception as e:
+            print(f"Database Initialization failed: {e}")
 
-# <--- IMPROVEMENT 1: Render timeout se bachne ke liye yahan se init_db() hata diya hai --->
-
+# Context processor with robust safety net (Bina crash kiye fallback cities dega)
 @app.context_processor
 def inject_locations():
     cities = []
@@ -92,15 +95,15 @@ def inject_locations():
         db = psycopg2.connect(DATABASE, cursor_factory=DictCursor)
         cursor = db.cursor()
         cursor.execute("SELECT DISTINCT city FROM items")
-        cities = [row['city'] for row in cursor.fetchall()]
+        cities = [row['city'] for row in cursor.fetchall() if row['city']]
         cursor.close()
         db.close()
-    except:
-        pass
+    except Exception as e:
+        print(f"Context Processor City Load Warning: {e}")
     
     if not cities:
         cities = ["Delhi", "Mumbai", "Bangalore", "Pune", "Kota", "Patna"]
-    return dict(available_cities=sorted(cities))
+    return dict(available_cities=sorted(list(set(cities))))
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -115,48 +118,50 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        name = request.form.get('name').strip()
-        mobile = request.form.get('mobile').strip()
-        password = request.form.get('password')
-        city = request.form.get('city').strip()
-        role = request.form.get('role')
+        name = request.form.get('name', '').strip()
+        mobile = request.form.get('mobile', '').strip()
+        password = request.form.get('password', '')
+        city = request.form.get('city', '').strip()
+        role = request.form.get('role', 'Student')
         
-        # Form se aa rha data catch karo
         university_name = request.form.get('university_name', '').strip()
         course_name = request.form.get('course_name', '').strip()
         
-        # Pehle common fields check karo jo sabke liye required hain
         if not name or not mobile or not password or not city or not role:
             flash("All common fields are required!", "danger")
             return redirect(url_for('register'))
             
-        # --- SMART VALIDATION BASED ON ROLE ---
         if role == 'Student':
-            # Agar Student hai, toh University aur Course ka hona pakka zaroori hai
             if not university_name or not course_name:
                 flash("University and Course details are required for Students!", "danger")
                 return redirect(url_for('register'))
         else:
-            # YAHAN BADAL DIYA BHAI: Ab Property Owner ki jagah Vendor/Seller save hoga
             university_name = "N/A (Vendor / Seller)"
             course_name = "N/A (Vendor / Seller)"
             
-        db = get_db()
-        cursor = db.cursor()
         try:
-            # Table mein data save karwao
-            cursor.execute(
-                'INSERT INTO users (name, mobile, password, city, role, university_name, course_name) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                (name, mobile, password, city, role, university_name, course_name)
-            )
+            db = get_db()
+            cursor = db.cursor()
+            
+            query = """
+                INSERT INTO users (name, mobile, password, city, role, university_name, course_name) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(query, (name, mobile, password, city, role, university_name, course_name))
             db.commit()
             cursor.close()
+            
             flash("Registration Successful! Please Sign In.", "success")
             return redirect(url_for('login'))
+            
         except psycopg2.IntegrityError:
-            db.rollback()
-            cursor.close()
+            if 'db' in locals(): db.rollback()
             flash("Mobile number already registered!", "danger")
+            return redirect(url_for('register'))
+        except Exception as e:
+            if 'db' in locals(): db.rollback()
+            print(f"Registration Error: {e}")
+            flash("Database issue. Please try again later.", "danger")
             return redirect(url_for('register'))
             
     return render_template('register.html')
@@ -164,27 +169,32 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        name = request.form.get('name').strip()
-        password = request.form.get('password')
+        name = request.form.get('name', '').strip()
+        password = request.form.get('password', '')
         
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute(
-            'SELECT * FROM users WHERE name = %s AND password = %s', 
-            (name, password)
-        )
-        user = cursor.fetchone()
-        cursor.close()
-        
-        if user:
-            session['user_id'] = user['id']
-            session['user_name'] = user['name']
-            session['user_mobile'] = user['mobile']
-            session['user_role'] = user['role']
-            flash(f"Welcome back, {user['name']}!", "success")
-            return redirect(url_for('index'))
-        else:
-            flash("Invalid Name or Password!", "danger")
+        try:
+            db = get_db()
+            cursor = db.cursor()
+            cursor.execute(
+                'SELECT * FROM users WHERE name = %s AND password = %s', 
+                (name, password)
+            )
+            user = cursor.fetchone()
+            cursor.close()
+            
+            if user:
+                session['user_id'] = user['id']
+                session['user_name'] = user['name']
+                session['user_mobile'] = user['mobile']
+                session['user_role'] = user['role']
+                flash(f"Welcome back, {user['name']}!", "success")
+                return redirect(url_for('index'))
+            else:
+                flash("Invalid Name or Password!", "danger")
+                return redirect(url_for('login'))
+        except Exception as e:
+            print(f"Login Route Error: {e}")
+            flash("Unable to connect to database right now. Try again.", "danger")
             return redirect(url_for('login'))
             
     return render_template('login.html')
@@ -216,10 +226,10 @@ def upload_item(category):
         return redirect(url_for('index'))
 
     if request.method == 'POST':
-        title = request.form.get('title').strip()
-        price = request.form.get('price').strip()
-        city = request.form.get('city').strip()
-        description = request.form.get('description').strip()
+        title = request.form.get('title', '').strip()
+        price = request.form.get('price', '').strip()
+        city = request.form.get('city', '').strip()
+        description = request.form.get('description', '').strip()
         file = request.files.get('image')
         
         if not title or not price or not city:
@@ -232,16 +242,20 @@ def upload_item(category):
             filename = f"user_{session['user_id']}_{filename}"
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('''
-            INSERT INTO items (title, category, price, city, description, image_url, user_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        ''', (title, mapped_category, price, city, description, filename, session['user_id']))
-        db.commit()
-        cursor.close()
-        
-        flash(f"{mapped_category} has been posted successfully!", "success")
+        try:
+            db = get_db()
+            cursor = db.cursor()
+            cursor.execute('''
+                INSERT INTO items (title, category, price, city, description, image_url, user_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ''', (title, mapped_category, price, city, description, filename, session['user_id']))
+            db.commit()
+            cursor.close()
+            flash(f"{mapped_category} has been posted successfully!", "success")
+        except Exception as e:
+            if 'db' in locals(): db.rollback()
+            print(f"Upload item error: {e}")
+            flash("Error saving item to database.", "danger")
         
         if category.lower() == 'book':
             return redirect(url_for('bookstore'))
@@ -262,9 +276,7 @@ def upload_room(): return redirect(url_for('upload_item', category='room'))
 def upload_tiffin(): return redirect(url_for('upload_item', category='tiffin'))
 
 
-# --- CONTENT LISTING VIEWS ---
-
-# --- IN CHARON VIEWS KO APNE CODE MEIN BADAL LO BHAI ---
+# --- CONTENT LISTING VIEWS (CRASH PROOF) ---
 
 @app.route('/bookstore')
 def bookstore():
@@ -342,6 +354,7 @@ def essentials():
         print(f"Essentials Error: {e}")
     return render_template('essential.html', items=items, title="Student Essentials")
 
+
 # --- CHAT SYSTEM ROUTES ---
 
 @app.route('/chat/<int:item_id>/<int:receiver_id>', methods=['GET', 'POST'])
@@ -351,42 +364,46 @@ def private_chat(item_id, receiver_id):
         return redirect(url_for('login'))
         
     current_user = session['user_id']
-    db = get_db()
-    cursor = db.cursor()
-    
-    if request.method == 'POST':
-        msg_text = request.form.get('message', '').strip()
-        if msg_text:
-            cursor.execute('''
-                INSERT INTO private_messages (sender_id, receiver_id, item_id, message)
-                VALUES (%s, %s, %s, %s)
-            ''', (current_user, receiver_id, item_id, msg_text))
-            db.commit()
-            cursor.close()
-            return redirect(url_for('private_chat', item_id=item_id, receiver_id=receiver_id))
-
-    cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
-    item = cursor.fetchone()
-    if not item:
-        cursor.close()
-        flash("Item not found!", "danger")
-        return redirect(url_for('index'))
+    try:
+        db = get_db()
+        cursor = db.cursor()
         
-    cursor.execute("SELECT name, role FROM users WHERE id = %s", (receiver_id,))
-    chat_partner = cursor.fetchone()
+        if request.method == 'POST':
+            msg_text = request.form.get('message', '').strip()
+            if msg_text:
+                cursor.execute('''
+                    INSERT INTO private_messages (sender_id, receiver_id, item_id, message)
+                    VALUES (%s, %s, %s, %s)
+                ''', (current_user, receiver_id, item_id, msg_text))
+                db.commit()
+                cursor.close()
+                return redirect(url_for('private_chat', item_id=item_id, receiver_id=receiver_id))
 
-    cursor.execute('''
-        SELECT private_messages.*, users.name as sender_name 
-        FROM private_messages 
-        JOIN users ON private_messages.sender_id = users.id
-        WHERE item_id = %s AND 
-        ((sender_id = %s AND receiver_id = %s) OR (sender_id = %s AND receiver_id = %s))
-        ORDER BY private_messages.id ASC
-    ''', (item_id, current_user, receiver_id, receiver_id, current_user))
-    messages = cursor.fetchall()
-    cursor.close()
-    
-    return render_template('chat.html', chat_messages=messages, item=item, partner=chat_partner, receiver_id=receiver_id)
+        cursor.execute("SELECT * FROM items WHERE id = %s", (item_id,))
+        item = cursor.fetchone()
+        if not item:
+            cursor.close()
+            flash("Item not found!", "danger")
+            return redirect(url_for('index'))
+            
+        cursor.execute("SELECT name, role FROM users WHERE id = %s", (receiver_id,))
+        chat_partner = cursor.fetchone()
+
+        cursor.execute('''
+            SELECT private_messages.*, users.name as sender_name 
+            FROM private_messages 
+            JOIN users ON private_messages.sender_id = users.id
+            WHERE item_id = %s AND 
+            ((sender_id = %s AND receiver_id = %s) OR (sender_id = %s AND receiver_id = %s))
+            ORDER BY private_messages.id ASC
+        ''', (item_id, current_user, receiver_id, receiver_id, current_user))
+        messages = cursor.fetchall()
+        cursor.close()
+        return render_template('chat.html', chat_messages=messages, item=item, partner=chat_partner, receiver_id=receiver_id)
+    except Exception as e:
+        print(f"Chat Route Error: {e}")
+        flash("Chat system error occurred.", "danger")
+        return redirect(url_for('index'))
 
 @app.route('/inbox')
 def inbox():
@@ -395,48 +412,56 @@ def inbox():
         return redirect(url_for('login'))
         
     current_user = session['user_id']
-    db = get_db()
-    cursor = db.cursor()
-    
-    cursor.execute('''
-        SELECT DISTINCT pm.item_id, pm.sender_id, pm.receiver_id, items.title, items.category,
-        (SELECT name FROM users WHERE id = (CASE WHEN pm.sender_id = %s THEN pm.receiver_id ELSE pm.sender_id END)) as partner_name,
-        (CASE WHEN pm.sender_id = %s THEN pm.receiver_id ELSE pm.sender_id END) as partner_id
-        FROM private_messages pm
-        JOIN items ON pm.item_id = items.id
-        WHERE pm.sender_id = %s OR pm.receiver_id = %s
-        ORDER BY pm.item_id DESC
-    ''', (current_user, current_user, current_user, current_user))
-    threads = cursor.fetchall()
-    cursor.close()
-    
-    return render_template('inbox.html', threads=threads)
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        
+        cursor.execute('''
+            SELECT DISTINCT pm.item_id, pm.sender_id, pm.receiver_id, items.title, items.category,
+            (SELECT name FROM users WHERE id = (CASE WHEN pm.sender_id = %s THEN pm.receiver_id ELSE pm.sender_id END)) as partner_name,
+            (CASE WHEN pm.sender_id = %s THEN pm.receiver_id ELSE pm.sender_id END) as partner_id
+            FROM private_messages pm
+            JOIN items ON pm.item_id = items.id
+            WHERE pm.sender_id = %s OR pm.receiver_id = %s
+            ORDER BY pm.item_id DESC
+        ''', (current_user, current_user, current_user, current_user))
+        threads = cursor.fetchall()
+        cursor.close()
+        return render_template('inbox.html', threads=threads)
+    except Exception as e:
+        print(f"Inbox Route Error: {e}")
+        return render_template('inbox.html', threads=[])
 
 @app.route('/delete_item/<int:item_id>', methods=['POST'])
 def delete_item(item_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("DELETE FROM items WHERE id = %s AND user_id = %s", (item_id, session['user_id']))
-    cursor.execute("DELETE FROM private_messages WHERE item_id = %s", (item_id,))
-    db.commit()
-    cursor.close()
-    
-    flash("Listing deleted successfully!", "success")
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM items WHERE id = %s AND user_id = %s", (item_id, session['user_id']))
+        cursor.execute("DELETE FROM private_messages WHERE item_id = %s", (item_id,))
+        db.commit()
+        cursor.close()
+        flash("Listing deleted successfully!", "success")
+    except Exception as e:
+        print(f"Delete Route Error: {e}")
+        flash("Error deleting listing.", "danger")
     return redirect(url_for('index'))
 
 # --- ADMIN DATABASE CHECKER ---
 @app.route('/secret-db-check')
 def secret_db_check():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT id, name, mobile, city, role, university_name, course_name FROM users ORDER BY id DESC")
-    users = cursor.fetchall()
-    cursor.close()
-    
-    # HTML Table with Beautiful Styling
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT id, name, mobile, city, role, university_name, course_name FROM users ORDER BY id DESC")
+        users = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        return f"Database query failed: {e}"
+        
     html = f"""
     <html>
     <head>
@@ -485,31 +510,20 @@ def secret_db_check():
     return html
 
 @app.route('/about')
-def about():
-    return render_template('about.html')
+def about(): return render_template('about.html')
 
 @app.route('/contact')
-def contact():
-    return render_template('contact.html')
+def contact(): return render_template('contact.html')
 
 @app.route('/terms')
-def terms():
-    return render_template('terms.html')
+def terms(): return render_template('terms.html')
 
 @app.route('/privacy')
-def privacy():
-    return render_template('privacy.html')
+def privacy(): return render_template('privacy.html')
 
-# --- PURANE IF __NAME__ WALE HISSE KO HATAKAR YEH LIKHO ---
-
-# Gunicorn ho ya local system, app start hote hi yeh hamesha chalega aur tables bana dega
-# --- APNE APP.PY KE SABSE NICHE YEH WAAL BLOCK UPDATE KAR DO ---
+# --- APP STARTUP BLOCK ---
 with app.app_context():
-    try:
-        init_db()
-        print("Database Tables Initialized Successfully! 🎉")
-    except Exception as e:
-        print(f"Database Initialization skipped or failed: {e}")
+    init_db()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
