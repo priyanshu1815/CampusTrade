@@ -464,7 +464,11 @@ def terms():
 def privacy():
     return render_template('privacy.html')
 
-# <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
+# --- PURANE IF __NAME__ WALE HISSE KO HATAKAR YEH LIKHO ---
+
+# Gunicorn ho ya local system, app start hote hi yeh hamesha chalega aur tables bana dega
+with app.app_context():
+    init_db()
+
 if __name__ == '__main__':
-    init_db()  # Yeh sirf tabhi table banayega jab table pehle se nahi hogi (Safe hai)
     app.run(host='0.0.0.0', port=5000, debug=True)
