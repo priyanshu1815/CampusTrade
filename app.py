@@ -13,14 +13,9 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-# Connection string properly formatted
-# --- PURANI DATABASE VALI LINE KO HATAKAR YEH DO LINES LIKHO ---
-
-# 1. Jo aapne Render se copy kiya (External URL) use yahan paste karo:
-EXTERNAL_DATABASE = 'postgresql://postgres:%40Pksm887314@db.ovgfbumulchtzyjimgdt.supabase.co:5432/postgres'
-
-# 2. Yeh line dono ko handle karegi (Laptop par external use karegi, Render par internal)
-DATABASE = os.environ.get('DATABASE_URL', EXTERNAL_DATABASE)
+# --- ISKO EXACT COPY-PASTE KARO APNE APP.PY MEIN ---
+EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:%40Pksm887314@aws-0-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
+DATABASE = EXTERNAL_DATABASE
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
