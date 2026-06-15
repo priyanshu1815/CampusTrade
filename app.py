@@ -448,15 +448,7 @@ def secret_db_check():
     """
     return html
 
+# <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
 if __name__ == '__main__':
-    # ---- BAS YEH DO LINES 2 MINUTE KE LIYE JOD DO ----
-    with app.app_context():
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute("DROP TABLE IF EXISTS users CASCADE;") # Purani table uda dega
-        db.commit()
-        cursor.close()
-    # --------------------------------------------------
-
-    init_db() 
+    init_db()  # Yeh sirf tabhi table banayega jab table pehle se nahi hogi (Safe hai)
     app.run(host='0.0.0.0', port=5000, debug=True)
