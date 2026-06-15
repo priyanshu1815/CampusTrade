@@ -522,8 +522,8 @@ def terms(): return render_template('terms.html')
 def privacy(): return render_template('privacy.html')
 
 # --- APP STARTUP BLOCK ---
-with app.app_context():
-    init_db()
+# Render/Pooler par crash se bachne ke liye table initialization ko comment/hata diya hai
+# Kyunki Supabase par tables pehle se bani hui hain.
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
