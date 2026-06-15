@@ -15,7 +15,8 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 # --- 🔥 FIX: SESSION MODE POOLER FOR SUPABASE (PORT 5432) ---
 # Yeh connection string Render par bina block hue direct aur smoothly chalegi
-EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:%40Pksm887314@aws-0-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
+# --- 🔥 FIXED: NEW AWS-1 REGION & PORT 5432 SESSION POOLER STRING ---
+EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:Priyanshu8873144493@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
 DATABASE = EXTERNAL_DATABASE
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
