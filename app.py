@@ -13,8 +13,9 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-# --- SAFE CONNECTION STRING WITH POOLER PROXY ---
-EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:%40Pksm887314@aws-0-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require'
+# --- 🔥 FIX: SESSION MODE POOLER FOR SUPABASE (PORT 5432) ---
+# Yeh connection string Render par bina block hue direct aur smoothly chalegi
+EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:%40Pksm887314@aws-0-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
 DATABASE = EXTERNAL_DATABASE
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -31,63 +32,7 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-# Initialize Database safely
-def init_db():
-    with app.app_context():
-        try:
-            db = get_db()
-            cursor = db.cursor()
-            
-            # 1. Users Table
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS users (
-                    id SERIAL PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    mobile TEXT UNIQUE NOT NULL,
-                    password TEXT NOT NULL,
-                    city TEXT NOT NULL,
-                    role TEXT DEFAULT 'Student',
-                    university_name TEXT DEFAULT 'Not Provided',
-                    course_name TEXT DEFAULT 'Not Provided'
-                )
-            ''')
-            
-            # 2. Items Table
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS items (
-                    id SERIAL PRIMARY KEY,
-                    title TEXT NOT NULL,
-                    category TEXT NOT NULL,
-                    price REAL NOT NULL,
-                    city TEXT NOT NULL,
-                    description TEXT,
-                    image_url TEXT,
-                    user_id INTEGER,
-                    FOREIGN KEY(user_id) REFERENCES users(id)
-                )
-            ''')
-
-            # 3. Private Messages Table
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS private_messages (
-                    id SERIAL PRIMARY KEY,
-                    sender_id INTEGER,
-                    receiver_id INTEGER,
-                    item_id INTEGER,
-                    message TEXT NOT NULL,
-                    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY(sender_id) REFERENCES users(id),
-                    FOREIGN KEY(receiver_id) REFERENCES users(id),
-                    FOREIGN KEY(item_id) REFERENCES items(id)
-                )
-            ''')
-            db.commit()
-            cursor.close()
-            print("Database Tables Initialized Successfully! 🎉")
-        except Exception as e:
-            print(f"Database Initialization failed: {e}")
-
-# Context processor with robust safety net (Bina crash kiye fallback cities dega)
+# Context processor with robust safety net
 @app.context_processor
 def inject_locations():
     cities = []
@@ -276,7 +221,7 @@ def upload_room(): return redirect(url_for('upload_item', category='room'))
 def upload_tiffin(): return redirect(url_for('upload_item', category='tiffin'))
 
 
-# --- CONTENT LISTING VIEWS (CRASH PROOF) ---
+# --- CONTENT LISTING VIEWS ---
 
 @app.route('/bookstore')
 def bookstore():
@@ -522,8 +467,5 @@ def terms(): return render_template('terms.html')
 def privacy(): return render_template('privacy.html')
 
 # --- APP STARTUP BLOCK ---
-# Render/Pooler par crash se bachne ke liye table initialization ko comment/hata diya hai
-# Kyunki Supabase par tables pehle se bani hui hain.
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
