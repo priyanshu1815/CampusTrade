@@ -264,42 +264,83 @@ def upload_tiffin(): return redirect(url_for('upload_item', category='tiffin'))
 
 # --- CONTENT LISTING VIEWS ---
 
+# --- IN CHARON VIEWS KO APNE CODE MEIN BADAL LO BHAI ---
+
 @app.route('/bookstore')
 def bookstore():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Book' ORDER BY items.id DESC")
-    items = cursor.fetchall()
-    cursor.close()
+    items = []
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            SELECT items.*, users.name 
+            FROM items 
+            LEFT JOIN users ON items.user_id = users.id 
+            WHERE items.category='Book' 
+            ORDER BY items.id DESC
+        """)
+        items = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        print(f"Bookstore Error: {e}")
     return render_template('bookstore.html', items=items, title="Campus Bookstore")
 
 @app.route('/rooms')
 def rooms():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Room' ORDER BY items.id DESC")
-    items = cursor.fetchall()
-    cursor.close()
+    items = []
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            SELECT items.*, users.name 
+            FROM items 
+            LEFT JOIN users ON items.user_id = users.id 
+            WHERE items.category='Room' 
+            ORDER BY items.id DESC
+        """)
+        items = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        print(f"Rooms Error: {e}")
     return render_template('rooms.html', items=items, title="Verified Rooms / PGs")
 
 @app.route('/tiffin')
 def tiffin():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Tiffin' ORDER BY items.id DESC")
-    items = cursor.fetchall()
-    cursor.close()
+    items = []
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            SELECT items.*, users.name 
+            FROM items 
+            LEFT JOIN users ON items.user_id = users.id 
+            WHERE items.category='Tiffin' 
+            ORDER BY items.id DESC
+        """)
+        items = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        print(f"Tiffin Error: {e}")
     return render_template('tiffin.html', items=items, title="Tiffin / Mess Services")
 
 @app.route('/essentials')
 def essentials():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT items.*, users.name FROM items JOIN users ON items.user_id = users.id WHERE category='Essential' ORDER BY items.id DESC")
-    items = cursor.fetchall()
-    cursor.close()
+    items = []
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            SELECT items.*, users.name 
+            FROM items 
+            LEFT JOIN users ON items.user_id = users.id 
+            WHERE items.category='Essential' 
+            ORDER BY items.id DESC
+        """)
+        items = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        print(f"Essentials Error: {e}")
     return render_template('essential.html', items=items, title="Student Essentials")
-
 
 # --- CHAT SYSTEM ROUTES ---
 
