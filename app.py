@@ -2,24 +2,23 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, g, flash, jsonify
 import psycopg2
 from psycopg2.extras import DictCursor
-from werkzeug.utils import secure_filename 
+import requests  # Image upload karne ke liye backend requests
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'
 
-# Configuration for Image Uploads
-UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
-
-# --- 🔥 FIX: SESSION MODE POOLER FOR SUPABASE (PORT 5432) ---
-# Yeh connection string Render par bina block hue direct aur smoothly chalegi
-# --- 🔥 FIXED: NEW AWS-1 REGION & PORT 5432 SESSION POOLER STRING ---
-EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:Priyanshu8873144493@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
+# --- SUPABASE CONFIGURATION ---
+SUPABASE_PROJECT_ID = 'ovgfbumulchtzyjimgdt'
+# Nayi wali perfect connection string
+EXTERNAL_DATABASE = f'postgresql://postgres.{SUPABASE_PROJECT_ID}:Priyanshu8873144493@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
 DATABASE = EXTERNAL_DATABASE
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Storage details
+BUCKET_NAME = 'campus_uploads'
+# Supabase anonymously files public URL handle karne deta hai
+SUPABASE_STORAGE_URL = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/"
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -33,7 +32,6 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-# Context processor with robust safety net
 @app.context_processor
 def inject_locations():
     cities = []
@@ -152,7 +150,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-# --- UPLOAD SYSTEM ROUTES ---
+# --- UPLOAD SYSTEM ROUTES WITH PERMANENT SUPABASE STORAGE ---
 
 @app.route('/upload/<category>', methods=['GET', 'POST'])
 def upload_item(category):
@@ -182,19 +180,43 @@ def upload_item(category):
             flash("Title, Price, and City are required!", "danger")
             return render_template('upload.html', category=mapped_category)
             
-        filename = None
+        final_image_url = None
+        
+        # 🔥 PURE JUGAD: Direct Supabase Bucket mein Storage Upload
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filename = f"user_{session['user_id']}_{filename}"
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            
+            try:
+                from datetime import datetime
+                # Unique filename taaki overwrite na ho
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                clean_filename = f"user_{session['user_id']}_{timestamp}_{file.filename}"
+                
+                # Supabase Storage REST API Endpoint
+                upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
+                
+                # Binary data read karke push karna
+                file_data = file.read()
+                headers = {
+                    "Content-Type": file.content_type
+                }
+                
+                # Upload Request
+                response = requests.post(upload_url, data=file_data, headers=headers)
+                
+                if response.status_code == 200 or response.status_code == 201:
+                    # Agar upload ho gya toh uska permanent public link generator
+                    final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
+                else:
+                    print(f"Supabase Upload Failed: {response.text}")
+            except Exception as upload_err:
+                print(f"Upload logic error: {upload_err}")
+
         try:
             db = get_db()
             cursor = db.cursor()
             cursor.execute('''
                 INSERT INTO items (title, category, price, city, description, image_url, user_id)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ''', (title, mapped_category, price, city, description, filename, session['user_id']))
+            ''', (title, mapped_category, price, city, description, final_image_url, session['user_id']))
             db.commit()
             cursor.close()
             flash(f"{mapped_category} has been posted successfully!", "success")
@@ -434,7 +456,6 @@ def secret_db_check():
                 <th>Course / Class</th>
             </tr>
     """
-    
     for u in users:
         html += f"""
             <tr>
@@ -447,7 +468,6 @@ def secret_db_check():
                 <td>{u['course_name']}</td>
             </tr>
         """
-        
     html += """
         </table>
     </body>
@@ -457,16 +477,12 @@ def secret_db_check():
 
 @app.route('/about')
 def about(): return render_template('about.html')
-
 @app.route('/contact')
 def contact(): return render_template('contact.html')
-
 @app.route('/terms')
 def terms(): return render_template('terms.html')
-
 @app.route('/privacy')
 def privacy(): return render_template('privacy.html')
 
-# --- APP STARTUP BLOCK ---
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
