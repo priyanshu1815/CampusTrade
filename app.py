@@ -13,8 +13,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
-# --- ISKO EXACT COPY-PASTE KARO APNE APP.PY MEIN ---
-EXTERNAL_DATABASE = 'postgresql://postgres.ovgfbumulchtzyjimgdt:%40Pksm887314@aws-0-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
+# --- PURANA DATABASE SETUP HATAKAR ISKO COPY-PASTE KARO ---
+EXTERNAL_DATABASE = 'postgresql://postgres:%40Pksm887314@db.ovgfbumulchtzyjimgdt.supabase.co:5432/postgres?sslmode=require'
 DATABASE = EXTERNAL_DATABASE
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
