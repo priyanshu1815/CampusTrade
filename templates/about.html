@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto my-12 px-4">
+    <div class="text-center mb-16">
+        <h1 class="text-4xl font-bold text-indigo-600 mb-4">About CampusTrade</h1>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+            CampusTrade is a dedicated peer-to-peer marketplace engineered exclusively for college students and local
+            vendors to trade books, find verified rooms, book tiffin services, and manage student essentials smoothly.
+        </p>
+    </div>
+
+    <div
+        class="bg-white border border-gray-100 rounded-2xl shadow-xl p-8 md:p-12 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10">
+
+        <div
+            class="w-48 h-48 sm:w-56 sm:h-56 rounded-full overflow-hidden shadow-2xl border-4 border-indigo-50 flex-shrink-0">
+            <img src="{{ url_for('static', filename='images/your_photo.jpg') }}" alt="Priyanshu Kumar Kashyap"
+                class="w-full h-full object-cover object-center">
+        </div>
+
+        <div class="flex-1 text-center md:text-left">
+            <span
+                class="text-xs font-bold uppercase tracking-widest text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full">The
+                Mind Behind CampusTrade</span>
+            <h2 class="text-3xl font-extrabold text-gray-800 mt-3 mb-1">Priyanshu Kumar Kashyap</h2>
+            <p class="text-gray-500 font-medium tracking-wide text-sm mb-6">FOUNDER & LEAD DEVELOPER, CAMPUSTRADE</p>
+
+            <p
+                class="text-gray-700 text-lg font-medium leading-relaxed mb-6 italic border-l-4 border-indigo-500 pl-4 bg-gray-50 py-3 rounded-r-lg">
+                "I built CampusTrade to help students find books, essentials, food, and accommodation—all in one place."
+            </p>
+
+            <p class="text-sm text-gray-400 italic">
+                "The best way to predict the future is to create it." — <span class="font-semibold text-gray-500">Peter
+                    Drucker</span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -17,7 +17,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 # --- PURANI DATABASE VALI LINE KO HATAKAR YEH DO LINES LIKHO ---
 
 # 1. Jo aapne Render se copy kiya (External URL) use yahan paste karo:
-EXTERNAL_DATABASE = 'postgresql://campustrade_db_slox_user:GTyWapkoK425ZqSsAgGGgoJOIQY5ThsP@dpg-d8lo7h8js32c73b253s0-a.oregon-postgres.render.com/campustrade_db_slox' 
+EXTERNAL_DATABASE = 'postgresql://postgres:%40Pksm887314@db.ovgfbumulchtzyjimgdt.supabase.co:5432/postgres'
 
 # 2. Yeh line dono ko handle karegi (Laptop par external use karegi, Render par internal)
 DATABASE = os.environ.get('DATABASE_URL', EXTERNAL_DATABASE)
@@ -447,6 +447,22 @@ def secret_db_check():
     </html>
     """
     return html
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
 
 # <--- IMPROVEMENT 2: Main block with correct indentation and parameters --->
 if __name__ == '__main__':
