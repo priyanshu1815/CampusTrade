@@ -37,12 +37,12 @@ def close_connection(exception):
 def inject_locations():
     cities = []
     try:
-        db = psycopg2.connect(DATABASE, cursor_factory=DictCursor)
+        # Global connection request context ka use kar rahe hain taaki naya connection leak na ho
+        db = get_db()
         cursor = db.cursor()
         cursor.execute("SELECT DISTINCT city FROM items")
         cities = [row['city'] for row in cursor.fetchall() if row['city']]
         cursor.close()
-        db.close()
     except Exception as e:
         print(f"Context Processor City Load Warning: {e}")
     
@@ -84,6 +84,9 @@ def register():
             university_name = "N/A (Vendor / Seller)"
             course_name = "N/A (Vendor / Seller)"
             
+        # 🔥 SECURE HASHED PASSWORD GENERATION
+        hashed_password = generate_password_hash(password)
+            
         try:
             db = get_db()
             cursor = db.cursor()
@@ -92,7 +95,8 @@ def register():
                 INSERT INTO users (name, mobile, password, city, role, university_name, course_name) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
-            cursor.execute(query, (name, mobile, password, city, role, university_name, course_name))
+            # Ab yahan secure hashed_password pass ho raha hai
+            cursor.execute(query, (name, mobile, hashed_password, city, role, university_name, course_name))
             db.commit()
             cursor.close()
             
@@ -120,14 +124,13 @@ def login():
         try:
             db = get_db()
             cursor = db.cursor()
-            cursor.execute(
-                'SELECT * FROM users WHERE name = %s AND password = %s', 
-                (name, password)
-            )
+            # Sirf name se account match kar rahe hain pehle
+            cursor.execute('SELECT * FROM users WHERE name = %s', (name,))
             user = cursor.fetchone()
             cursor.close()
             
-            if user:
+            # 🔥 CRYPTOGRAPHIC HASH VERIFICATION
+            if user and check_password_hash(user['password'], password):
                 session['user_id'] = user['id']
                 session['user_name'] = user['name']
                 session['user_mobile'] = user['mobile']
@@ -183,28 +186,22 @@ def upload_item(category):
             
         final_image_url = None
         
-        # 🔥 PURE JUGAD: Direct Supabase Bucket mein Storage Upload
         if file and allowed_file(file.filename):
             try:
                 from datetime import datetime
-                # Unique filename taaki overwrite na ho
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 clean_filename = f"user_{session['user_id']}_{timestamp}_{file.filename}"
                 
-                # Supabase Storage REST API Endpoint
                 upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
                 
-                # Binary data read karke push karna
                 file_data = file.read()
                 headers = {
                     "Content-Type": file.content_type
                 }
                 
-                # Upload Request
                 response = requests.post(upload_url, data=file_data, headers=headers)
                 
-                if response.status_code == 200 or response.status_code == 201:
-                    # Agar upload ho gya toh uska permanent public link generator
+                if response.status_code in [200, 201]:
                     final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
                 else:
                     print(f"Supabase Upload Failed: {response.text}")
@@ -418,6 +415,7 @@ def delete_item(item_id):
         print(f"Delete Route Error: {e}")
         flash("Error deleting listing.", "danger")
     return redirect(url_for('index'))
+
 
 # --- ADMIN DATABASE CHECKER ---
 @app.route('/secret-db-check')
