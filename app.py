@@ -84,7 +84,7 @@ def register():
             university_name = "N/A (Vendor / Seller)"
             course_name = "N/A (Vendor / Seller)"
             
-        # 🔥 SECURE HASHED PASSWORD GENERATION
+        # Secure Hashed Password
         hashed_password = generate_password_hash(password)
             
         try:
@@ -95,7 +95,6 @@ def register():
                 INSERT INTO users (name, mobile, password, city, role, university_name, course_name) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
-            # Ab yahan secure hashed_password pass ho raha hai
             cursor.execute(query, (name, mobile, hashed_password, city, role, university_name, course_name))
             db.commit()
             cursor.close()
@@ -118,18 +117,18 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        name = request.form.get('name', '').strip()
+        mobile = request.form.get('mobile', '').strip()  # Name ki jagah mobile fetch ho rha hai
         password = request.form.get('password', '')
         
         try:
             db = get_db()
             cursor = db.cursor()
-            # Sirf name se account match kar rahe hain pehle
-            cursor.execute('SELECT * FROM users WHERE name = %s', (name,))
+            # Ab mobile number se unique account dhoondhenge
+            cursor.execute('SELECT * FROM users WHERE mobile = %s', (mobile,))
             user = cursor.fetchone()
             cursor.close()
             
-            # 🔥 CRYPTOGRAPHIC HASH VERIFICATION
+            # Cryptographic Verification
             if user and check_password_hash(user['password'], password):
                 session['user_id'] = user['id']
                 session['user_name'] = user['name']
@@ -138,7 +137,7 @@ def login():
                 flash(f"Welcome back, {user['name']}!", "success")
                 return redirect(url_for('index'))
             else:
-                flash("Invalid Name or Password!", "danger")
+                flash("Invalid Mobile Number or Password!", "danger")
                 return redirect(url_for('login'))
         except Exception as e:
             print(f"Login Route Error: {e}")
