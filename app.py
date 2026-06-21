@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, g
 import psycopg2
 from psycopg2.extras import DictCursor
 import requests  # Image upload karne ke liye backend requests
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'

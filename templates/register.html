@@ -92,29 +92,23 @@
         const ownerLabel = document.getElementById('owner-label');
 
         if (role === 'Student') {
-            // Student fields ko dikhao aur required karo
             studentFields.style.display = 'block';
             uniInput.required = true;
             courseInput.required = true;
 
-            // UI Colors update karo
             studentLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-blue-500 bg-blue-50/50";
             ownerLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-gray-200";
         } else {
-            // Owner ke liye fields chhupao aur required hatao
             studentFields.style.display = 'none';
             uniInput.required = false;
             courseInput.required = false;
-            uniInput.value = ''; // value clear kar do
+            uniInput.value = '';
             courseInput.value = '';
 
-            // UI Colors update karo
             ownerLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-blue-500 bg-blue-50/50";
             studentLabel.className = "flex items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-gray-50 transition border-gray-200";
         }
     }
-
-    // Page load hote hi ek baar run kar do taaki setting sahi rahe
     window.onload = toggleFields;
 </script>
 {% endblock %}
