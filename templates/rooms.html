@@ -49,7 +49,8 @@
                     </div>
 
                     {% if session.get('user_id') == item.user_id %}
-                    <form action="/delete/{{ item.id }}" method="POST" onsubmit="return confirm('Delete this ad?');">
+                    <form action="/delete_item/{{ item.id }}" method="POST"
+                        onsubmit="return confirm('Delete this ad?');">
                         <button type="submit"
                             class="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
                             <i class="fa-solid fa-trash"></i> Delete
