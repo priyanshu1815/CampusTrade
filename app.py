@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 🔥 Strict Limit: Max 5MB file upload allowed
 
 # --- SUPABASE CONFIGURATION ---
 SUPABASE_PROJECT_ID = 'ovgfbumulchtzyjimgdt'
@@ -481,6 +482,11 @@ def contact(): return render_template('contact.html')
 def terms(): return render_template('terms.html')
 @app.route('/privacy')
 def privacy(): return render_template('privacy.html')
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    flash("File size too large! Maximum allowed limit is 5MB.", "danger")
+    return redirect(request.referrer or url_for('index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
