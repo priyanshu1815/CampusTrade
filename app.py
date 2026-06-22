@@ -14,7 +14,7 @@ SUPABASE_PROJECT_ID = 'ovgfbumulchtzyjimgdt'
 
 # 🚨 APNI ASLI SUPABASE ANON/PUBLIC KEY YAHAN PASTE KARO 🚨
 # (Kyunki agar environment variable nahi mila toh ye use hoga)
-SUPABASE_ANON_KEY = 'YAHAN_APNI_SUPABASE_ANON_KEY_PASTE_KARO' 
+SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im92Z2ZidW11bGNodHp5amltZ2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NjUxODksImV4cCI6MjA5NzA0MTE4OX0.GUBuCeyadM1149Ix47W4UP_CqQPuHaSsn2V5zOBFeU4' 
 
 # Nayi wali perfect connection string
 EXTERNAL_DATABASE = f'postgresql://postgres.{SUPABASE_PROJECT_ID}:Priyanshu8873144493@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
@@ -204,9 +204,11 @@ def upload_item(category):
                 file_data = file.read()
                 
                 # Safe key checking pattern taaki NameError na aaye
-                supabase_key = os.environ.get('SUPABASE_ANON_KEY') or SUPABASE_ANON_KEY
-                
+                supabase_key = (os.environ.get('SUPABASE_ANON_KEY') or SUPABASE_ANON_KEY).strip()
+
+                # Dono headers pass karo taaki backend aur storage dono chal jayein
                 headers = {
+                    "apikey": supabase_key,
                     "Authorization": f"Bearer {supabase_key}",
                     "Content-Type": file.content_type or "application/octet-stream",
                     "Cache-Control": "3600"
