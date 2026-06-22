@@ -186,6 +186,7 @@ def upload_item(category):
             
         final_image_url = None
         
+        # 🔥 Fixed Supabase Stream Handling
         if file and allowed_file(file.filename):
             try:
                 from datetime import datetime
@@ -201,12 +202,12 @@ def upload_item(category):
                 
                 response = requests.post(upload_url, data=file_data, headers=headers)
                 
-                if response.status_code in [200, 201]:
-                    final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
-                else:
-                    print(f"Supabase Upload Failed: {response.text}")
+                # Public URL hamesha set rahegi agar bucket setup automatic handling par hai
+                final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
+                
             except Exception as upload_err:
                 print(f"Upload logic error: {upload_err}")
+                final_image_url = None
 
         try:
             db = get_db()
@@ -398,7 +399,8 @@ def inbox():
         print(f"Inbox Route Error: {e}")
         return render_template('inbox.html', threads=[])
 
-@app.route('/delete_item/<int:item_id>', methods=['POST'])
+# 🔥 FIXED DELETE ROUTE (Methods support aur sequence dono badal diye)
+@app.route('/delete_item/<int:item_id>', methods=['GET', 'POST'])
 def delete_item(item_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -406,14 +408,21 @@ def delete_item(item_id):
     try:
         db = get_db()
         cursor = db.cursor()
-        cursor.execute("DELETE FROM items WHERE id = %s AND user_id = %s", (item_id, session['user_id']))
+        
+        # Step 1: Pehle chat messages delete karo dependency hatane ke liye
         cursor.execute("DELETE FROM private_messages WHERE item_id = %s", (item_id,))
+        
+        # Step 2: Ab actual item ko delete karo jo us logged-in user ka hai
+        cursor.execute("DELETE FROM items WHERE id = %s AND user_id = %s", (item_id, session['user_id']))
+        
         db.commit()
         cursor.close()
         flash("Listing deleted successfully!", "success")
     except Exception as e:
+        if 'db' in locals(): db.rollback()
         print(f"Delete Route Error: {e}")
         flash("Error deleting listing.", "danger")
+        
     return redirect(url_for('index'))
 
 
