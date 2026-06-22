@@ -186,34 +186,42 @@ def upload_item(category):
             
         final_image_url = None
         
-        # 🔥 Fixed Supabase Stream Handling
-        # 🔥 MULTIPART FILE ENCODING FOR SUPABASE BYTES STREAM
+        # 🔥 FIXED: MULTIPART BINARY CONTENT HANDLING WITH SUPABASE
         if file and allowed_file(file.filename):
             try:
                 from datetime import datetime
+                import requests
+                
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 clean_filename = f"user_{session['user_id']}_{timestamp}_{file.filename}"
                 
+                # Yeh tumhara correct API storage endpoint hai
                 upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
                 
-                # File pointer reset aur binary read setup
+                # File pointer reset aur clear stream data read karna
                 file.seek(0)
-                file_bytes = file.read()
+                file_data = file.read()
                 
+                # IMPORTANT: Anonymous buckets ke liye content-type headers aur request format bypass zaroori hai
                 headers = {
-                    "Content-Type": file.content_type or "image/png"
+                    "Content-Type": file.content_type or "application/octet-stream",
+                    "Cache-Control": "3600"
                 }
                 
-                response = requests.post(upload_url, data=file_bytes, headers=headers)
+                print(f"Attempting upload to: {upload_url}")
+                response = requests.post(upload_url, data=file_data, headers=headers)
+                print(f"Supabase Server Response Status: {response.status_code}")
                 
+                # Agar 200 (Success) ya duplicate handling standard handle ho jaye
                 if response.status_code in [200, 201]:
                     final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
+                    print(f"Successfully generated public link: {final_image_url}")
                 else:
-                    print(f"Supabase Storage Rejected Stream: {response.text}")
+                    print(f"Supabase Upload Rejected with details: {response.text}")
                     final_image_url = None
                     
             except Exception as upload_err:
-                print(f"Upload logic processing error: {upload_err}")
+                print(f"Upload execution failed error trace: {upload_err}")
                 final_image_url = None
 
         try:
