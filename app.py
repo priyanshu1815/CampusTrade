@@ -187,6 +187,7 @@ def upload_item(category):
         final_image_url = None
         
         # 🔥 Fixed Supabase Stream Handling
+        # 🔥 MULTIPART FILE ENCODING FOR SUPABASE BYTES STREAM
         if file and allowed_file(file.filename):
             try:
                 from datetime import datetime
@@ -195,18 +196,24 @@ def upload_item(category):
                 
                 upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
                 
-                file_data = file.read()
+                # File pointer reset aur binary read setup
+                file.seek(0)
+                file_bytes = file.read()
+                
                 headers = {
-                    "Content-Type": file.content_type
+                    "Content-Type": file.content_type or "image/png"
                 }
                 
-                response = requests.post(upload_url, data=file_data, headers=headers)
+                response = requests.post(upload_url, data=file_bytes, headers=headers)
                 
-                # Public URL hamesha set rahegi agar bucket setup automatic handling par hai
-                final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
-                
+                if response.status_code in [200, 201]:
+                    final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
+                else:
+                    print(f"Supabase Storage Rejected Stream: {response.text}")
+                    final_image_url = None
+                    
             except Exception as upload_err:
-                print(f"Upload logic error: {upload_err}")
+                print(f"Upload logic processing error: {upload_err}")
                 final_image_url = None
 
         try:

@@ -51,10 +51,10 @@
                             class="relative cursor-pointer bg-white rounded-md font-semibold text-blue-600 hover:text-blue-500 focus-within:outline-none">
                             <span>Upload a file</span>
                             <input id="image-upload" name="image" type="file" accept="image/*" class="sr-only"
-                                onchange="previewName(this)">
+                                onchange="validateAndPreview(this)">
                         </label>
                     </div>
-                    <p class="text-xs text-gray-500">PNG, JPG, JPEG up to 16MB</p>
+                    <p class="text-xs text-gray-500">PNG, JPG, JPEG up to 5MB</p>
                     <p id="file-chosen" class="text-xs font-bold text-emerald-600 mt-2"></p>
                 </div>
             </div>
@@ -68,10 +68,22 @@
 </div>
 
 <script>
-    function previewName(input) {
+    function validateAndPreview(input) {
         const fileChosen = document.getElementById('file-chosen');
+
         if (input.files.length > 0) {
-            fileChosen.innerHTML = `<i class="fa-solid fa-circle-check"></i> Selected: ${input.files[0].name}`;
+            const file = input.files[0];
+            const fileSizeMB = file.size / (1024 * 1024);
+
+            // 🔥 Strict Client-side 5MB limit validation
+            if (fileSizeMB > 5) {
+                alert("File size exceeds 5MB! Please select a smaller photo to ensure a smooth upload.");
+                input.value = ""; // Clear selected file
+                fileChosen.innerHTML = "";
+                return;
+            }
+
+            fileChosen.innerHTML = `<i class="fa-solid fa-circle-check"></i> Selected: ${file.name}`;
         }
     }
 </script>
