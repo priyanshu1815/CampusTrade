@@ -179,66 +179,78 @@ def upload_item(category):
         price = request.form.get('price', '').strip()
         city = request.form.get('city', '').strip()
         description = request.form.get('description', '').strip()
-        file = request.files.get('image')
+        
+        # 🔥 MULTIPLE FILES FETCH: 'images' naam ki list nikalenge frontend se
+        files = request.files.getlist('images')
         
         if not title or not price or not city:
             flash("Title, Price, and City are required!", "danger")
             return render_template('upload.html', category=mapped_category)
             
-        final_image_url = None
+        uploaded_image_urls = []
         
-        # 🔥 PERFECT AUTHENTICATED SUPABASE UPLOAD BYTES STREAM (FIXED FALLBACK LOGIC)
-        if file and allowed_file(file.filename):
-            try:
-                from datetime import datetime
-                import requests
-                
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                # Filename se spaces aur special characters clean karna taaki URL safe rahe
-                safe_filename = file.filename.replace(" ", "_")
-                clean_filename = f"user_{session['user_id']}_{timestamp}_{safe_filename}"
-                
-                upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
-                
-                file.seek(0)
-                file_data = file.read()
-                
-                # Safe key checking pattern taaki NameError na aaye
-                supabase_key = (os.environ.get('SUPABASE_ANON_KEY') or SUPABASE_ANON_KEY).strip()
-
-                # Dono headers pass karo taaki backend aur storage dono chal jayein
-                headers = {
-                    "apikey": supabase_key,
-                    "Authorization": f"Bearer {supabase_key}",
-                    "Content-Type": file.content_type or "application/octet-stream",
-                    "Cache-Control": "3600"
-                }
-                
-                print(f"Attempting upload to: {upload_url}")
-                response = requests.post(upload_url, data=file_data, headers=headers)
-                print(f"Supabase Server Response Status: {response.status_code}")
-                
-                if response.status_code in [200, 201]:
-                    final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
-                    print(f"Successfully generated public link: {final_image_url}")
-                else:
-                    print(f"Supabase Upload Rejected with details: {response.text}")
-                    final_image_url = None
+        # 🔥 MULTIPLE IMAGES UPLOAD LOOP
+        for file in files:
+            if file and allowed_file(file.filename):
+                try:
+                    from datetime import datetime
+                    import requests
                     
-            except Exception as upload_err:
-                print(f"Upload execution failed error trace: {upload_err}")
-                final_image_url = None
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S%f") # %f microsecond tak unique rakhega
+                    safe_filename = file.filename.replace(" ", "_")
+                    clean_filename = f"user_{session['user_id']}_{timestamp}_{safe_filename}"
+                    
+                    upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
+                    
+                    file.seek(0)
+                    file_data = file.read()
+                    
+                    supabase_key = (os.environ.get('SUPABASE_ANON_KEY') or SUPABASE_ANON_KEY).strip()
+                    
+                    headers = {
+                        "apikey": supabase_key,
+                        "Authorization": f"Bearer {supabase_key}",
+                        "Content-Type": file.content_type or "application/octet-stream",
+                        "Cache-Control": "3600"
+                    }
+                    
+                    print(f"Attempting upload to: {upload_url}")
+                    response = requests.post(upload_url, data=file_data, headers=headers)
+                    
+                    if response.status_code in [200, 201]:
+                        public_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
+                        uploaded_image_urls.append(public_url)
+                        print(f"Successfully uploaded: {public_url}")
+                    else:
+                        print(f"Supabase Upload Rejected for a file: {response.text}")
+                        
+                except Exception as upload_err:
+                    print(f"Individual file upload failed: {upload_err}")
 
         try:
             db = get_db()
             cursor = db.cursor()
+            
+            # Pehli image ko main image_url banayenge (purane code ki compatibility ke liye)
+            main_image_url = uploaded_image_urls[0] if uploaded_image_urls else None
+            
+            # 1. Main item insert karo
             cursor.execute('''
                 INSERT INTO items (title, category, price, city, description, image_url, user_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ''', (title, mapped_category, price, city, description, final_image_url, session['user_id']))
+                VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
+            ''', (title, mapped_category, price, city, description, main_image_url, session['user_id']))
+            
+            new_item_id = cursor.fetchone()['id']
+            
+            # 2. Baaki bachi saari images (including first one) item_images table mein daalo
+            for url in uploaded_image_urls:
+                cursor.execute('''
+                    INSERT INTO item_images (item_id, image_url) VALUES (%s, %s)
+                ''', (new_item_id, url))
+                
             db.commit()
             cursor.close()
-            flash(f"{mapped_category} has been posted successfully!", "success")
+            flash(f"{mapped_category} has been posted successfully with {len(uploaded_image_urls)} images!", "success")
         except Exception as e:
             if 'db' in locals(): db.rollback()
             print(f"Upload item database error: {e}")

@@ -6,7 +6,7 @@
         <span class="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest rounded-full">New
             Listing</span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">List Your {{ category }}</h2>
-        <p class="text-sm text-gray-500 mt-1">Provide proper details and high-quality picture</p>
+        <p class="text-sm text-gray-500 mt-1">Provide proper details and up to 3 pictures (Optional)</p>
     </div>
 
     <form action="" method="POST" enctype="multipart/form-data" class="space-y-5">
@@ -41,7 +41,7 @@
 
         <div>
             <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Upload Product
-                Picture</label>
+                Pictures (Max 3 - Optional)</label>
             <div
                 class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl hover:border-blue-500 transition relative bg-gray-50/50">
                 <div class="space-y-1 text-center">
@@ -49,13 +49,13 @@
                     <div class="flex text-sm text-gray-600 justify-center">
                         <label for="image-upload"
                             class="relative cursor-pointer bg-white rounded-md font-semibold text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                            <span>Upload a file</span>
-                            <input id="image-upload" name="image" type="file" accept="image/*" class="sr-only"
-                                onchange="validateAndPreview(this)">
+                            <span>Select Files</span>
+                            <input id="image-upload" name="images" type="file" accept="image/*" multiple class="sr-only"
+                                onchange="validateAndPreviewMultiple(this)">
                         </label>
                     </div>
-                    <p class="text-xs text-gray-500">PNG, JPG, JPEG up to 5MB</p>
-                    <p id="file-chosen" class="text-xs font-bold text-emerald-600 mt-2"></p>
+                    <p class="text-xs text-gray-500">PNG, JPG, JPEG (Max 3 files, up to 5MB each)</p>
+                    <div id="file-list" class="text-xs font-bold text-emerald-600 mt-2 space-y-1"></div>
                 </div>
             </div>
         </div>
@@ -68,22 +68,30 @@
 </div>
 
 <script>
-    function validateAndPreview(input) {
-        const fileChosen = document.getElementById('file-chosen');
+    function validateAndPreviewMultiple(input) {
+        const fileListContainer = document.getElementById('file-list');
+        fileListContainer.innerHTML = ""; // Clear old selections
 
-        if (input.files.length > 0) {
-            const file = input.files[0];
+        if (input.files.length > 3) {
+            alert("Bhai, aap maximum 3 images hi select kar sakte ho!");
+            input.value = ""; // Reset file selection
+            return;
+        }
+
+        // Check size of each selected file
+        for (let i = 0; i < input.files.length; i++) {
+            const file = input.files[i];
             const fileSizeMB = file.size / (1024 * 1024);
 
-            // 🔥 Strict Client-side 5MB limit validation
             if (fileSizeMB > 5) {
-                alert("File size exceeds 5MB! Please select a smaller photo to ensure a smooth upload.");
-                input.value = ""; // Clear selected file
-                fileChosen.innerHTML = "";
+                alert(`"${file.name}" ka size 5MB se bada hai! Kripya choti file select karein.`);
+                input.value = ""; // Reset everything if even one file fails
+                fileListContainer.innerHTML = "";
                 return;
             }
 
-            fileChosen.innerHTML = `<i class="fa-solid fa-circle-check"></i> Selected: ${file.name}`;
+            // Append each valid file info dynamically
+            fileListContainer.innerHTML += `<div><i class="fa-solid fa-circle-check"></i> Selected: ${file.name}</div>`;
         }
     }
 </script>
