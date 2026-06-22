@@ -11,6 +11,11 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 🔥 Strict Limit: Max 5MB
 
 # --- SUPABASE CONFIGURATION ---
 SUPABASE_PROJECT_ID = 'ovgfbumulchtzyjimgdt'
+
+# 🚨 APNI ASLI SUPABASE ANON/PUBLIC KEY YAHAN PASTE KARO 🚨
+# (Kyunki agar environment variable nahi mila toh ye use hoga)
+SUPABASE_ANON_KEY = 'YAHAN_APNI_SUPABASE_ANON_KEY_PASTE_KARO' 
+
 # Nayi wali perfect connection string
 EXTERNAL_DATABASE = f'postgresql://postgres.{SUPABASE_PROJECT_ID}:Priyanshu8873144493@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require'
 DATABASE = EXTERNAL_DATABASE
@@ -38,7 +43,6 @@ def close_connection(exception):
 def inject_locations():
     cities = []
     try:
-        # Global connection request context ka use kar rahe hain taaki naya connection leak na ho
         db = get_db()
         cursor = db.cursor()
         cursor.execute("SELECT DISTINCT city FROM items")
@@ -85,7 +89,6 @@ def register():
             university_name = "N/A (Vendor / Seller)"
             course_name = "N/A (Vendor / Seller)"
             
-        # Secure Hashed Password
         hashed_password = generate_password_hash(password)
             
         try:
@@ -118,18 +121,16 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        mobile = request.form.get('mobile', '').strip()  # Name ki jagah mobile fetch ho rha hai
+        mobile = request.form.get('mobile', '').strip()
         password = request.form.get('password', '')
         
         try:
             db = get_db()
             cursor = db.cursor()
-            # Ab mobile number se unique account dhoondhenge
             cursor.execute('SELECT * FROM users WHERE mobile = %s', (mobile,))
             user = cursor.fetchone()
             cursor.close()
             
-            # Cryptographic Verification
             if user and check_password_hash(user['password'], password):
                 session['user_id'] = user['id']
                 session['user_name'] = user['name']
@@ -186,24 +187,27 @@ def upload_item(category):
             
         final_image_url = None
         
-        # 🔥 FIXED: MULTIPART BINARY CONTENT HANDLING WITH SUPABASE
+        # 🔥 PERFECT AUTHENTICATED SUPABASE UPLOAD BYTES STREAM (FIXED FALLBACK LOGIC)
         if file and allowed_file(file.filename):
             try:
                 from datetime import datetime
                 import requests
                 
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                clean_filename = f"user_{session['user_id']}_{timestamp}_{file.filename}"
+                # Filename se spaces aur special characters clean karna taaki URL safe rahe
+                safe_filename = file.filename.replace(" ", "_")
+                clean_filename = f"user_{session['user_id']}_{timestamp}_{safe_filename}"
                 
-                # Yeh tumhara correct API storage endpoint hai
                 upload_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/{BUCKET_NAME}/{clean_filename}"
                 
-                # File pointer reset aur clear stream data read karna
                 file.seek(0)
                 file_data = file.read()
                 
-                # IMPORTANT: Anonymous buckets ke liye content-type headers aur request format bypass zaroori hai
+                # Safe key checking pattern taaki NameError na aaye
+                supabase_key = os.environ.get('SUPABASE_ANON_KEY') or SUPABASE_ANON_KEY
+                
                 headers = {
+                    "Authorization": f"Bearer {supabase_key}",
                     "Content-Type": file.content_type or "application/octet-stream",
                     "Cache-Control": "3600"
                 }
@@ -212,7 +216,6 @@ def upload_item(category):
                 response = requests.post(upload_url, data=file_data, headers=headers)
                 print(f"Supabase Server Response Status: {response.status_code}")
                 
-                # Agar 200 (Success) ya duplicate handling standard handle ho jaye
                 if response.status_code in [200, 201]:
                     final_image_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/{BUCKET_NAME}/{clean_filename}"
                     print(f"Successfully generated public link: {final_image_url}")
@@ -236,7 +239,7 @@ def upload_item(category):
             flash(f"{mapped_category} has been posted successfully!", "success")
         except Exception as e:
             if 'db' in locals(): db.rollback()
-            print(f"Upload item error: {e}")
+            print(f"Upload item database error: {e}")
             flash("Error saving item to database.", "danger")
         
         if category.lower() == 'book':
@@ -414,7 +417,7 @@ def inbox():
         print(f"Inbox Route Error: {e}")
         return render_template('inbox.html', threads=[])
 
-# 🔥 FIXED DELETE ROUTE (Methods support aur sequence dono badal diye)
+
 @app.route('/delete_item/<int:item_id>', methods=['GET', 'POST'])
 def delete_item(item_id):
     if 'user_id' not in session:
@@ -424,10 +427,7 @@ def delete_item(item_id):
         db = get_db()
         cursor = db.cursor()
         
-        # Step 1: Pehle chat messages delete karo dependency hatane ke liye
         cursor.execute("DELETE FROM private_messages WHERE item_id = %s", (item_id,))
-        
-        # Step 2: Ab actual item ko delete karo jo us logged-in user ka hai
         cursor.execute("DELETE FROM items WHERE id = %s AND user_id = %s", (item_id, session['user_id']))
         
         db.commit()
