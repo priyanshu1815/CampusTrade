@@ -171,6 +171,76 @@
             }
         });
     </script>
+
+    <div id="proZoomModal"
+        class="fixed inset-0 bg-black/90 hidden z-50 flex flex-col items-center justify-center p-4 transition-all duration-300"
+        onclick="closeZoomModal()">
+        <button
+            class="absolute top-5 right-5 text-white/80 hover:text-white text-4xl font-light transition">&times;</button>
+        <div class="relative max-w-4xl max-h-[80vh] flex items-center justify-center" onclick="event.stopPropagation()">
+            <img id="modalZoomImg"
+                class="max-w-full max-h-[85vh] rounded-xl shadow-2xl transform scale-95 transition-transform duration-300 object-contain">
+        </div>
+    </div>
+
+    <script>
+        const itemSlideState = {};
+
+        function changeSlide(itemId, direction, imagesList) {
+            if (!(itemId in itemSlideState)) {
+                itemSlideState[itemId] = 0;
+            }
+
+            let currentIndex = itemSlideState[itemId];
+            currentIndex += direction;
+
+            if (currentIndex >= imagesList.length) {
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                currentIndex = imagesList.length - 1;
+            }
+
+            itemSlideState[itemId] = currentIndex;
+
+            const imageElement = document.getElementById(`main-img-${itemId}`);
+            if (imageElement) {
+                imageElement.src = imagesList[currentIndex];
+            }
+
+            const counterElement = document.getElementById(`counter-${itemId}`);
+            if (counterElement) {
+                counterElement.innerText = `${currentIndex + 1}/${imagesList.length}`;
+            }
+        }
+
+        function openFullZoomModal(itemId) {
+            const currentSrc = document.getElementById(`main-img-${itemId}`).src;
+            const modal = document.getElementById('proZoomModal');
+            const modalImg = document.getElementById('modalZoomImg');
+
+            modalImg.src = currentSrc;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                modalImg.classList.remove('scale-95');
+                modalImg.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeZoomModal() {
+            const modal = document.getElementById('proZoomModal');
+            const modalImg = document.getElementById('modalZoomImg');
+
+            modalImg.classList.remove('scale-100');
+            modalImg.classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+    </script>
 </body>
 
 </html>

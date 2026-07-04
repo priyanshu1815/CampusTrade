@@ -19,21 +19,45 @@
         <div
             class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition duration-200 flex flex-col h-full">
 
-            <div class="relative bg-gray-100 h-48 w-full overflow-hidden flex items-center justify-center">
+            <div
+                class="relative bg-gray-100 h-48 w-full overflow-hidden flex items-center justify-center group rounded-t-2xl">
                 {% if item.image_url %}
-                <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-full object-cover">
+                <div class="relative w-full h-full item-carousel-wrapper" id="carousel-container-{{ item.id }}"
+                    data-images='{{ item.all_images | tojson | safe }}'>
+
+                    <img id="main-img-{{ item.id }}" src="{{ item.image_url }}" alt="{{ item.title }}"
+                        class="w-full h-full object-cover cursor-pointer hover:opacity-95 transition duration-300"
+                        onclick="openFullZoomModal('{{ item.id }}')">
+
+                    {% if item.all_images and item.all_images|length > 1 %}
+                    <button type="button"
+                        onclick="event.preventDefault(); changeSlide('{{ item.id }}', -1, JSON.parse(this.closest('.item-carousel-wrapper').getAttribute('data-images')));"
+                        class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1.5 rounded-full hover:bg-black/70 transition z-10 opacity-0 group-hover:opacity-100">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button type="button"
+                        onclick="event.preventDefault(); changeSlide('{{ item.id }}', 1, JSON.parse(this.closest('.item-carousel-wrapper').getAttribute('data-images')));"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1.5 rounded-full hover:bg-black/70 transition z-10 opacity-0 group-hover:opacity-100">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                    <div
+                        class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white font-medium text-[10px] px-2 py-0.5 rounded-full">
+                        <span id="counter-{{ item.id }}">1/{{ item.all_images|length }}</span>
+                    </div>
+                    {% endif %}
+                </div>
                 {% else %}
                 <div class="text-center text-gray-400">
                     <i class="fa-solid fa-box-open text-4xl mb-1"></i>
                     <p class="text-[11px] font-medium">No Image</p>
                 </div>
                 {% endif %}
+
                 <span
-                    class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white font-bold text-[10px] px-2 py-1 rounded-md uppercase tracking-wide">
+                    class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white font-bold text-[10px] px-2 py-1 rounded-md uppercase tracking-wide z-10">
                     <i class="fa-solid fa-location-dot text-red-400 mr-1"></i> {{ item.city }}
                 </span>
             </div>
-
             <div class="p-4 flex flex-col flex-grow">
                 <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-600 mb-1">{{ item.category
                     }}</span>
@@ -50,7 +74,7 @@
 
                     {% if session.get('user_id') == item.user_id %}
                     <form action="/delete_item/{{ item.id }}" method="POST"
-                        onsubmit="return confirm('Delete this ad?');" class="inline">
+                        onsubmit="return confirm('Delete this ad?');">
                         <button type="submit"
                             class="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
                             <i class="fa-solid fa-trash"></i> Delete

@@ -277,6 +277,7 @@ def upload_tiffin(): return redirect(url_for('upload_item', category='tiffin'))
 
 # --- CONTENT LISTING VIEWS ---
 
+# ==================== 1. BOOKSTORE ROUTE ====================
 @app.route('/bookstore')
 def bookstore():
     items = []
@@ -284,10 +285,13 @@ def bookstore():
         db = get_db()
         cursor = db.cursor()
         cursor.execute("""
-            SELECT items.*, users.name 
+            SELECT items.*, users.name,
+                   COALESCE(json_agg(img.image_url) FILTER (WHERE img.image_url IS NOT NULL), '[]') as all_images
             FROM items 
             LEFT JOIN users ON items.user_id = users.id 
+            LEFT JOIN item_images img ON items.id = img.item_id
             WHERE items.category='Book' 
+            GROUP BY items.id, users.name
             ORDER BY items.id DESC
         """)
         items = cursor.fetchall()
@@ -296,44 +300,7 @@ def bookstore():
         print(f"Bookstore Error: {e}")
     return render_template('bookstore.html', items=items, title="Campus Bookstore")
 
-@app.route('/rooms')
-def rooms():
-    items = []
-    try:
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute("""
-            SELECT items.*, users.name 
-            FROM items 
-            LEFT JOIN users ON items.user_id = users.id 
-            WHERE items.category='Room' 
-            ORDER BY items.id DESC
-        """)
-        items = cursor.fetchall()
-        cursor.close()
-    except Exception as e:
-        print(f"Rooms Error: {e}")
-    return render_template('rooms.html', items=items, title="Verified Rooms / PGs")
-
-@app.route('/tiffin')
-def tiffin():
-    items = []
-    try:
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute("""
-            SELECT items.*, users.name 
-            FROM items 
-            LEFT JOIN users ON items.user_id = users.id 
-            WHERE items.category='Tiffin' 
-            ORDER BY items.id DESC
-        """)
-        items = cursor.fetchall()
-        cursor.close()
-    except Exception as e:
-        print(f"Tiffin Error: {e}")
-    return render_template('tiffin.html', items=items, title="Tiffin / Mess Services")
-
+# ==================== 2. ESSENTIALS ROUTE ====================
 @app.route('/essentials')
 def essentials():
     items = []
@@ -341,10 +308,13 @@ def essentials():
         db = get_db()
         cursor = db.cursor()
         cursor.execute("""
-            SELECT items.*, users.name 
+            SELECT items.*, users.name,
+                   COALESCE(json_agg(img.image_url) FILTER (WHERE img.image_url IS NOT NULL), '[]') as all_images
             FROM items 
             LEFT JOIN users ON items.user_id = users.id 
+            LEFT JOIN item_images img ON items.id = img.item_id
             WHERE items.category='Essential' 
+            GROUP BY items.id, users.name
             ORDER BY items.id DESC
         """)
         items = cursor.fetchall()
@@ -352,6 +322,52 @@ def essentials():
     except Exception as e:
         print(f"Essentials Error: {e}")
     return render_template('essential.html', items=items, title="Student Essentials")
+
+# ==================== 3. ROOMS ROUTE ====================
+@app.route('/rooms')
+def rooms():
+    items = []
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            SELECT items.*, users.name,
+                   COALESCE(json_agg(img.image_url) FILTER (WHERE img.image_url IS NOT NULL), '[]') as all_images
+            FROM items 
+            LEFT JOIN users ON items.user_id = users.id 
+            LEFT JOIN item_images img ON items.id = img.item_id
+            WHERE items.category='Room' 
+            GROUP BY items.id, users.name
+            ORDER BY items.id DESC
+        """)
+        items = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        print(f"Rooms Error: {e}")
+    return render_template('rooms.html', items=items, title="Campus Accommodations")
+
+# ==================== 4. TIFFIN ROUTE ====================
+@app.route('/tiffin')
+def tiffin():
+    items = []
+    try:
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            SELECT items.*, users.name,
+                   COALESCE(json_agg(img.image_url) FILTER (WHERE img.image_url IS NOT NULL), '[]') as all_images
+            FROM items 
+            LEFT JOIN users ON items.user_id = users.id 
+            LEFT JOIN item_images img ON items.id = img.item_id
+            WHERE items.category='Tiffin' 
+            GROUP BY items.id, users.name
+            ORDER BY items.id DESC
+        """)
+        items = cursor.fetchall()
+        cursor.close()
+    except Exception as e:
+        print(f"Tiffin Error: {e}")
+    return render_template('tiffin.html', items=items, title="Campus Tiffin Services")
 
 
 # --- CHAT SYSTEM ROUTES ---
