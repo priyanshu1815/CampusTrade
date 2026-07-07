@@ -2,27 +2,30 @@
 
 {% block content %}
 <div id="profile-main-card"
-    class="max-w-xl mx-auto my-6 sm:my-12 p-6 bg-white border border-gray-100 rounded-2xl shadow-sm transition-all duration-300">
+    class="max-w-xl mx-auto my-6 sm:my-12 p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm transition-all duration-300">
 
-    <div class="flex flex-col items-center text-center pb-6 border-b border-gray-50">
+    <div class="flex flex-col items-center text-center pb-6 border-b border-gray-50 dark:border-gray-700">
         <div
-            class="w-20 h-20 rounded-full bg-[#1d5bf7] text-white flex items-center justify-center text-2xl font-black shadow-md tracking-wider mb-4 border-4 border-blue-50">
+            class="w-20 h-20 rounded-full bg-[#1d5bf7] text-white flex items-center justify-center text-2xl font-black shadow-md tracking-wider mb-4 border-4 border-blue-50 dark:border-gray-700">
             <span id="avatar-initials">U</span>
         </div>
 
-        <h2 id="text-user-name" class="text-xl font-black text-gray-800 flex items-center gap-1.5 justify-center">
+        <h2 class="text-xl font-black text-gray-800 dark:text-white flex items-center gap-1.5 justify-center">
             <span id="profile-name">{{ session.get('user_name', 'Campus User') }}</span>
             <span
-                class="bg-blue-50 text-[#1d5bf7] text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-100">
-                <i class="fa-solid fa-circle-check text-[10px]"></i> Verified
+                class="bg-blue-50 dark:bg-blue-900/40 text-[#1d5bf7] dark:text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-100 dark:border-blue-800"
+                data-translate="verified_badge">
+                Verified
             </span>
         </h2>
 
-        <p class="text-xs font-semibold text-gray-400 mt-1">
+        <p class="text-xs font-semibold text-gray-400 dark:text-gray-300 mt-1">
             {% if session.get('user_role', '')|lower == 'owner' %}
-            <i class="fa-solid fa-hotel text-blue-500 mr-1"></i> Property Owner
+            <i class="fa-solid fa-hotel text-blue-500 mr-1"></i><span data-translate="property_owner">Property
+                Owner</span>
             {% else %}
-            <i class="fa-solid fa-graduation-cap text-gray-400 mr-1"></i> Student Member
+            <i class="fa-solid fa-graduation-cap text-gray-400 mr-1"></i><span data-translate="student_member">Student
+                Member</span>
             {% endif %}
         </p>
     </div>
@@ -30,44 +33,46 @@
     <div class="space-y-6 mt-6">
 
         <div>
-            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Account &
-                Privacy</span>
-            <div class="rounded-xl overflow-hidden border border-gray-50 divide-y divide-gray-50">
+            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1"
+                data-translate="account_privacy">Account & Privacy</span>
+            <div
+                class="rounded-xl overflow-hidden border border-gray-50 dark:border-gray-700 divide-y divide-gray-50 dark:divide-gray-700">
 
-                <div class="p-4 flex items-center justify-between bg-gray-50/50">
+                <div class="p-4 flex items-center justify-between bg-gray-50/50 dark:bg-gray-700/30">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-white text-gray-500 flex items-center justify-center text-xs shadow-sm">
+                            class="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs shadow-sm">
                             <i class="fa-solid fa-phone"></i></div>
                         <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase">Phone Number</p>
-                            <p id="text-phone" class="text-xs font-extrabold text-gray-700 mt-0.5">
-                                {{ session.get('user_phone', session.get('phone', 'No Mobile Linked')) }}
+                            <p class="text-[10px] text-gray-400 font-bold uppercase" data-translate="phone_title">Phone
+                                Number</p>
+                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200 mt-0.5">
+                                {{ session.get('user_phone', 'No Mobile Linked') }}
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-4 bg-gray-50/50">
+                <div class="p-4 bg-gray-50/50 dark:bg-gray-700/30">
                     <button onclick="togglePasswordSection()"
                         class="w-full flex items-center justify-between transition outline-none border-none bg-transparent p-0 cursor-pointer">
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs shadow-sm">
+                                class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs shadow-sm">
                                 <i class="fa-solid fa-lock"></i></div>
-                            <span id="text-pass-label" class="text-xs font-extrabold text-gray-700">Change
-                                Password</span>
+                            <span class="text-xs font-extrabold text-gray-700 dark:text-gray-200"
+                                data-translate="change_pass">Change Password</span>
                         </div>
                         <i id="pass-arrow"
                             class="fa-solid fa-chevron-right text-[10px] text-gray-300 transition-transform"></i>
                     </button>
 
                     <form id="password-form-block" method="POST" action="/update_password"
-                        class="hidden mt-4 pt-4 border-t border-gray-100 space-y-3">
+                        class="hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 space-y-3">
                         <input type="password" name="current_password" required placeholder="Current Password"
-                            class="w-full text-xs p-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-500">
+                            class="w-full text-xs p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl outline-none">
                         <input type="password" name="new_password" required placeholder="New Password"
-                            class="w-full text-xs p-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-500">
+                            class="w-full text-xs p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl outline-none">
                         <button type="submit"
                             class="w-full bg-[#1d5bf7] text-white font-bold text-xs py-2.5 rounded-xl hover:bg-blue-600 transition shadow-sm">Update
                             Password</button>
@@ -77,30 +82,35 @@
         </div>
 
         <div>
-            <span
-                class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Preferences</span>
-            <div class="rounded-xl overflow-hidden border border-gray-50 divide-y divide-gray-50">
-                <div class="p-4 flex items-center justify-between bg-gray-50/50 cursor-pointer"
-                    onclick="changeLanguage()">
+            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1"
+                data-translate="preferences">Preferences</span>
+            <div
+                class="rounded-xl overflow-hidden border border-gray-50 dark:border-gray-700 divide-y divide-gray-50 dark:divide-gray-700">
+
+                <div class="p-4 flex items-center justify-between bg-gray-50/50 dark:bg-gray-700/30">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-white text-gray-500 flex items-center justify-center text-xs shadow-sm">
+                            class="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs shadow-sm">
                             <i class="fa-solid fa-language"></i></div>
-                        <span id="text-lang-label" class="text-xs font-extrabold text-gray-700">App Language</span>
+                        <span class="text-xs font-extrabold text-gray-700 dark:text-gray-200"
+                            data-translate="app_lang">App Language</span>
                     </div>
-                    <span id="current-lang"
-                        class="text-[10px] font-black text-gray-400 bg-white border border-gray-100 px-2 py-1 rounded-lg">English
-                        (IN)</span>
+                    <select id="lang-select" onchange="switchLanguage(this.value)"
+                        class="text-xs font-bold text-gray-600 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-1.5 rounded-lg outline-none cursor-pointer">
+                        <option value="en">English (IN)</option>
+                        <option value="hi">Hindi (IN)</option>
+                    </select>
                 </div>
 
-                <div class="p-4 flex items-center justify-between bg-gray-50/50">
+                <div class="p-4 flex items-center justify-between bg-gray-50/50 dark:bg-gray-700/30">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-white text-gray-500 flex items-center justify-center text-xs shadow-sm">
+                            class="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs shadow-sm">
                             <i class="fa-solid fa-moon"></i></div>
-                        <span id="text-dark-label" class="text-xs font-extrabold text-gray-700">Dark Mode</span>
+                        <span class="text-xs font-extrabold text-gray-700 dark:text-gray-200"
+                            data-translate="dark_mode">Dark Mode</span>
                     </div>
-                    <div onclick="toggleDarkMode()" id="dark-toggle-bg"
+                    <div onclick="handleToggleClick()" id="dark-toggle-bg"
                         class="w-9 h-5 bg-gray-200 rounded-full relative p-0.5 cursor-pointer transition-colors duration-200">
                         <div id="dark-toggle-circle"
                             class="w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200"></div>
@@ -110,31 +120,33 @@
         </div>
 
         <div>
-            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Support &
-                Help</span>
-            <div class="rounded-xl overflow-hidden border border-gray-50 divide-y divide-gray-50">
+            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1"
+                data-translate="support_help">Support & Help</span>
+            <div
+                class="rounded-xl overflow-hidden border border-gray-50 dark:border-gray-700 divide-y divide-gray-50 dark:divide-gray-700">
                 <a href="mailto:support@campustrade.pro"
-                    class="p-4 flex items-center justify-between bg-gray-50/50 hover:bg-gray-100/50 transition">
+                    class="p-4 flex items-center justify-between bg-gray-50/50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-white text-emerald-600 flex items-center justify-center text-xs shadow-sm">
+                            class="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 text-emerald-600 flex items-center justify-center text-xs shadow-sm">
                             <i class="fa-solid fa-envelope-open-text"></i></div>
                         <div>
-                            <p id="text-mail-support" class="text-xs font-extrabold text-gray-700">Official Mail Support
-                            </p>
+                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200"
+                                data-translate="mail_support">Official Mail Support</p>
                             <p class="text-[10px] font-bold text-gray-400 mt-0.5">support@campustrade.pro</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-gray-300"></i>
                 </a>
                 <a href="https://t.me/campustrade" target="_blank"
-                    class="p-4 flex items-center justify-between bg-gray-50/50 hover:bg-gray-100/50 transition">
+                    class="p-4 flex items-center justify-between bg-gray-50/50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-white text-sky-50 flex items-center justify-center text-xs shadow-sm">
+                            class="w-8 h-8 rounded-xl bg-white dark:bg-gray-800 text-sky-500 flex items-center justify-center text-xs shadow-sm">
                             <i class="fa-solid fa-paper-plane"></i></div>
                         <div>
-                            <p id="text-tg-support" class="text-xs font-extrabold text-gray-700">Telegram Community</p>
+                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200"
+                                data-translate="tg_community">Telegram Community</p>
                             <p class="text-[10px] font-bold text-gray-400 mt-0.5">@campustrade</p>
                         </div>
                     </div>
@@ -150,7 +162,7 @@
                     <div
                         class="w-8 h-8 rounded-xl bg-white text-red-500 flex items-center justify-center text-xs shadow-sm">
                         <i class="fa-solid fa-power-off"></i></div>
-                    <span class="text-xs font-black text-red-500">Log Out Account</span>
+                    <span class="text-xs font-black text-red-500" data-translate="logout_acc">Log Out Account</span>
                 </div>
                 <i class="fa-solid fa-chevron-right text-[10px] text-red-300"></i>
             </a>
@@ -161,87 +173,47 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const nameElement = document.getElementById("profile-name");
-        if (nameElement) {
-            const nameText = nameElement.innerText.trim();
-            if (nameText.length > 0) {
-                document.getElementById("avatar-initials").innerText = nameText.charAt(0).toUpperCase();
-            }
-        }
+        const nameText = document.getElementById("profile-name")?.innerText.trim() || "";
+        if (nameText) document.getElementById("avatar-initials").innerText = nameText.charAt(0).toUpperCase();
 
-        if (localStorage.getItem('profileTheme') === 'dark') {
-            applyDarkUI(true);
-        }
+        // Sync toggles and select states on mount
+        const currentTheme = localStorage.getItem('globalTheme') === 'dark';
+        updateToggleUI(currentTheme);
+
+        const currentLang = localStorage.getItem('appLanguage') || 'en';
+        document.getElementById("lang-select").value = currentLang;
     });
 
     function togglePasswordSection() {
-        const formBlock = document.getElementById("password-form-block");
-        const arrow = document.getElementById("pass-arrow");
-        formBlock.classList.toggle("hidden");
-        arrow.classList.toggle("rotate-90");
+        document.getElementById("password-form-block").classList.toggle("hidden");
+        document.getElementById("pass-arrow").classList.toggle("rotate-90");
     }
 
-    function changeLanguage() {
-        const currentLangSpan = document.getElementById("current-lang");
-        if (currentLangSpan.innerText.includes("English")) {
-            currentLangSpan.innerText = "Hindi (IN)";
-        } else {
-            currentLangSpan.innerText = "English (IN)";
-        }
+    function switchLanguage(lang) {
+        applyGlobalLanguage(lang);
     }
 
-    function toggleDarkMode() {
-        const mainCard = document.getElementById("profile-main-card");
-        if (mainCard.classList.contains('bg-white')) {
-            localStorage.setItem('profileTheme', 'dark');
-            applyDarkUI(true);
-        } else {
-            localStorage.setItem('profileTheme', 'light');
-            applyDarkUI(false);
-        }
+    function handleToggleClick() {
+        const isCurrentlyDark = localStorage.getItem('globalTheme') === 'dark';
+        const targetState = !isCurrentlyDark;
+
+        applyGlobalDarkMode(targetState);
+        updateToggleUI(targetState);
     }
 
-    function applyDarkUI(isDark) {
-        const mainCard = document.getElementById("profile-main-card");
+    function updateToggleUI(isDark) {
         const toggleBg = document.getElementById("dark-toggle-bg");
         const toggleCircle = document.getElementById("dark-toggle-circle");
-
-        const titleName = document.getElementById("text-user-name");
-        const phoneText = document.getElementById("text-phone");
-        const passLabel = document.getElementById("text-pass-label");
-        const langLabel = document.getElementById("text-lang-label");
-        const darkLabel = document.getElementById("text-dark-label");
-        const mailSup = document.getElementById("text-mail-support");
-        const tgSup = document.getElementById("text-tg-support");
+        if (!toggleBg || !toggleCircle) return;
 
         if (isDark) {
-            mainCard.style.backgroundColor = "#111827";
-            mainCard.style.borderColor = "#374151";
             toggleBg.classList.remove('bg-gray-200');
             toggleBg.classList.add('bg-blue-600');
             toggleCircle.classList.add('translate-x-4');
-
-            if (titleName) titleName.style.color = "#ffffff";
-            if (phoneText) phoneText.style.color = "#e5e7eb";
-            if (passLabel) passLabel.style.color = "#e5e7eb";
-            if (langLabel) langLabel.style.color = "#e5e7eb";
-            if (darkLabel) darkLabel.style.color = "#e5e7eb";
-            if (mailSup) mailSup.style.color = "#e5e7eb";
-            if (tgSup) tgSup.style.color = "#e5e7eb";
         } else {
-            mainCard.style.backgroundColor = "#ffffff";
-            mainCard.style.borderColor = "#f3f4f6";
             toggleBg.classList.remove('bg-blue-600');
             toggleBg.classList.add('bg-gray-200');
             toggleCircle.classList.remove('translate-x-4');
-
-            if (titleName) titleName.style.color = "#1f2937";
-            if (phoneText) phoneText.style.color = "#374151";
-            if (passLabel) passLabel.style.color = "#374151";
-            if (langLabel) langLabel.style.color = "#374151";
-            if (darkLabel) darkLabel.style.color = "#374151";
-            if (mailSup) mailSup.style.color = "#374151";
-            if (tgSup) tgSup.style.color = "#374151";
         }
     }
 </script>

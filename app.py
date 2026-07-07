@@ -595,20 +595,30 @@ def profile():
         flash('Please login to view your profile!', 'warning')
         return redirect(url_for('login'))
         
-    # Database se user ka phone aur baaki details check karte hain
     try:
         db = get_db()
         cursor = db.cursor(cursor_factory=DictCursor)
-        cursor.execute("SELECT name, phone, role FROM users WHERE id = %s", (user_id,))
+        
+        # Users table se saari details fetch karte hain
+        cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
         user_data = cursor.fetchone()
         cursor.close()
         
         if user_data:
-            session['user_name'] = user_data['name']
-            session['user_phone'] = user_data['phone'] if user_data['phone'] else 'No Mobile Linked'
-            session['user_role'] = user_data['role']
+            session['user_name'] = user_data.get('name', 'Campus User')
+            session['user_role'] = user_data.get('role', 'student')
+            
+            # Phone column ka exact matching fallback checking
+            phone = user_data.get('phone') or user_data.get('mobile') or user_data.get('phone_number') or session.get('phone', '')
+            session['user_phone'] = phone if phone else 'No Mobile Linked'
+            
     except Exception as e:
         print("Profile route database error:", e)
+        # Fallback if query fails completely
+        if 'user_phone' not in session:
+            session['user_phone'] = session.get('phone', 'No Mobile Linked')
+
+    return render_template('profile.html')
 
     return render_template('profile.html')
 

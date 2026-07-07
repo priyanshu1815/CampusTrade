@@ -358,6 +358,87 @@
         </a>
     </div>
 
+    <script>
+        // Global Multi-Language Dictionary
+        const translations = {
+            'en': {
+                'nav_home': 'Home',
+                'nav_listings': 'Listings',
+                'nav_profile': 'Profile',
+                'verified_badge': 'Verified',
+                'student_member': 'Student Member',
+                'property_owner': 'Property Owner',
+                'account_privacy': 'Account & Privacy',
+                'phone_title': 'Phone Number',
+                'change_pass': 'Change Password',
+                'preferences': 'Preferences',
+                'app_lang': 'App Language',
+                'dark_mode': 'Dark Mode',
+                'support_help': 'Support & Help',
+                'mail_support': 'Official Mail Support',
+                'tg_community': 'Telegram Community',
+                'logout_acc': 'Log Out Account'
+            },
+            'hi': {
+                'nav_home': 'होम',
+                'nav_listings': 'मेरी लिस्टिंग्स',
+                'nav_profile': 'प्रोफ़ाइल',
+                'verified_badge': 'सत्यापित',
+                'student_member': 'छात्र सदस्य',
+                'property_owner': 'प्रॉपर्टी ओनर',
+                'account_privacy': 'खाता और गोपनीयता',
+                'phone_title': 'फ़ोन नंबर',
+                'change_pass': 'पासवर्ड बदलें',
+                'preferences': 'वरीयताएँ',
+                'app_lang': 'ऐप की भाषा',
+                'dark_mode': 'डार्क मोड',
+                'support_help': 'सहायता और सपोर्ट',
+                'mail_support': 'आधिकारिक मेल सपोर्ट',
+                'tg_community': 'टेलीग्राम कम्युनिटी',
+                'logout_acc': 'खाता लॉग आउट करें'
+            }
+        };
+
+        function applyGlobalLanguage(lang) {
+            localStorage.setItem('appLanguage', lang);
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+        }
+
+        function applyGlobalDarkMode(isDark) {
+            const body = document.body;
+            // Global Tailwind dynamic check fallback or direct color override
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                body.style.backgroundColor = "#111827";
+                body.style.color = "#ffffff";
+                localStorage.setItem('globalTheme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                body.style.backgroundColor = "";
+                body.style.color = "";
+                localStorage.setItem('globalTheme', 'light');
+            }
+        }
+
+        // Page load hote hi set karo configurations
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedTheme = localStorage.getItem('globalTheme');
+            if (savedTheme === 'dark') {
+                applyGlobalDarkMode(true);
+            } else {
+                applyGlobalDarkMode(false);
+            }
+
+            const savedLang = localStorage.getItem('appLanguage') || 'en';
+            applyGlobalLanguage(savedLang);
+        });
+    </script>
+
 </body>
 
 </html>
