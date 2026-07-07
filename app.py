@@ -563,9 +563,28 @@ def request_entity_too_large(error):
 
 @app.route('/listings')
 def listings():
-    # Agar tumne alag file banayi hai toh uska naam rakhna, 
-    # varna database se user ki apni listings fetch karke yahan dikhayenge
-    return render_template('index.html') # Abhi ke liye index par bhej rha hu taaki error na aaye
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Please login to view your listings!', 'warning')
+        return redirect(url_for('login'))
+        
+    items = []
+    
+    # Yahan hum direct database (psycopg2) ka use karke items nikal rahe hain
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=DictCursor)
+        
+        # Apni table ka naam check kar lena, agar 'items' hai toh sahi hai
+        cursor.execute("SELECT * FROM items WHERE user_id = %s ORDER BY id DESC", (user_id,))
+        items = cursor.fetchall()
+        
+        cursor.close()
+    except Exception as e:
+        print("Error fetching user listings from Supabase PostgreSQL:", e)
+
+    # Ab ye dynamic data tumhari nayi file my_listings.html par jayega
+    return render_template('my_listings.html', items=items)
 
 @app.route('/profile')
 def profile():
