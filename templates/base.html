@@ -134,21 +134,34 @@
             </div>
         </div>
 
-        <div class="hidden md:block w-full border-t border-gray-50 bg-white">
-            <div class="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between">
-                <nav class="flex items-center space-x-6 text-xs font-bold text-gray-600">
-                    <a href="/bookstore" class="hover:text-blue-600 transition flex items-center"><i
-                            class="fa-solid fa-book-open mr-1.5 text-blue-500"></i> Bookstore</a>
-                    <a href="/rooms" class="hover:text-blue-600 transition flex items-center"><i
-                            class="fa-solid fa-bed mr-1.5 text-emerald-500"></i> Rooms / PGs</a>
-                    <a href="/tiffin" class="hover:text-blue-600 transition flex items-center"><i
-                            class="fa-solid fa-utensils mr-1.5 text-amber-500"></i> Tiffin Centers</a>
-                    <a href="/essentials" class="hover:text-blue-600 transition flex items-center"><i
-                            class="fa-solid fa-box-open mr-1.5 text-purple-500"></i> Essentials</a>
+        <div
+            class="hidden md:block w-full border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <div class="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
+                <nav class="flex items-center space-x-6 text-xs font-bold text-gray-600 dark:text-gray-300">
+                    <a href="/bookstore"
+                        class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                        <i class="fa-solid fa-book-open mr-1.5 text-blue-500"></i>
+                        <span data-translate="sub_nav_bookstore">Bookstore</span>
+                    </a>
+                    <a href="/rooms" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                        <i class="fa-solid fa-bed mr-1.5 text-emerald-500"></i>
+                        <span data-translate="sub_nav_rooms">Rooms / PGs</span>
+                    </a>
+                    <a href="/tiffin" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                        <i class="fa-solid fa-utensils mr-1.5 text-amber-500"></i>
+                        <span data-translate="sub_nav_tiffin">Tiffin Centers</span>
+                    </a>
+                    <a href="/essentials"
+                        class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                        <i class="fa-solid fa-box-open mr-1.5 text-purple-500"></i>
+                        <span data-translate="sub_nav_essentials">Essentials</span>
+                    </a>
                 </nav>
+
                 <button onclick="document.getElementById('menuButton').click()"
                     class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer">
-                    <i class="fa-solid fa-plus"></i> Post an Ad
+                    <i class="fa-solid fa-plus"></i>
+                    <span data-translate="sub_nav_postad">Post an Ad</span>
                 </button>
             </div>
         </div>
@@ -378,6 +391,11 @@
                 'mail_support': 'Official Mail Support',
                 'tg_community': 'Telegram Community',
                 'logout_acc': 'Log Out Account'
+                'sub_nav_bookstore': 'Bookstore',
+                'sub_nav_rooms': 'Rooms / PGs',
+                'sub_nav_tiffin': 'Tiffin Centers',
+                'sub_nav_essentials': 'Essentials',
+                'sub_nav_postad': 'Post an Ad',
             },
             'hi': {
                 'nav_home': 'होम',
@@ -396,6 +414,11 @@
                 'mail_support': 'आधिकारिक मेल सपोर्ट',
                 'tg_community': 'टेलीग्राम कम्युनिटी',
                 'logout_acc': 'खाता लॉग आउट करें'
+                'sub_nav_bookstore': 'किताबों की दुकान',
+                'sub_nav_rooms': 'कमरे / पीजी',
+                'sub_nav_tiffin': 'टिफिन सेंटर्स',
+                'sub_nav_essentials': 'आवश्यक चीजें',
+                'sub_nav_postad': 'विज्ञापन डालें',
             }
         };
 
