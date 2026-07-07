@@ -29,12 +29,10 @@
             <!-- LOGO -->
             <a href="/"
                 class="flex items-center space-x-2 text-xl sm:text-2xl font-black tracking-tight text-blue-600 shrink-0">
-                <svg class="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2 2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
-                    <path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path>
-                    <circle cx="8" cy="12" r="2"></circle>
-                </svg>
+                <!-- Tumhari Logo Image -->
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="CampusTrade Logo"
+                    class="w-8 h-8 sm:w-9 sm:h-9 object-contain">
+
                 <span>Campus<span class="text-gray-900">Trade</span></span>
             </a>
 
