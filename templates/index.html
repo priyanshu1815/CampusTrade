@@ -1,67 +1,151 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% block content %}
-<div class="py-6 sm:py-12">
+
+<div class="w-full max-w-7xl mx-auto px-4 pt-4 pb-6">
     <div
-        class="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-3xl text-white p-6 sm:p-12 text-center shadow-xl relative overflow-hidden">
-        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-        <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-2xl"></div>
+        class="relative bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-800 rounded-3xl overflow-hidden p-6 sm:p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-xl">
 
-        <h1 class="text-3xl sm:text-5xl font-black tracking-tight max-w-3xl mx-auto leading-tight">
-            The Ultimate Smart Campus Marketplace
-        </h1>
-        <p class="mt-4 text-sm sm:text-lg text-blue-100 max-w-2xl mx-auto font-medium">
-            Buy and sell textbooks, discover premium student rooms/PGs, find verified local tiffin services, and switch
-            essential gears smoothly.
-        </p>
-
-        <div class="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-            <a href="/bookstore"
-                class="w-full sm:w-auto bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-gray-100 transition shadow-md text-sm">
-                Browse Marketplace
-            </a>
-            {% if not session.get('user_id') %}
-            <a href="/register"
-                class="w-full sm:w-auto bg-blue-500/40 text-white border border-white/20 font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition text-sm">
-                Register as Student / Owner
-            </a>
-            {% endif %}
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-900/40 rounded-full blur-2xl pointer-events-none">
         </div>
+
+        <div class="w-full lg:w-1/2 text-center lg:text-left z-10">
+            <div
+                class="inline-flex items-center gap-1.5 bg-white/10 text-white text-xs font-semibold px-3 py-1 rounded-full mb-4 backdrop-blur-sm">
+                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
+                <span>Trusted by 10,000+ Campus Students</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4 leading-tight">
+                The Ultimate Smart <br class="hidden sm:inline">Campus Marketplace
+            </h1>
+            <p class="text-xs sm:text-sm text-blue-100 font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+                Buy and sell textbooks, discover premium student rooms/PGs, find verified local tiffin services, and
+                switch essential gears smoothly.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <a href="/bookstore"
+                    class="w-full sm:w-auto text-center bg-white text-blue-700 font-bold px-6 py-3.5 rounded-xl shadow-md hover:bg-blue-50 transition duration-200 text-xs sm:text-sm">
+                    Browse Marketplace
+                </a>
+                <button onclick="document.getElementById('menuButton').click()"
+                    class="w-full sm:w-auto text-center border border-white/30 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition duration-200 text-xs sm:text-sm">
+                    Register as Student / Owner
+                </button>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/2 hidden md:flex justify-center items-center z-10">
+            <div
+                class="relative w-60 h-[420px] bg-slate-900 rounded-[36px] p-2.5 shadow-2xl border-4 border-slate-700/80 ring-4 ring-slate-800/20 transform rotate-2 hover:rotate-0 transition duration-500">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 h-4 w-24 bg-slate-900 rounded-b-xl z-20"></div>
+
+                <div
+                    class="w-full h-full bg-slate-50 rounded-[28px] overflow-hidden p-3 pt-5 flex flex-col justify-between border border-slate-200">
+                    <div
+                        class="w-full bg-gray-100 rounded-lg p-2 flex items-center justify-between text-[10px] text-gray-400 mb-3">
+                        <span>Search campus deals...</span>
+                        <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 flex-grow">
+                        <div
+                            class="bg-blue-50 rounded-xl p-2 flex flex-col items-center justify-center text-center border border-blue-100/50">
+                            <i class="fa-solid fa-book-open text-blue-600 text-sm mb-1"></i>
+                            <span class="text-[9px] font-bold text-gray-700">Bookstore</span>
+                        </div>
+                        <div
+                            class="bg-emerald-50 rounded-xl p-2 flex flex-col items-center justify-center text-center border border-emerald-100/50">
+                            <i class="fa-solid fa-bed text-emerald-600 text-sm mb-1"></i>
+                            <span class="text-[9px] font-bold text-gray-700">Rooms</span>
+                        </div>
+                        <div
+                            class="bg-amber-50 rounded-xl p-2 flex flex-col items-center justify-center text-center border border-amber-100/50">
+                            <i class="fa-solid fa-utensils text-amber-600 text-sm mb-1"></i>
+                            <span class="text-[9px] font-bold text-gray-700">Tiffin Center</span>
+                        </div>
+                        <div
+                            class="bg-purple-50 rounded-xl p-2 flex flex-col items-center justify-center text-center border border-purple-100/50">
+                            <i class="fa-solid fa-box-open text-purple-600 text-sm mb-1"></i>
+                            <span class="text-[9px] font-bold text-gray-700">Essentials</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-2 border-t border-gray-100">
+                        <span class="text-[8px] font-black text-blue-600 tracking-wider uppercase">Live Marketplace
+                            App</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 sm:mt-12">
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
-            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-3 text-xl">
-                <i class="fa-solid fa-book"></i>
+<div class="block md:hidden w-full px-4 pb-4">
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Explore Categories</p>
+    <div class="grid grid-cols-4 gap-2.5">
+        <a href="/bookstore"
+            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition">
+            <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-1.5"><i
+                    class="fa-solid fa-book-open text-blue-500 text-sm"></i></div>
+            <span class="text-[10px] font-bold text-gray-700">Books</span>
+        </a>
+        <a href="/rooms"
+            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition">
+            <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center mb-1.5"><i
+                    class="fa-solid fa-bed text-emerald-500 text-sm"></i></div>
+            <span class="text-[10px] font-bold text-gray-700">Rooms</span>
+        </a>
+        <a href="/tiffin"
+            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition">
+            <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center mb-1.5"><i
+                    class="fa-solid fa-utensils text-amber-500 text-sm"></i></div>
+            <span class="text-[10px] font-bold text-gray-700">Tiffin</span>
+        </a>
+        <a href="/essentials"
+            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition">
+            <div class="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center mb-1.5"><i
+                    class="fa-solid fa-box-open text-purple-500 text-sm"></i></div>
+            <span class="text-[10px] font-bold text-gray-700">Gears</span>
+        </a>
+    </div>
+</div>
+
+<div class="w-full max-w-7xl mx-auto px-4 pb-6">
+    <div class="bg-white border border-gray-100 rounded-2xl p-4 grid grid-cols-2 md:grid-cols-4 gap-4 shadow-sm">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-shield-halved text-blue-600 text-xs"></i></div>
+            <div>
+                <p class="text-[11px] font-black text-gray-900 leading-none">Trust & Verified</p>
+                <p class="text-[9px] text-gray-400 mt-0.5">100% verified campus ad listings</p>
             </div>
-            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Used Books</h3>
-            <p class="text-xs text-gray-500 mt-1">Buy & sell syllabus books locally</p>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
-            <div
-                class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-3 text-xl">
-                <i class="fa-solid fa-bed"></i>
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-handshake text-emerald-600 text-xs"></i></div>
+            <div>
+                <p class="text-[11px] font-black text-gray-900 leading-none">Connect Easily</p>
+                <p class="text-[9px] text-gray-400 mt-0.5">Direct chatting channels with local sellers</p>
             </div>
-            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Verified Rooms</h3>
-            <p class="text-xs text-gray-500 mt-1">Find nearby PGs & rooms easily</p>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
-            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 mb-3 text-xl">
-                <i class="fa-solid fa-utensils"></i>
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-chart-line text-indigo-600 text-xs"></i></div>
+            <div>
+                <p class="text-[11px] font-black text-gray-900 leading-none">Grow Together</p>
+                <p class="text-[9px] text-gray-400 mt-0.5">Buy, trade & save finances seamlessly</p>
             </div>
-            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Tiffin Services</h3>
-            <p class="text-xs text-gray-500 mt-1">Healthy home meals subscription</p>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center">
-            <div
-                class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-3 text-xl">
-                <i class="fa-solid fa-laptop"></i>
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-lock text-purple-600 text-xs"></i></div>
+            <div>
+                <p class="text-[11px] font-black text-gray-900 leading-none">Safe & Secure</p>
+                <p class="text-[9px] text-gray-400 mt-0.5">Absolute user data privacy metrics</p>
             </div>
-            <h3 class="font-bold text-gray-900 text-sm sm:text-base">Campus Essentials</h3>
-            <p class="text-xs text-gray-500 mt-1">Laptops, cycles, and lab gears</p>
         </div>
     </div>
 </div>
