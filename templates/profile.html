@@ -3,106 +3,120 @@
 {% block content %}
 <div class="max-w-xl mx-auto my-6 sm:my-12 px-4 pb-24 md:pb-6 transition-colors duration-300" id="profile-container">
 
+    <!-- TOP CARD SECTION -->
     <div
-        class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm mb-6 flex flex-col items-center text-center relative overflow-hidden transition-colors">
-        <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-50 dark:bg-gray-700/50 rounded-full blur-xl"></div>
+        class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6 flex flex-col items-center text-center relative overflow-hidden">
 
+        <!-- Profile Avatar (Initials) -->
         <div
-            class="w-20 h-20 rounded-full bg-[#1d5bf7] text-white flex items-center justify-center text-2xl font-black shadow-md tracking-wider mb-4 border-4 border-blue-50 dark:border-gray-700">
+            class="w-20 h-20 rounded-full bg-[#1d5bf7] text-white flex items-center justify-center text-2xl font-black shadow-md tracking-wider mb-4 border-4 border-blue-50">
             <span id="avatar-initials">U</span>
         </div>
 
-        <h2 class="text-xl font-black text-gray-800 dark:text-white flex items-center gap-1.5 justify-center">
+        <!-- User Details -->
+        <h2 class="text-xl font-black text-gray-800 flex items-center gap-1.5 justify-center">
             <span id="profile-name">{{ session.get('user_name', 'Campus User') }}</span>
             <span
-                class="bg-blue-50 dark:bg-blue-900/40 text-[#1d5bf7] dark:text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 border border-blue-100 dark:border-blue-800 shadow-sm">
+                class="bg-blue-50 text-[#1d5bf7] text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 border border-blue-100">
                 <i class="fa-solid fa-circle-check text-[10px]"></i> Verified
             </span>
         </h2>
 
-        <p class="text-xs font-semibold text-gray-400 dark:text-gray-300 mt-1 flex items-center gap-1">
-            {% if session.get('user_role', '')|lower == 'owner' %}
-            <i class="fa-solid fa-hotel text-blue-500"></i> Verified Property Owner / Room Provider
-            {% else %}
-            <i class="fa-solid fa-graduation-cap text-gray-400"></i> IIT / Campus College Student
-            {% endif %}
+        <p class="text-xs font-semibold text-gray-400 mt-1 flex items-center gap-1">
+            <i class="fa-solid fa-graduation-cap text-gray-400"></i> CampusTrade Registered Member
         </p>
-
-        <button onclick="alert('Bhai, Edit Profile feature jald hi aane wala hai!')"
-            class="mt-4 text-xs font-bold text-gray-500 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-100 dark:border-gray-600 px-4 py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer">
-            <i class="fa-regular fa-pen-to-square"></i> Edit Profile
-        </button>
     </div>
 
+    <!-- ACCOUNT OPTIONS SECTIONS -->
     <div class="space-y-5">
 
+        <!-- 1. Account Settings -->
         <div>
             <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Account &
                 Privacy</span>
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm divide-y divide-gray-50 dark:divide-gray-700 transition-colors">
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm divide-y divide-gray-50">
+
+                <!-- Email Address Field -->
                 <div class="p-4 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs">
+                            class="w-8 h-8 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-envelope"></i></div>
                         <div>
                             <p class="text-xs text-gray-400 font-bold">Email Address</p>
-                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200 mt-0.5">{{
-                                session.get('user_email', 'student@campustrade.pro') }}</p>
+                            <input type="email" id="input-email"
+                                value="{{ session.get('user_email', session.get('email', '')) }}"
+                                class="text-xs font-extrabold text-gray-700 bg-transparent border-none outline-none mt-0.5 w-full focus:ring-0 p-0"
+                                placeholder="Enter your email">
                         </div>
                     </div>
                 </div>
+
+                <!-- Phone Number Field -->
                 <div class="p-4 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs">
+                            class="w-8 h-8 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-phone"></i></div>
                         <div>
                             <p class="text-xs text-gray-400 font-bold">Phone Number</p>
-                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200 mt-0.5">{{
-                                session.get('user_phone', session.get('phone', 'Not Provided')) }}</p>
+                            <input type="text" id="input-phone"
+                                value="{{ session.get('user_phone', session.get('phone', '')) }}"
+                                class="text-xs font-extrabold text-gray-700 bg-transparent border-none outline-none mt-0.5 w-full focus:ring-0 p-0"
+                                placeholder="Enter phone number">
                         </div>
                     </div>
                 </div>
-                <a href="#"
-                    onclick="alert('Password reset link aapki registered email id par bhej diya gaya hai, bhai!')"
-                    class="p-4 flex items-center justify-between hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition group">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs">
-                            <i class="fa-solid fa-lock"></i></div>
-                        <span class="text-xs font-extrabold text-gray-700 dark:text-gray-200">Change Password</span>
+
+                <!-- Change Password Form Block -->
+                <div class="p-4 bg-white">
+                    <button onclick="togglePasswordSection()"
+                        class="w-full flex items-center justify-between transition group outline-none border-none bg-transparent p-0 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-lock"></i></div>
+                            <span class="text-xs font-extrabold text-gray-700">Change Password</span>
+                        </div>
+                        <i id="pass-arrow"
+                            class="fa-solid fa-chevron-right text-[10px] text-gray-300 transition-transform"></i>
+                    </button>
+
+                    <div id="password-form-block" class="hidden mt-4 pt-4 border-t border-gray-50 space-y-3">
+                        <input type="password" placeholder="Current Password"
+                            class="w-full text-xs p-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-blue-500">
+                        <input type="password" placeholder="New Password"
+                            class="w-full text-xs p-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:border-blue-500">
+                        <button onclick="alert('Password feature linked to database update framework!')"
+                            class="w-full bg-[#1d5bf7] text-white font-bold text-xs py-2.5 rounded-xl hover:bg-blue-600 transition">Update
+                            Password</button>
                     </div>
-                    <i
-                        class="fa-solid fa-chevron-right text-[10px] text-gray-300 group-hover:text-gray-400 transition"></i>
-                </a>
+                </div>
             </div>
         </div>
 
+        <!-- 2. Preferences -->
         <div>
             <span
                 class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Preferences</span>
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm divide-y divide-gray-50 dark:divide-gray-700 transition-colors">
-                <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm divide-y divide-gray-50">
+                <div class="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50"
                     onclick="changeLanguage()">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs">
+                            class="w-8 h-8 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-language"></i></div>
-                        <span class="text-xs font-extrabold text-gray-700 dark:text-gray-200">App Language</span>
+                        <span class="text-xs font-extrabold text-gray-700">App Language</span>
                     </div>
                     <span id="current-lang"
-                        class="text-[10px] font-black text-gray-400 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded-lg">English
-                        (IN)</span>
+                        class="text-[10px] font-black text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">English (IN)</span>
                 </div>
                 <div class="p-4 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-300 flex items-center justify-center text-xs">
+                            class="w-8 h-8 rounded-xl bg-gray-50 text-gray-500 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-moon"></i></div>
-                        <span class="text-xs font-extrabold text-gray-700 dark:text-gray-200">Dark Mode</span>
+                        <span class="text-xs font-extrabold text-gray-700">Dark Mode</span>
                     </div>
                     <div onclick="toggleDarkMode()" id="dark-toggle-bg"
                         class="w-9 h-5 bg-gray-200 rounded-full relative p-0.5 cursor-pointer transition-colors duration-200">
@@ -113,32 +127,31 @@
             </div>
         </div>
 
+        <!-- 3. Support -->
         <div>
             <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2 px-1">Support &
                 Help</span>
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm divide-y divide-gray-50 dark:divide-gray-700 transition-colors">
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm divide-y divide-gray-50">
                 <a href="mailto:support@campustrade.pro"
-                    class="p-4 flex items-center justify-between hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition group">
+                    class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs">
+                            class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-envelope-open-text"></i></div>
                         <div>
-                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200">Official Mail Support</p>
+                            <p class="text-xs font-extrabold text-gray-700">Official Mail Support</p>
                             <p class="text-[10px] font-bold text-gray-400 mt-0.5">support@campustrade.pro</p>
                         </div>
                     </div>
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-gray-300"></i>
                 </a>
                 <a href="https://t.me/campustrade" target="_blank"
-                    class="p-4 flex items-center justify-between hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition group">
+                    class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition">
                     <div class="flex items-center gap-3">
-                        <div
-                            class="w-8 h-8 rounded-xl bg-sky-50 dark:bg-sky-900/30 text-sky-500 dark:text-sky-400 flex items-center justify-center text-xs">
+                        <div class="w-8 h-8 rounded-xl bg-sky-50 text-sky-500 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-paper-plane"></i></div>
                         <div>
-                            <p class="text-xs font-extrabold text-gray-700 dark:text-gray-200">Telegram Community</p>
+                            <p class="text-xs font-extrabold text-gray-700">Telegram Community</p>
                             <p class="text-[10px] font-bold text-gray-400 mt-0.5">@campustrade</p>
                         </div>
                     </div>
@@ -147,18 +160,17 @@
             </div>
         </div>
 
+        <!-- 4. Account Controls -->
         <div>
-            <div
-                class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm transition-colors">
+            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
                 <a href="/logout"
-                    class="p-4 flex items-center justify-between hover:bg-red-50/50 dark:hover:bg-red-900/20 transition group bg-red-50/10">
+                    class="p-4 flex items-center justify-between hover:bg-red-50/50 transition bg-red-50/10">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-xs">
                             <i class="fa-solid fa-power-off"></i></div>
                         <span class="text-xs font-black text-red-500">Log Out Account</span>
                     </div>
-                    <i
-                        class="fa-solid fa-chevron-right text-[10px] text-red-300 group-hover:text-red-400 transition"></i>
+                    <i class="fa-solid fa-chevron-right text-[10px] text-red-300"></i>
                 </a>
             </div>
         </div>
@@ -167,7 +179,6 @@
 </div>
 
 <script>
-    // Extract dynamic profile avatar initials sequentially from string context
     document.addEventListener("DOMContentLoaded", function () {
         const nameElement = document.getElementById("profile-name");
         if (nameElement) {
@@ -176,50 +187,31 @@
                 document.getElementById("avatar-initials").innerText = nameText.charAt(0).toUpperCase();
             }
         }
-
-        // Handle persistent LocalStorage dark mode client rendering logic checks
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-            updateToggleUI(true);
-        }
     });
 
-    // Language Dynamic Swapper Function
+    function togglePasswordSection() {
+        const formBlock = document.getElementById("password-form-block");
+        const arrow = document.getElementById("pass-arrow");
+        formBlock.classList.toggle("hidden");
+        arrow.classList.toggle("rotate-90");
+    }
+
     function changeLanguage() {
         const currentLangSpan = document.getElementById("current-lang");
         if (currentLangSpan.innerText.includes("English")) {
             currentLangSpan.innerText = "Hindi (IN)";
-            alert("Bhai, App language Hindi set ho gayi hai!");
         } else {
             currentLangSpan.innerText = "English (IN)";
-            alert("App language changed to English!");
         }
     }
 
-    // Toggle Dark Mode styling variables smoothly inline
     function toggleDarkMode() {
-        const isDark = document.documentElement.classList.toggle('dark');
-        if (isDark) {
-            localStorage.setItem('theme', 'dark');
-            updateToggleUI(true);
-        } else {
-            localStorage.setItem('theme', 'light');
-            updateToggleUI(false);
-        }
-    }
-
-    function updateToggleUI(isDarkState) {
         const toggleBg = document.getElementById("dark-toggle-bg");
         const toggleCircle = document.getElementById("dark-toggle-circle");
-        if (isDarkState) {
-            toggleBg.classList.remove('bg-gray-200');
-            toggleBg.classList.add('bg-blue-600');
-            toggleCircle.classList.add('translate-x-4');
-        } else {
-            toggleBg.classList.remove('bg-blue-600');
-            toggleBg.classList.add('bg-gray-200');
-            toggleCircle.classList.remove('translate-x-4');
-        }
+
+        toggleBg.classList.toggle('bg-blue-600');
+        toggleBg.classList.toggle('bg-gray-200');
+        toggleCircle.classList.toggle('translate-x-4');
     }
 </script>
 {% endblock %}
