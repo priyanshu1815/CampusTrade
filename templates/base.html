@@ -318,31 +318,43 @@
         }
     </script>
 
+    <div class="h-24 md:hidden"></div>
+
     <div
-        class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-2 px-6 flex justify-between items-center md:hidden z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-        <a href="/" class="flex flex-col items-center gap-0.5 text-blue-600">
-            <i class="fa-solid fa-house text-base"></i>
-            <span class="text-[9px] font-bold">Home</span>
+        class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100/80 pt-2 pb-3 px-4 flex justify-between items-center md:hidden z-50 shadow-[0_-8px_24px_rgba(0,0,0,0.06)] rounded-t-2xl">
+
+        <a href="/" class="flex flex-col items-center gap-1 flex-1 text-blue-600 transition-transform active:scale-95">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-bold tracking-tight">Home</span>
         </a>
 
-        <button onclick="openListingModal(this.getAttribute('data-role'))"
-            data-role="{{ session.get('user_role', '') | lower }}"
-            class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-blue-600 cursor-pointer bg-transparent border-none outline-none">
-            <i class="fa-solid fa-circle-plus text-base"></i>
-            <span class="text-[9px] font-bold">Post Ad</span>
-        </button>
-
-        <a href="/inbox" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-blue-600 relative">
-            <i class="fa-solid fa-message text-base"></i>
-            <span class="text-[9px] font-bold">Chats</span>
+        <a href="/inbox"
+            class="flex flex-col items-center gap-1 flex-1 text-gray-400 hover:text-gray-600 relative transition-transform active:scale-95">
+            <i class="fa-solid fa-message text-lg"></i>
+            <span class="text-[10px] font-semibold tracking-tight">Chats</span>
             {% if unread_count and unread_count > 0 %}
-            <span class="absolute top-0 right-2 bg-red-500 w-2 h-2 rounded-full"></span>
+            <span class="absolute top-0 right-6 bg-red-500 w-2 h-2 rounded-full"></span>
             {% endif %}
         </a>
 
-        <a href="/profile" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-blue-600">
-            <i class="fa-solid fa-user text-base"></i>
-            <span class="text-[9px] font-bold">Profile</span>
+        <div class="flex-1 flex justify-center -mt-6 relative z-50">
+            <button onclick="openListingModal(this.getAttribute('data-role'))"
+                data-role="{{ session.get('user_role', '') | lower }}"
+                class="w-12 h-12 rounded-full bg-[#1d5bf7] text-white flex items-center justify-center shadow-[0_4px_14px_rgba(29,91,247,0.4)] hover:bg-blue-600 active:scale-90 transition-all duration-200 cursor-pointer border-none outline-none">
+                <i class="fa-solid fa-plus text-xl"></i>
+            </button>
+        </div>
+
+        <a href="/listings"
+            class="flex flex-col items-center gap-1 flex-1 text-gray-400 hover:text-gray-600 transition-transform active:scale-95">
+            <i class="fa-solid fa-list-ul text-lg"></i>
+            <span class="text-[10px] font-semibold tracking-tight">Listings</span>
+        </a>
+
+        <a href="/profile"
+            class="flex flex-col items-center gap-1 flex-1 text-gray-400 hover:text-gray-600 transition-transform active:scale-95">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-[10px] font-semibold tracking-tight">Profile</span>
         </a>
     </div>
 
