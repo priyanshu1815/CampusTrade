@@ -139,26 +139,39 @@
             class="hidden md:block w-full border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
             <div class="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
                 <!-- Navigation Links -->
-                <nav class="flex items-center space-x-6 text-xs font-bold text-gray-600 dark:text-gray-300">
-                    <a href="/bookstore"
-                        class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
-                        <i class="fa-solid fa-book-open mr-1.5 text-blue-500"></i>
-                        <span data-translate="sub_nav_bookstore">Bookstore</span>
-                    </a>
-                    <a href="/rooms" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
-                        <i class="fa-solid fa-bed mr-1.5 text-emerald-500"></i>
-                        <span data-translate="sub_nav_rooms">Rooms / PGs</span>
-                    </a>
-                    <a href="/tiffin" class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
-                        <i class="fa-solid fa-utensils mr-1.5 text-amber-500"></i>
-                        <span data-translate="sub_nav_tiffin">Tiffin Centers</span>
-                    </a>
-                    <a href="/essentials"
-                        class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
-                        <i class="fa-solid fa-box-open mr-1.5 text-purple-500"></i>
-                        <span data-translate="sub_nav_essentials">Essentials</span>
-                    </a>
-                </nav>
+                <div
+                    class="hidden md:block w-full border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
+                    <div class="max-w-6xl mx-auto px-4 h-12 flex items-center justify-between">
+                        <nav class="flex items-center space-x-6 text-xs font-bold text-gray-600 dark:text-gray-300">
+                            <a href="/bookstore"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                                <i class="fa-solid fa-book-open mr-1.5 text-blue-500"></i>
+                                <span data-translate="sub_nav_bookstore">Bookstore</span>
+                            </a>
+                            <a href="/rooms"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                                <i class="fa-solid fa-bed mr-1.5 text-emerald-500"></i>
+                                <span data-translate="sub_nav_rooms">Rooms / PGs</span>
+                            </a>
+                            <a href="/tiffin"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                                <i class="fa-solid fa-utensils mr-1.5 text-amber-500"></i>
+                                <span data-translate="sub_nav_tiffin">Tiffin Centers</span>
+                            </a>
+                            <a href="/essentials"
+                                class="hover:text-blue-600 dark:hover:text-blue-400 transition flex items-center">
+                                <i class="fa-solid fa-box-open mr-1.5 text-purple-500"></i>
+                                <span data-translate="sub_nav_essentials">Essentials</span>
+                            </a>
+                        </nav>
+
+                        <button onclick="document.getElementById('menuButton').click()"
+                            class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-plus"></i>
+                            <span data-translate="sub_nav_postad">Post an Ad</span>
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Post An Ad Button (Isme Translation and Dark Mode Support Hai) -->
                 <button onclick="document.getElementById('menuButton').click()"
