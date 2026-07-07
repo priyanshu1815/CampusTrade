@@ -586,6 +586,8 @@ def listings():
     # Ab ye dynamic data tumhari nayi file my_listings.html par jayega
     return render_template('my_listings.html', items=items)
 
+from werkzeug.security import generate_password_hash
+
 @app.route('/profile')
 def profile():
     user_id = session.get('user_id')
@@ -593,13 +595,62 @@ def profile():
         flash('Please login to view your profile!', 'warning')
         return redirect(url_for('login'))
         
-    # Supabase authentication ya users data store table se details fetch karne ka pipeline
-    # User email ko automatic session data se fetch karke navbar/cards inject karna
-    if 'user_email' not in session:
-        # User session verification fallback state
-        session['user_email'] = session.get('email', 'student@campustrade.pro')
+    # Database se user ki taji details (email, phone, name) nikalte hain
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=DictCursor)
+        cursor.execute("SELECT name, email, phone, role FROM users WHERE id = %s", (user_id,))
+        user_data = cursor.fetchone()
+        cursor.close()
+        
+        if user_data:
+            # Session ko fresh data se update kar dete hain
+            session['user_name'] = user_data['name']
+            session['user_email'] = user_data['email']
+            session['user_phone'] = user_data['phone'] if user_data['phone'] else ''
+            session['user_role'] = user_data['role']
+    except Exception as e:
+        print("Profile route database error:", e)
 
     return render_template('profile.html')
+
+@app.route('/update_password', methods=['POST'])
+def update_password():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+        
+    current_password = request.form.get('current_password')
+    new_password = request.form.get('new_password')
+    
+    if not current_password or not new_password:
+        flash("Bhai, dono fields bharna zaroori hai!", "danger")
+        return redirect(url_for('profile'))
+        
+    try:
+        db = get_db()
+        cursor = db.cursor(cursor_factory=DictCursor)
+        
+        # Pehle check karo ki purana password sahi hai ya nahi
+        cursor.execute("SELECT password FROM users WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        
+        if user and check_password_hash(user['password'], current_password):
+            # Naye password ko securely hash karo
+            hashed_password = generate_password_hash(new_password)
+            cursor.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
+            db.commit()
+            flash("Password successfully update ho gaya hai, bhai!", "success")
+        else:
+            flash("Purana password galat hai! Dobara check karo.", "danger")
+            
+        cursor.close()
+    except Exception as e:
+        if 'db' in locals(): db.rollback()
+        print("Password Update Error:", e)
+        flash("Error updating password.", "danger")
+        
+    return redirect(url_for('profile'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
