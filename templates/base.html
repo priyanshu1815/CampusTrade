@@ -20,15 +20,12 @@
     </style>
 </head>
 
-<body
-    class="bg-[#f8fafc] text-gray-800 antialiased pb-20 md:pb-0 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+<body class="bg-[#f8fafc] text-gray-800 dark:text-gray-100 antialiased pb-20 md:pb-0 transition-colors duration-300">
 
     <header
         class="w-full bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-50 shadow-sm transition-colors duration-300">
-        <!-- MAIN NAVBAR HEADER -->
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
 
-            <!-- Left Side: Logo -->
             <a href="/"
                 class="flex items-center space-x-2 text-xl sm:text-2xl font-black tracking-tight text-blue-600 shrink-0">
                 <svg class="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -40,17 +37,14 @@
                 <span>Campus<span class="text-gray-900 dark:text-white">Trade</span></span>
             </a>
 
-            <!-- Middle: Laptop Search Bar (Hidden on Mobile) -->
             <div class="hidden md:flex items-center flex-grow max-w-xl relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400 text-sm"></i>
                 <input type="text" placeholder="Search books, rooms, tiffin, essentials..."
-                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full pl-11 pr-4 py-2 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition">
+                    class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full pl-11 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition text-gray-900 dark:text-gray-100">
             </div>
 
-            <!-- Right Side Actions -->
             <div class="flex items-center space-x-3 sm:space-x-4">
 
-                <!-- Laptop Location Selector (Hidden on Mobile) -->
                 <div
                     class="hidden sm:flex items-center space-x-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-700 dark:text-gray-300">
                     <i class="fa-solid fa-location-dot text-red-500"></i>
@@ -62,14 +56,13 @@
                     </select>
                 </div>
 
-                <!-- Chat & Notification (Sirf Logged-In Users ko dikhega) -->
-                {% if session.get('user_id') %}
-                <a href="/inbox" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 transition">
+                <a href="/inbox"
+                    class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition">
                     <i class="fa-regular fa-comment-dots text-xl"></i>
                 </a>
 
                 <a href="/inbox"
-                    class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 transition cursor-pointer">
+                    class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer">
                     <i class="fa-solid fa-bell text-xl"></i>
                     {% if unread_count and unread_count > 0 %}
                     <span
@@ -81,19 +74,18 @@
                     {% endif %}
                 </a>
 
-                <!-- Profile Trigger Element (ID menuButton bilkul intact hai) -->
-                <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 font-bold text-xs flex items-center justify-center border border-blue-200 dark:border-blue-800 uppercase cursor-pointer"
+                {% if session.get('user_id') %}
+                <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 font-bold text-xs flex items-center justify-center border border-blue-200 dark:border-blue-800 uppercase cursor-pointer"
                     id="menuButton">
                     {{ session.get('user_name')[:2] }}
                 </div>
                 {% else %}
-                <!-- Logged Out State me Buttons pure size me fit rahenge aur purani single ID yahan trigger karegi -->
                 <div class="flex items-center space-x-2 sm:space-x-3">
                     <a href="/login"
-                        class="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-blue-600 transition px-2 py-1">Sign
+                        class="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-blue-600 transition px-2 py-1">Sign
                         In</a>
                     <a href="/register"
-                        class="bg-blue-600 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl hover:bg-blue-700 transition shadow-sm whitespace-nowrap">Sign
+                        class="bg-blue-600 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl hover:bg-blue-700 transition shadow-sm">Sign
                         Up</a>
                 </div>
                 <button id="menuButton"
@@ -102,7 +94,6 @@
                 </button>
                 {% endif %}
 
-                <!-- Global Dropdown Menu -->
                 <div id="dropdownMenu"
                     class="hidden absolute right-4 mt-12 w-56 rounded-xl bg-white dark:bg-gray-800 shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 dark:divide-gray-700 focus:outline-none z-50 top-6">
                     <div class="py-2">
@@ -146,7 +137,6 @@
             </div>
         </div>
 
-        <!-- LAPTOP SUB-NAVBAR BLOCK -->
         <div
             class="hidden md:block w-full border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between">
@@ -172,15 +162,15 @@
                 </nav>
 
                 <button onclick="document.getElementById('menuButton').click()"
-                    class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer border-none outline-none">
+                    class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                     <i class="fa-solid fa-plus"></i>
                     <span data-translate="sub_nav_postad">Post an Ad</span>
                 </button>
             </div>
         </div>
 
-        <!-- MOBILE SEARCH & LOCATION BAR -->
-        <div class="block md:hidden px-4 pb-3 pt-1 bg-white dark:bg-gray-900 transition-colors duration-300">
+        <div
+            class="block md:hidden px-4 pb-3 pt-1 bg-white dark:bg-gray-900 border-t border-gray-50 dark:border-gray-800 transition-colors duration-300">
             <div class="flex items-center gap-2">
                 <div
                     class="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-2.5 py-2 rounded-xl text-[11px] font-bold text-gray-700 dark:text-gray-300 shrink-0">
@@ -197,7 +187,7 @@
                 <div class="relative flex-grow">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
                     <input type="text" id="mobileSearchInput" placeholder="Search books, rooms, tiffin..."
-                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl pl-8 pr-3 py-2 text-xs text-gray-800 dark:text-gray-200 focus:outline-none">
+                        class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none text-gray-900 dark:text-gray-100">
                 </div>
             </div>
         </div>
@@ -220,37 +210,32 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- MOBILE STICKY BOTTOM TAB NAVIGATION (Sahi gaps aur text line spacing ke saath fixed) -->
     <div
         class="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 h-16 flex items-center justify-around px-2 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.03)] transition-colors duration-300">
-        <a href="/" class="flex flex-col items-center justify-center w-12 text-blue-600">
+        <a href="/" class="flex flex-col items-center gap-1 text-blue-600">
             <i class="fa-solid fa-house text-lg"></i>
-            <span class="text-[10px] font-bold mt-0.5 leading-none">Home</span>
+            <span class="text-[10px] font-bold">Home</span>
         </a>
-        <a href="/inbox"
-            class="flex flex-col items-center justify-center w-12 text-gray-400 dark:text-gray-500 hover:text-blue-600 transition">
+        <a href="/inbox" class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
             <i class="fa-regular fa-comment text-lg"></i>
-            <span class="text-[10px] font-medium mt-0.5 leading-none">Chats</span>
+            <span class="text-[10px] font-medium">Chats</span>
         </a>
-        <div class="flex-1 flex justify-center -mt-6 relative z-50">
-            <button onclick="document.getElementById('menuButton').click()"
-                class="flex flex-col items-center justify-center bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg border-4 border-white dark:border-gray-900 hover:bg-blue-700 transition cursor-pointer">
-                <i class="fa-solid fa-plus text-lg"></i>
-            </button>
-        </div>
         <button onclick="document.getElementById('menuButton').click()"
-            class="flex flex-col items-center justify-center w-14 text-gray-400 dark:text-gray-500 hover:text-blue-600 transition cursor-pointer">
+            class="flex flex-col items-center justify-center -mt-6 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg border-4 border-white dark:border-gray-900 hover:bg-blue-700 transition cursor-pointer">
+            <i class="fa-solid fa-plus text-lg"></i>
+        </button>
+        <a href="/listings"
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition cursor-pointer">
             <i class="fa-regular fa-file-lines text-lg"></i>
-            <span class="text-[10px] font-medium mt-0.5 leading-none">Listings</span>
-        </button>
-        <button onclick="document.getElementById('menuButton').click()"
-            class="flex flex-col items-center justify-center w-14 text-gray-400 dark:text-gray-500 hover:text-blue-600 transition cursor-pointer">
+            <span class="text-[10px] font-medium">Listings</span>
+        </a>
+        <a href="/profile"
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition cursor-pointer">
             <i class="fa-regular fa-user text-lg"></i>
-            <span class="text-[10px] font-medium mt-0.5 leading-none">Profile</span>
-        </button>
+            <span class="text-[10px] font-medium">Profile</span>
+        </a>
     </div>
 
-    <!-- PRO ZOOM BACKDROP MODAL -->
     <div id="proZoomModal"
         class="fixed inset-0 bg-black/90 hidden z-50 flex flex-col items-center justify-center p-4 transition-all duration-300"
         onclick="closeZoomModal()">
@@ -262,8 +247,8 @@
         </div>
     </div>
 
-    <!-- GLOBAL CONFIGURATION SCRIPTS -->
     <script>
+        // Dropdown Menu Toggler Logic
         const menuButton = document.getElementById('menuButton');
         const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -280,6 +265,7 @@
             });
         }
 
+        // Link Mobile Dropdown Selection sync to Main Dropdown functionality
         const locSel = document.getElementById('locationSelector');
         const locSelMob = document.getElementById('locationSelectorMobile');
         if (locSel && locSelMob) {
@@ -289,30 +275,46 @@
             });
         }
 
+        // Image Slider State Handler Script
         const itemSlideState = {};
+
         function changeSlide(itemId, direction, imagesList) {
             if (!(itemId in itemSlideState)) {
                 itemSlideState[itemId] = 0;
             }
-            let currentIndex = itemSlideState[itemId] + direction;
-            if (currentIndex >= imagesList.length) currentIndex = 0;
-            else if (currentIndex < 0) currentIndex = imagesList.length - 1;
+
+            let currentIndex = itemSlideState[itemId];
+            currentIndex += direction;
+
+            if (currentIndex >= imagesList.length) {
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                currentIndex = imagesList.length - 1;
+            }
 
             itemSlideState[itemId] = currentIndex;
+
             const imageElement = document.getElementById(`main-img-${itemId}`);
-            if (imageElement) imageElement.src = imagesList[currentIndex];
+            if (imageElement) {
+                imageElement.src = imagesList[currentIndex];
+            }
 
             const counterElement = document.getElementById(`counter-${itemId}`);
-            if (counterElement) counterElement.innerText = `${currentIndex + 1}/${imagesList.length}`;
+            if (counterElement) {
+                counterElement.innerText = `${currentIndex + 1}/${imagesList.length}`;
+            }
         }
 
+        // Zoom Modal Controllers
         function openFullZoomModal(itemId) {
             const currentSrc = document.getElementById(`main-img-${itemId}`).src;
             const modal = document.getElementById('proZoomModal');
             const modalImg = document.getElementById('modalZoomImg');
+
             modalImg.src = currentSrc;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+
             setTimeout(() => {
                 modalImg.classList.remove('scale-95');
                 modalImg.classList.add('scale-100');
@@ -322,15 +324,17 @@
         function closeZoomModal() {
             const modal = document.getElementById('proZoomModal');
             const modalImg = document.getElementById('modalZoomImg');
+
             modalImg.classList.remove('scale-100');
             modalImg.classList.add('scale-95');
+
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             }, 200);
         }
 
-        // Global Dynamic Multi-Language Dictionary
+        // Global Multi-Language Dictionary
         const translations = {
             'en': {
                 'nav_home': 'Home',
@@ -405,9 +409,15 @@
             }
         }
 
+        // Page load configurations
         document.addEventListener("DOMContentLoaded", function () {
             const savedTheme = localStorage.getItem('globalTheme');
-            applyGlobalDarkMode(savedTheme === 'dark');
+            if (savedTheme === 'dark') {
+                applyGlobalDarkMode(true);
+            } else {
+                applyGlobalDarkMode(false);
+            }
+
             const savedLang = localStorage.getItem('appLanguage') || 'en';
             applyGlobalLanguage(savedLang);
         });
