@@ -561,5 +561,16 @@ def request_entity_too_large(error):
     flash("File size too large! Maximum allowed limit is 5MB.", "danger")
     return redirect(request.referrer or url_for('index'))
 
+@app.route('/listings')
+def listings():
+    # Agar tumne alag file banayi hai toh uska naam rakhna, 
+    # varna database se user ki apni listings fetch karke yahan dikhayenge
+    return render_template('index.html') # Abhi ke liye index par bhej rha hu taaki error na aaye
+
+@app.route('/profile')
+def profile():
+    # Profile page render karne ke liye (Jaise tumhare folders me profile ka logic hoga)
+    return render_template('index.html') # Abhi ke liye error rokne ke liye index lagaya hai
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
