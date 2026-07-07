@@ -252,64 +252,72 @@
     }
 </script>
 
-<footer class="bg-gray-900 text-gray-300 py-12 px-6">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-
-        <!-- Column 1: Logo & Name -->
+<footer class="bg-gray-900 text-gray-300 pt-12 pb-6 mt-16 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-            <div class="flex items-center mb-4">
-                <img src="/static/logo.png" alt="Logo" class="h-12 w-12 mr-3">
-                <h2 class="text-3xl font-bold text-white">CampusTrade</h2>
-            </div>
-            <p class="text-sm leading-relaxed mb-6">
+            <!-- CampusTrade Name aur Size Update -->
+            <h3 class="text-white text-4xl font-extrabold mb-4">CampusTrade</h3>
+
+            <p class="text-gray-400 text-sm mb-4">
                 CampusTrade is a dedicated peer-to-peer marketplace built exclusively for college students.
             </p>
-            <!-- Badi Size ke Social Icons -->
-            <div class="flex space-x-6">
-                <a href="https://www.instagram.com/campustrade.pro" class="text-3xl text-pink-500 hover:text-white"><i
-                        class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com/share/1JPYraYjwj/" class="text-3xl text-blue-600 hover:text-white"><i
-                        class="fab fa-facebook"></i></a>
-                <a href="https://t.me/campustrade" class="text-3xl text-blue-400 hover:text-white"><i
-                        class="fab fa-telegram"></i></a>
-                <a href="mailto:support@campustrade.com" class="text-3xl text-red-500 hover:text-white"><i
-                        class="fas fa-envelope"></i></a>
+
+            <!-- Social Icons Size Update (text-xl to text-3xl) -->
+            <div class="flex gap-6 mb-6">
+                <a href="https://www.instagram.com/campustrade.pro?igsh=MTcxOTdxdHJnMnU4dw==" target="_blank"
+                    class="text-pink-500 text-3xl hover:text-white transition-all"><i
+                        class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/share/1JPYraYjwj/" target="_blank"
+                    class="text-blue-600 text-3xl hover:text-white transition-all"><i
+                        class="fa-brands fa-facebook"></i></a>
+                <a href="https://t.me/campustrade" target="_blank"
+                    class="text-blue-400 text-3xl hover:text-white transition-all"><i
+                        class="fa-brands fa-telegram"></i></a>
+                <a href="mailto:support@campustrade.pro"
+                    class="text-red-500 text-3xl hover:text-white transition-all"><i
+                        class="fa-solid fa-envelope"></i></a>
             </div>
-        </div>
 
-        <!-- Column 2: About/Terms -->
-        <div>
-            <h3 class="text-lg font-bold text-white mb-4">Quick Links</h3>
-            <ul class="space-y-2">
-                <li><a href="/about" class="hover:text-blue-400">About Us</a></li>
-                <li><a href="/terms" class="hover:text-blue-400">Terms & Conditions</a></li>
-                <li><a href="/privacy" class="hover:text-blue-400">Privacy Policy</a></li>
+            <ul class="space-y-2 text-sm">
+                <li><a href="/about" class="hover:text-indigo-400 transition-colors">👉 About Us</a></li>
+                <li><a href="/terms" class="hover:text-indigo-400 transition-colors">📄 Terms & Conditions</a></li>
+                <li><a href="/privacy" class="hover:text-indigo-400 transition-colors">🔒 Privacy Policy</a></li>
             </ul>
         </div>
 
-        <!-- Column 3: Our Services -->
         <div>
-            <h3 class="text-lg font-bold text-white mb-4">Our Services</h3>
-            <ul class="space-y-2">
-                <li>Books Marketplace</li>
-                <li>Verified Rooms & PGs</li>
-                <li>Local Tiffin Services</li>
-                <li>Student Essentials</li>
+            <h3 class="text-white text-lg font-bold mb-4">Our Services</h3>
+            <ul class="space-y-2 text-sm">
+                <li><a href="/bookstore" class="hover:text-indigo-400 transition-colors">📚 Books Marketplace</a></li>
+                <li><a href="/rooms" class="hover:text-indigo-400 transition-colors">🏠 Verified Rooms & PGs</a></li>
+                <li><a href="/tiffin" class="hover:text-indigo-400 transition-colors">🍱 Local Tiffin Services</a></li>
+                <li><a href="/essentials" class="hover:text-indigo-400 transition-colors">🎒 Student Essentials</a></li>
             </ul>
         </div>
 
-        <!-- Column 4: Contact Us -->
         <div>
-            <h3 class="text-lg font-bold text-white mb-4">Contact Us</h3>
-            <p class="text-sm">support@campustrade.pro</p>
-            <p class="text-sm">@campustrade.pro</p>
-            <p class="text-sm">Kaimur, Bihar, India</p>
+            <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
+            <ul class="space-y-3 text-sm text-gray-400">
+                <li class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:support@campustrade.pro">support@campustrade.pro</a>
+                </li>
+                <li class="flex items-center gap-2.5">
+                    <i class="fa-brands fa-instagram"></i>
+                    <a href="https://instagram.com/campustrade.pro" target="_blank">@campustrade.pro</a>
+                </li>
+                <li class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-location-dot text-red-400"></i>
+                    <span>Kaimur, Bihar, India</span>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <!-- Copyright -->
-    <div class="text-center mt-12 border-t border-gray-700 pt-6 text-sm">
-        &copy; 2026 CampusTrade. All rights reserved.
+    <div
+        class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-gray-800 text-center text-sm text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p>© 2026 CampusTrade. All rights reserved.</p>
+        <p class="text-xs">Made with ❤️ for Students</p>
     </div>
 </footer>
 {% endblock %}
