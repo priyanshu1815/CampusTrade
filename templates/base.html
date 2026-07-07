@@ -5,11 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CampusTrade - Privacy Protected Campus Marketplace</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Plus Jakarta Sans for Tech Premium Look) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
@@ -25,11 +22,9 @@
 
 <body class="bg-[#f8fafc] text-gray-800 antialiased pb-20 md:pb-0">
 
-    <!-- ==================== DESKTOP & MOBILE HEADER ==================== -->
     <header class="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
 
-            <!-- Logo Space -->
             <a href="/"
                 class="flex items-center space-x-2 text-xl sm:text-2xl font-black tracking-tight text-blue-600 shrink-0">
                 <svg class="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -41,17 +36,14 @@
                 <span>Campus<span class="text-gray-900">Trade</span></span>
             </a>
 
-            <!-- Global Search Bar (Laptop Only) -->
             <div class="hidden md:flex items-center flex-grow max-w-xl relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400 text-sm"></i>
                 <input type="text" placeholder="Search books, rooms, tiffin, essentials..."
                     class="w-full bg-gray-50 border border-gray-200 rounded-full pl-11 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition">
             </div>
 
-            <!-- Header Actions & Dropdown -->
             <div class="flex items-center space-x-3 sm:space-x-4">
 
-                <!-- Dynamic Location Selector Selector (Laptop Only) -->
                 <div
                     class="hidden sm:flex items-center space-x-1 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-700">
                     <i class="fa-solid fa-location-dot text-red-500"></i>
@@ -63,19 +55,17 @@
                     </select>
                 </div>
 
-                <!-- Chat & Notification Action Icons -->
-                {% if session.get('user_id') %}
                 <a href="/inbox" class="relative p-2 text-gray-600 hover:text-blue-600 transition">
                     <i class="fa-regular fa-comment-dots text-xl"></i>
                 </a>
-                <button class="relative p-2 text-gray-600 hover:text-blue-600 transition">
+
+                <button onclick="document.getElementById('menuButton').click()"
+                    class="relative p-2 text-gray-600 hover:text-blue-600 transition cursor-pointer">
                     <i class="fa-regular fa-bell text-xl"></i>
                     <span
-                        class="absolute top-1 right-1 w-4 h-4 bg-blue-600 text-[9px] font-bold text-white rounded-full flex items-center justify-center">3</span>
+                        class="absolute top-1 right-1 w-4 h-4 bg-blue-600 text-[9px] font-bold text-white rounded-full flex items-center justify-center">!</span>
                 </button>
-                {% endif %}
 
-                <!-- Authentication Display Check -->
                 {% if session.get('user_id') %}
                 <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200 uppercase cursor-pointer"
                     id="menuButton">
@@ -96,7 +86,6 @@
                 </button>
                 {% endif %}
 
-                <!-- Premium Menu Dropdown Dropdown Layout -->
                 <div id="dropdownMenu"
                     class="hidden absolute right-4 mt-12 w-56 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 top-6">
                     <div class="py-2">
@@ -140,7 +129,6 @@
             </div>
         </div>
 
-        <!-- Secondary Sub-Navbar (Categories & Post Ad) - Laptop Only -->
         <div class="hidden md:block w-full border-t border-gray-50 bg-white">
             <div class="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between">
                 <nav class="flex items-center space-x-6 text-xs font-bold text-gray-600">
@@ -160,17 +148,29 @@
             </div>
         </div>
 
-        <!-- Mobile Sub-Header Search Bar (Mobile Only) -->
         <div class="block md:hidden px-4 pb-3 pt-1 bg-white">
-            <div class="relative flex items-center">
-                <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-gray-400 text-xs"></i>
-                <input type="text" placeholder="Search books, rooms, tiffin, essentials..."
-                    class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none">
+            <div class="flex items-center gap-2">
+                <div
+                    class="flex items-center space-x-1 bg-gray-100 border border-gray-200 px-2.5 py-2 rounded-xl text-[11px] font-bold text-gray-700 shrink-0">
+                    <i class="fa-solid fa-location-dot text-red-500"></i>
+                    <select id="locationSelectorMobile"
+                        class="bg-transparent focus:outline-none cursor-pointer max-w-[80px]">
+                        <option value="all">All</option>
+                        {% for city in available_cities %}
+                        <option value="{{ city | lower }}">{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="relative flex-grow">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                    <input type="text" id="mobileSearchInput" placeholder="Search books, rooms, tiffin..."
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none">
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Flash Alert Messaging Queue -->
     <div class="max-w-4xl mx-auto px-4 mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -184,12 +184,10 @@
         {% endwith %}
     </div>
 
-    <!-- ==================== MAIN CONTENT DISPLAY CONTAINER ==================== -->
     <main class="w-full">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ==================== MOBILE APP-STYLE STICKY BOTTOM NAVIGATION ==================== -->
     <div
         class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center justify-around px-2 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
         <a href="/" class="flex flex-col items-center gap-1 text-blue-600">
@@ -200,23 +198,22 @@
             <i class="fa-regular fa-comment text-lg"></i>
             <span class="text-[10px] font-medium">Chats</span>
         </a>
-        <!-- Central Trigger Custom Menu Function -->
         <button onclick="document.getElementById('menuButton').click()"
             class="flex flex-col items-center justify-center -mt-6 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg border-4 border-white hover:bg-blue-700 transition cursor-pointer">
             <i class="fa-solid fa-plus text-lg"></i>
         </button>
-        <a href="/dashboard" class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
+        <button onclick="document.getElementById('menuButton').click()"
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition cursor-pointer">
             <i class="fa-regular fa-file-lines text-lg"></i>
             <span class="text-[10px] font-medium">Listings</span>
-        </a>
+        </button>
         <button onclick="document.getElementById('menuButton').click()"
-            class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
+            class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition cursor-pointer">
             <i class="fa-regular fa-user text-lg"></i>
             <span class="text-[10px] font-medium">Profile</span>
         </button>
     </div>
 
-    <!-- ==================== PRO LOOK ZOOM MODAL FUNCTION (RESTORED) ==================== -->
     <div id="proZoomModal"
         class="fixed inset-0 bg-black/90 hidden z-50 flex flex-col items-center justify-center p-4 transition-all duration-300"
         onclick="closeZoomModal()">
@@ -228,7 +225,6 @@
         </div>
     </div>
 
-    <!-- ==================== ALL CORE JS CODE SCRIPTS ==================== -->
     <script>
         // Dropdown Menu Toggler Logic
         const menuButton = document.getElementById('menuButton');
@@ -247,7 +243,17 @@
             });
         }
 
-        // Image Slider State Handler Script (Restored)
+        // Link Mobile Dropdown Selection sync to Main Dropdown functionality
+        const locSel = document.getElementById('locationSelector');
+        const locSelMob = document.getElementById('locationSelectorMobile');
+        if (locSel && locSelMob) {
+            locSelMob.addEventListener('change', (e) => {
+                locSel.value = e.target.value;
+                locSel.dispatchEvent(new Event('change'));
+            });
+        }
+
+        // Image Slider State Handler Script
         const itemSlideState = {};
 
         function changeSlide(itemId, direction, imagesList) {
@@ -277,7 +283,7 @@
             }
         }
 
-        // Zoom Modal Controllers (Restored)
+        // Zoom Modal Controllers
         function openFullZoomModal(itemId) {
             const currentSrc = document.getElementById(`main-img-${itemId}`).src;
             const modal = document.getElementById('proZoomModal');
