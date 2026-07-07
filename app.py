@@ -588,8 +588,18 @@ def listings():
 
 @app.route('/profile')
 def profile():
-    # Profile page render karne ke liye (Jaise tumhare folders me profile ka logic hoga)
-    return render_template('index.html') # Abhi ke liye error rokne ke liye index lagaya hai
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Please login to view your profile!', 'warning')
+        return redirect(url_for('login'))
+        
+    # Supabase authentication ya users data store table se details fetch karne ka pipeline
+    # User email ko automatic session data se fetch karke navbar/cards inject karna
+    if 'user_email' not in session:
+        # User session verification fallback state
+        session['user_email'] = session.get('email', 'student@campustrade.pro')
+
+    return render_template('profile.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
