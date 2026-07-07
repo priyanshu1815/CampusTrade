@@ -1,123 +1,94 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- ==================== EXACT MATCH HIGH-FIDELITY HERO BANNER ==================== -->
 <div class="w-full max-w-7xl mx-auto px-4 pt-4 pb-6">
-    <!-- Exact Royal Blue Gradient blend matching Image 1 -->
     <div
-        class="relative bg-gradient-to-br from-[#0a46e4] via-[#1253f3] to-[#003bc4] rounded-[32px] overflow-hidden px-8 py-14 sm:px-12 lg:p-20 flex flex-col lg:flex-row items-center justify-between gap-12 shadow-xl min-h-[460px]">
+        class="relative bg-gradient-to-r from-[#1d5bf7] to-[#0046e5] rounded-3xl overflow-hidden px-6 py-12 sm:px-10 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-lg min-h-[380px]">
 
-        <!-- Background Soft Floating Elements Layered Exactly as Image 1 -->
-        <!-- Graduation Cap (Top Left of Phone) -->
-        <div class="absolute top-12 right-[36%] text-white/15 text-8xl pointer-events-none hidden lg:block select-none">
+        <div class="absolute top-10 right-[40%] text-white/10 text-6xl pointer-events-none hidden lg:block select-none">
             <i class="fa-solid fa-graduation-cap"></i>
         </div>
-        <!-- ID Card Badge (Left of Phone Center) -->
         <div
-            class="absolute top-[48%] right-[39%] bg-gradient-to-br from-white/20 to-white/5 border border-white/20 backdrop-blur-md text-white p-3.5 rounded-2xl text-xl pointer-events-none hidden lg:block shadow-lg">
-            <i class="fa-solid fa-id-card opacity-90"></i>
-        </div>
-        <!-- Chat Bubble Icon (Right of Phone Top) -->
-        <div
-            class="absolute top-[32%] right-[4%] bg-gradient-to-br from-white/20 to-white/5 border border-white/20 backdrop-blur-md text-white p-3 rounded-xl text-base pointer-events-none hidden lg:block shadow-lg">
-            <i class="fa-solid fa-comment-dots opacity-90"></i>
-        </div>
-        <!-- Big Red Pin Drop Icon (Right of Phone Bottom) -->
-        <div class="absolute bottom-[20%] right-[8%] text-[#ff3b30] text-5xl pointer-events-none hidden lg:block drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)] animate-bounce"
-            style="animation-duration: 3s;">
-            <i class="fa-solid fa-location-dot"></i>
+            class="absolute bottom-10 right-[35%] bg-white/10 backdrop-blur-md text-white p-2.5 rounded-xl text-sm pointer-events-none hidden lg:block shadow-sm">
+            <i class="fa-solid fa-id-card opacity-70"></i>
         </div>
 
-        <!-- Left Column: Content Block Layout -->
-        <div class="w-full lg:w-[50%] text-center lg:text-left z-10 flex flex-col justify-center">
-            <!-- Hidden trust badge dynamically kept from original code structure -->
+        <div class="w-full lg:w-[55%] text-center lg:text-left z-10 flex flex-col justify-center">
             <div
-                class="hidden items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1 rounded-full mb-6 w-fit mx-auto lg:mx-0">
-                <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
+                class="inline-flex items-center gap-1.5 bg-white/20 text-white text-[11px] font-bold px-3 py-1 rounded-full mb-5 w-fit mx-auto lg:mx-0 shadow-sm backdrop-blur-sm">
+                <i class="fa-solid fa-star text-amber-300 text-[10px]"></i>
                 <span>Trusted by 10,000+ Campus Students</span>
             </div>
 
-            <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-black tracking-tight text-white mb-6 leading-[1.1]">
-                The Ultimate Smart <br>Campus Marketplace
+            <h1 class="text-3xl sm:text-4xl lg:text-[42px] font-black tracking-tight text-white mb-4 leading-[1.2]">
+                The Ultimate Smart <br class="hidden sm:inline">Campus Marketplace
             </h1>
-            <p class="text-sm sm:text-base text-white/85 font-medium max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+            <p class="text-xs sm:text-sm text-white/85 font-medium max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed">
                 Buy and sell textbooks, discover premium student rooms/PGs, find verified local tiffin services, and
                 switch essential gears smoothly.
             </p>
 
-            <!-- Exact Button Shapes & Typography From Image 1 -->
             <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                <a href="/bookstore"
-                    class="w-full sm:w-auto text-center bg-white text-[#1253f3] font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-gray-50 transition duration-200 text-sm tracking-wide">
+                <a href="/"
+                    class="w-full sm:w-auto text-center bg-white text-[#1d5bf7] font-extrabold px-6 py-3 rounded-xl shadow-md hover:bg-gray-50 transition text-xs sm:text-sm tracking-wide">
                     Browse Marketplace
                 </a>
 
                 {% if session.get('user_id') %}
                 <button onclick="openListingModal(this.getAttribute('data-role'))"
                     data-role="{{ session.get('user_role', '') | lower }}"
-                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/40 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition duration-200 text-sm tracking-wide cursor-pointer flex items-center justify-center gap-2">
+                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/30 text-white font-extrabold px-6 py-3 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm tracking-wide cursor-pointer flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus text-xs"></i> Post a New Listing
                 </button>
                 {% else %}
                 <a href="/register"
-                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/40 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition duration-200 text-sm tracking-wide">
+                    class="w-full sm:w-auto text-center bg-transparent border border-white/30 text-white font-extrabold px-6 py-3 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm tracking-wide">
                     Register as Student / Owner
                 </a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Right Column: Premium High-Fidelity iPhone Mockup Screen Matching Image 1 -->
-        <div class="w-full lg:w-[45%] hidden lg:flex relative items-center justify-center z-10 select-none">
-            <!-- Premium Dark Blue Curved iPhone Body Structure -->
+        <div class="w-full lg:w-[38%] hidden lg:flex relative items-center justify-center z-10">
             <div
-                class="relative w-[280px] h-[440px] bg-[#0d2240] rounded-[48px] p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transform rotate-[14deg] border-2 border-white/10 flex items-center justify-center">
-
-                <!-- White Internal Screen Wrapper -->
+                class="relative w-[230px] h-[350px] bg-[#0b1329] rounded-[40px] p-3 shadow-2xl border border-white/10 transform rotate-[6deg] hover:rotate-0 transition-all duration-350 ease-out">
                 <div
-                    class="w-full h-full bg-[#f4f7fc] rounded-[38px] overflow-hidden relative flex flex-col justify-between pt-5 pb-4 px-4 shadow-inner">
+                    class="w-full h-full bg-slate-50 rounded-[32px] p-3.5 flex flex-col justify-between overflow-hidden relative shadow-inner">
 
-                    <!-- iPhone Dynamic Notch/Speaker Line -->
                     <div
-                        class="absolute top-2.5 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-[#0d2240] rounded-b-xl z-20 flex items-center justify-center">
-                        <div class="w-8 h-1 bg-white/20 rounded-full mb-1"></div>
+                        class="w-20 h-3.5 bg-[#0b1329] rounded-b-lg mx-auto absolute top-0 left-1/2 transform -translate-x-1/2 z-20">
                     </div>
 
-                    <!-- Internal Search Mockup Bar -->
                     <div
-                        class="w-full bg-white rounded-xl py-2 px-3 flex items-center justify-between text-[11px] text-gray-300 shadow-sm mt-2 border border-gray-100">
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-4 h-1 bg-gray-200 rounded-full"></div>
-                        </div>
-                        <i class="fa-solid fa-magnifying-glass text-gray-400 text-[10px]"></i>
+                        class="w-full bg-white rounded-lg p-1.5 flex items-center justify-between text-[9px] text-gray-400 mt-2 border border-slate-100 shadow-sm">
+                        <span>Search campus...</span>
+                        <i class="fa-solid fa-magnifying-glass text-[8px] text-gray-400"></i>
                     </div>
 
-                    <!-- High-Fidelity Category Cards Grid (Pure Icon Layout matching Image 1) -->
-                    <div class="grid grid-cols-2 gap-3.5 my-auto">
-                        <!-- Bookstore Block -->
+                    <div class="grid grid-cols-2 gap-2 my-auto">
                         <div
-                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
-                            <i class="fa-solid fa-book-open text-[#1253f3] text-3xl"></i>
+                            class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                            <i class="fa-solid fa-book text-blue-600 text-sm mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-600">Bookstore</span>
                         </div>
-                        <!-- Rooms Block -->
                         <div
-                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
-                            <i class="fa-solid fa-bed text-[#10b981] text-3xl"></i>
+                            class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                            <i class="fa-solid fa-bed text-emerald-600 text-sm mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-600">Rooms</span>
                         </div>
-                        <!-- Tiffin Block -->
                         <div
-                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
-                            <i class="fa-solid fa-utensils text-[#f59e0b] text-3xl"></i>
+                            class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                            <i class="fa-solid fa-utensils text-amber-600 text-sm mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-600">Tiffin</span>
                         </div>
-                        <!-- Essentials Block -->
                         <div
-                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
-                            <i class="fa-solid fa-box-open text-[#8b5cf6] text-3xl"></i>
+                            class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                            <i class="fa-solid fa-laptop text-purple-600 text-sm mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-600">Gears</span>
                         </div>
                     </div>
 
-                    <!-- Apple Style Bottom Indicator Home Bar -->
-                    <div class="w-20 h-1 bg-gray-300 rounded-full mx-auto mt-auto"></div>
+                    <div class="w-14 h-1 bg-gray-300 rounded-full mx-auto"></div>
                 </div>
             </div>
         </div>
@@ -125,14 +96,13 @@
     </div>
 </div>
 
-<!-- ==================== MOBILE DIRECT SHORTCUT CHIPS ==================== -->
 <div class="block md:hidden w-full px-4 pb-4">
     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Explore Categories</p>
     <div class="grid grid-cols-4 gap-2">
         <a href="/bookstore"
             class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
             <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mb-1"><i
-                    class="fa-solid fa-book-open text-blue-500 text-xs"></i></div>
+                    class="fa-solid fa-book text-blue-500 text-xs"></i></div>
             <span class="text-[9px] font-bold text-gray-700">Books</span>
         </a>
         <a href="/rooms"
@@ -150,13 +120,12 @@
         <a href="/essentials"
             class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
             <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center mb-1"><i
-                    class="fa-solid fa-box-open text-purple-500 text-xs"></i></div>
+                    class="fa-solid fa-laptop text-purple-500 text-xs"></i></div>
             <span class="text-[9px] font-bold text-gray-700">Gears</span>
         </a>
     </div>
 </div>
 
-<!-- ==================== DYNAMIC LISTING ROLE OPTIONS MODAL POPUP ==================== -->
 <div id="listingOptionModal"
     class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
     <div
@@ -169,13 +138,10 @@
             <button onclick="closeListingModal()"
                 class="text-gray-400 hover:text-gray-600 text-xl cursor-pointer">&times;</button>
         </div>
-
-        <!-- Dynamic Content Grid based on roles via JavaScript -->
         <div class="p-5 grid grid-cols-1 gap-3" id="modalOptionsGrid"></div>
     </div>
 </div>
 
-<!-- ==================== WHY CAMPUSTRADE? SECTION ==================== -->
 <div class="w-full max-w-7xl mx-auto px-4 py-6">
     <div class="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 shadow-sm">
         <div class="mb-4">
@@ -184,7 +150,6 @@
         </div>
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <!-- Feature 1: Verified Sellers -->
             <div class="flex items-start gap-3">
                 <div
                     class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100/50">
@@ -192,12 +157,9 @@
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-sm font-bold text-gray-900 leading-tight">Verified Sellers</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">100% genuine and verified profiles on
-                        campus.</p>
+                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">100% genuine profiles on campus.</p>
                 </div>
             </div>
-
-            <!-- Feature 2: Secure Platform -->
             <div class="flex items-start gap-3">
                 <div
                     class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100/50">
@@ -205,12 +167,9 @@
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-sm font-bold text-gray-900 leading-tight">Secure Platform</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">Absolute student privacy and data security
-                        encryption.</p>
+                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">Absolute privacy and encryption.</p>
                 </div>
             </div>
-
-            <!-- Feature 3: Fast Search -->
             <div class="flex items-start gap-3">
                 <div
                     class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center shrink-0 border border-amber-100/50">
@@ -218,12 +177,9 @@
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-sm font-bold text-gray-900 leading-tight">Fast Search</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">Smart search filters to locate books or
-                        food instantly.</p>
+                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">Locate deals instantly.</p>
                 </div>
             </div>
-
-            <!-- Feature 4: Nearby Listings -->
             <div class="flex items-start gap-3">
                 <div
                     class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center shrink-0 border border-purple-100/50">
@@ -231,58 +187,53 @@
                 </div>
                 <div>
                     <h3 class="text-xs sm:text-sm font-bold text-gray-900 leading-tight">Nearby Listings</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">Find rooms, PGs, and deals directly in your
-                        locality.</p>
+                    <p class="text-[10px] text-gray-400 mt-1 leading-normal">Find rooms directly in your locality.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- DYNAMIC MODAL JAVASCRIPT LOGIC -->
 <script>
     function openListingModal(role) {
         const modal = document.getElementById('listingOptionModal');
         const grid = document.getElementById('modalOptionsGrid');
-        grid.innerHTML = ''; // Clear previous fields
+        grid.innerHTML = '';
 
-        // Options available for everyone (Students & Owners)
         const commonOptions = `
             <a href="/upload_book" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-blue-50/50 transition group">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs"><i class="fa-solid fa-book"></i></div>
-                    <div><p class="text-xs font-bold text-gray-800">Sell Academic Books</p><p class="text-[10px] text-gray-400">List old semester or reference books</p></div>
+                    <div><p class="text-xs font-bold text-gray-800">Sell Academic Books</p><p class="text-[10px] text-gray-400">List old semester books</p></div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-blue-500 text-xs transition"></i>
             </a>
             <a href="/upload_essential" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-purple-50/50 transition group">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 text-xs"><i class="fa-solid fa-box-open"></i></div>
-                    <div><p class="text-xs font-bold text-gray-800">Sell Student Essentials</p><p class="text-[10px] text-gray-400">List mattresses, coolants, laptops or gears</p></div>
+                    <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 text-xs"><i class="fa-solid fa-laptop"></i></div>
+                    <div><p class="text-xs font-bold text-gray-800">Sell Student Essentials</p><p class="text-[10px] text-gray-400">List coolants, laptops or gears</p></div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-purple-500 text-xs transition"></i>
             </a>
         `;
 
-        // Extra Premium sections available only for Owners and Admins
         const vendorOptions = `
             <a href="/upload_room" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-emerald-50/50 transition group">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 text-xs"><i class="fa-solid fa-house-user"></i></div>
-                    <div><p class="text-xs font-bold text-gray-800">List Student Rooms / PGs</p><p class="text-[10px] text-gray-400">Rent flats or beds to local college students</p></div>
+                    <div><p class="text-xs font-bold text-gray-800">List Student Rooms / PGs</p><p class="text-[10px] text-gray-400">Rent flats or beds to students</p></div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-emerald-500 text-xs transition"></i>
             </a>
             <a href="/upload_tiffin" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-amber-50/50 transition group">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 text-xs"><i class="fa-solid fa-bowl-food"></i></div>
-                    <div><p class="text-xs font-bold text-gray-800">List Tiffin Services</p><p class="text-[10px] text-gray-400">Publish monthly home-cooked meal plans</p></div>
+                    <div><p class="text-xs font-bold text-gray-800">List Tiffin Services</p><p class="text-[10px] text-gray-400">Publish home-cooked meal plans</p></div>
                 </div>
                 <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-amber-500 text-xs transition"></i>
             </a>
         `;
 
-        // Conditional Check
         if (role === 'owner' || role === 'admin') {
             grid.innerHTML = commonOptions + vendorOptions;
         } else {
@@ -293,6 +244,7 @@
         modal.classList.add('flex');
     }
 
+    // Modal close event handler
     function closeListingModal() {
         const modal = document.getElementById('listingOptionModal');
         modal.classList.add('hidden');
@@ -300,99 +252,14 @@
     }
 </script>
 
-<style>
-    .founder-section {
-        background-color: #ffffff;
-        padding: 60px 20px;
-        margin-top: 50px;
-        border-top: 1px solid #eef2f5;
-    }
-
-    .founder-card {
-        max-width: 850px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        gap: 35px;
-        background: #f8f9fa;
-        padding: 35px;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .founder-img {
-        width: 160px;
-        height: 160px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #0056b3;
-    }
-
-    .founder-info {
-        flex: 1;
-    }
-
-    .punchline {
-        font-style: italic;
-        color: #0056b3;
-        font-weight: bold;
-        font-size: 1.15rem;
-        margin-bottom: 8px;
-    }
-
-    .founder-name {
-        margin: 0;
-        color: #222;
-        font-size: 1.8rem;
-        font-weight: 700;
-    }
-
-    .founder-title {
-        margin: 2px 0 15px 0;
-        color: #666;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .founder-quote {
-        color: #333;
-        line-height: 1.6;
-        font-size: 1.1rem;
-        font-weight: 500;
-        margin-bottom: 10px;
-    }
-
-    .founder-motivation {
-        color: #555;
-        font-style: italic;
-        font-size: 1rem;
-        border-left: 3px solid #0056b3;
-        padding-left: 10px;
-    }
-
-    @media (max-width: 650px) {
-        .founder-card {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .founder-motivation {
-            border-left: none;
-            padding-left: 0;
-        }
-    }
-</style>
-
 <footer class="bg-gray-900 text-gray-300 pt-12 pb-6 mt-16 border-t border-gray-800">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-
         <div>
             <h3 class="text-white text-lg font-bold mb-4">CampusTrade</h3>
             <p class="text-gray-400 text-sm mb-4">The ultimate peer-to-peer marketplace engineered exclusively for
-                college students and local vendors.</p>
+                college students.</p>
             <ul class="space-y-2 text-sm">
-                <li><a href="/about" class="hover:text-indigo-400 transition-colors">👉 About Us & Founders</a></li>
+                <li><a href="/about" class="hover:text-indigo-400 transition-colors">👉 About Us</a></li>
                 <li><a href="/terms" class="hover:text-indigo-400 transition-colors">📄 Terms & Conditions</a></li>
                 <li><a href="/privacy" class="hover:text-indigo-400 transition-colors">🔒 Privacy Policy</a></li>
             </ul>
@@ -411,27 +278,20 @@
         <div>
             <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
             <ul class="space-y-3 text-sm text-gray-400">
-                <li class="flex items-center gap-2.5 group">
-                    <i
-                        class="fa-solid fa-envelope text-sm text-gray-400 group-hover:text-[#EA4335] transition duration-200"></i>
-                    <a href="mailto:support@campustrade.pro"
-                        class="group-hover:text-[#EA4335] transition duration-200">support@campustrade.pro</a>
-                </li>
-
-                <li class="flex items-center gap-2.5 group">
-                    <i
-                        class="fa-brands fa-instagram text-base text-gray-400 group-hover:text-[#E1306C] transition duration-200"></i>
-                    <a href="https://instagram.com/campustrade.pro" target="_blank"
-                        class="group-hover:text-[#E1306C] transition duration-200">@campustrade.pro</a>
-                </li>
-
                 <li class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-location-dot text-sm text-red-400"></i>
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:support@campustrade.pro">support@campustrade.pro</a>
+                </li>
+                <li class="flex items-center gap-2.5">
+                    <i class="fa-brands fa-instagram"></i>
+                    <a href="https://instagram.com/campustrade.pro" target="_blank">@campustrade.pro</a>
+                </li>
+                <li class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-location-dot text-red-400"></i>
                     <span>Kaimur, Bihar, India</span>
                 </li>
             </ul>
         </div>
-
     </div>
 
     <div
