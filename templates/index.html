@@ -1,112 +1,114 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- ==================== DYNAMIC HIGH-FIDELITY HERO BANNER ==================== -->
+<!-- ==================== EXACT MATCH HIGH-FIDELITY HERO BANNER ==================== -->
 <div class="w-full max-w-7xl mx-auto px-4 pt-4 pb-6">
+    <!-- Exact Royal Blue Brand color and rounded-3xl layout from your image -->
     <div
-        class="relative bg-gradient-to-r from-blue-600 via-blue-600 to-blue-700 rounded-3xl overflow-hidden p-6 sm:p-10 lg:p-12 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-xl border border-blue-500/20 min-h-[380px]">
+        class="relative bg-[#1d5bf7] rounded-3xl overflow-hidden px-6 py-12 sm:px-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl min-h-[380px]">
 
-        <!-- Subtle Pattern Overlay from your Reference Image -->
+        <!-- Background Soft Floating Icons Layout exactly positioned from your image -->
+        <div class="absolute top-12 right-[42%] text-white/10 text-7xl pointer-events-none hidden lg:block">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
         <div
-            class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)] pointer-events-none">
+            class="absolute bottom-12 right-[36%] bg-white/10 backdrop-blur-sm text-white p-3 rounded-2xl text-base pointer-events-none hidden lg:block shadow-sm">
+            <i class="fa-solid fa-id-card opacity-80"></i>
+        </div>
+        <div
+            class="absolute top-20 right-10 bg-white/10 backdrop-blur-sm text-white p-3 rounded-2xl text-base pointer-events-none hidden lg:block shadow-sm">
+            <i class="fa-solid fa-comment-dots opacity-80"></i>
+        </div>
+        <div
+            class="absolute bottom-16 right-12 text-[#ef4444] text-4xl pointer-events-none hidden lg:block drop-shadow-md">
+            <i class="fa-solid fa-location-dot"></i>
         </div>
 
-        <!-- Left Information Column (Controls height layout) -->
+        <!-- Left Column: Content Block -->
         <div class="w-full lg:w-[55%] text-center lg:text-left z-10 flex flex-col justify-center">
             <!-- Trust Badge Element -->
             <div
-                class="inline-flex items-center gap-1.5 bg-white/10 text-white text-[11px] font-bold px-3 py-1 rounded-full mb-5 w-fit mx-auto lg:mx-0 backdrop-blur-md">
+                class="inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1 rounded-full mb-6 w-fit mx-auto lg:mx-0">
                 <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
                 <span>Trusted by 10,000+ Campus Students</span>
             </div>
 
-            <h1 class="text-3xl sm:text-4xl lg:text-[44px] font-black tracking-tight text-white mb-4 leading-[1.15]">
-                The Ultimate Smart <br>Campus Marketplace
+            <h1 class="text-3xl sm:text-4xl lg:text-[45px] font-black tracking-tight text-white mb-4 leading-[1.15]">
+                The Ultimate Smart <br class="hidden sm:inline">Campus Marketplace
             </h1>
-            <p
-                class="text-xs sm:text-sm text-blue-100 font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed opacity-90">
+            <p class="text-xs sm:text-sm text-white/80 font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
                 Buy and sell textbooks, discover premium student rooms/PGs, find verified local tiffin services, and
                 switch essential gears smoothly.
             </p>
 
-            <!-- Call To Actions -->
+            <!-- Operational Action Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <a href="/bookstore"
-                    class="w-full sm:w-auto text-center bg-white text-blue-700 font-black px-7 py-3.5 rounded-xl shadow-md hover:bg-blue-50 transition text-xs sm:text-sm">
+                    class="w-full sm:w-auto text-center bg-white text-[#1d5bf7] font-black px-7 py-3.5 rounded-xl shadow-md hover:bg-gray-50 transition text-xs sm:text-sm">
                     Browse Marketplace
                 </a>
 
                 {% if session.get('user_id') %}
-                <!-- Logged In Action Button Fixed (No more freeze) -->
-                <a href="/upload_book"
-                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/40 text-white font-black px-7 py-3 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm">
-                    <i class="fa-solid fa-plus mr-1"></i> Post a New Listing
-                </a>
+                <!-- Dynamic Listing Opener via Clean HTML Data Attribute to stop VS Code Linter errors -->
+                <button onclick="openListingModal(this.getAttribute('data-role'))"
+                    data-role="{{ session.get('user_role', '') | lower }}"
+                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/30 text-white font-black px-7 py-3.5 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus text-xs"></i> Post a New Listing
+                </button>
                 {% else %}
-                <!-- Logged Out Trigger -->
                 <a href="/register"
-                    class="w-full sm:w-auto text-center bg-transparent border border-white/30 text-white font-black px-7 py-3 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm">
+                    class="w-full sm:w-auto text-center bg-transparent border border-white/30 text-white font-black px-7 py-3.5 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm">
                     Register as Student / Owner
                 </a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Right Column: Perfect Dimension Matching 3D Angled Phone & Floating Elements -->
-        <div class="w-full lg:w-[42%] hidden lg:flex relative items-center justify-center h-[320px] z-10">
-
-            <!-- Background Vector Floating Icons exactly like your image -->
-            <div class="absolute -top-4 left-6 text-white/10 text-6xl transform -rotate-12 animate-pulse"><i
-                    class="fa-solid fa-graduation-cap"></i></div>
+        <!-- Right Column: Clean-Sleek In-Frame Mockup from your Image -->
+        <div class="w-full lg:w-[40%] hidden lg:flex relative items-center justify-center z-10">
+            <!-- Exact Angled Phone Structure from reference screenshot -->
             <div
-                class="absolute bottom-6 left-0 bg-blue-500/40 text-white p-2.5 rounded-xl text-sm border border-white/10 shadow-lg transform -rotate-12">
-                <i class="fa-solid fa-id-card"></i></div>
-            <div
-                class="absolute top-12 right-0 bg-blue-400/30 text-white p-2.5 rounded-xl text-sm border border-white/10 shadow-lg transform rotate-12">
-                <i class="fa-solid fa-comment-dots"></i></div>
-            <div class="absolute bottom-10 right-4 text-red-500 text-3xl transform rotate-6 drop-shadow-md"><i
-                    class="fa-solid fa-location-dot"></i></div>
+                class="relative w-[210px] h-[320px] bg-[#111827] rounded-[38px] p-2.5 shadow-2xl transform rotate-[11deg] hover:rotate-0 transition-all duration-500 ease-out border-2 border-slate-800">
 
-            <!-- The Angled Responsive Device Shell -->
-            <div
-                class="relative w-[190px] h-[300px] bg-slate-900 rounded-[32px] p-2 shadow-[20px_20px_50px_rgba(0,0,0,0.3)] border-2 border-slate-700/70 transform rotate-[11deg] hover:rotate-0 transition-transform duration-500 ease-out overflow-hidden flex flex-col justify-between">
+                <!-- Internal UI Canvas Screen -->
+                <div
+                    class="w-full h-full bg-white rounded-[28px] p-3 flex flex-col justify-between overflow-hidden relative">
 
-                <!-- Internal Phone Screen Interface Layout -->
-                <div class="w-full h-full bg-white rounded-[26px] p-2 flex flex-col justify-between overflow-hidden">
-                    <!-- Internal Fake Search Bar Component -->
+                    <!-- Inside Search Mockup -->
                     <div
                         class="w-full bg-slate-100 rounded-md p-1.5 flex items-center justify-between text-[8px] text-gray-400 mt-1">
                         <span>Search campus...</span>
                         <i class="fa-solid fa-magnifying-glass text-[7px]"></i>
                     </div>
 
-                    <!-- Internal Feature Display Grid -->
-                    <div class="grid grid-cols-2 gap-1.5 my-2">
+                    <!-- Clean Flat Category Items Grid from Image -->
+                    <div class="grid grid-cols-2 gap-2 my-auto">
                         <div
-                            class="bg-blue-50 border border-blue-100/50 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-book-open text-blue-600 text-[10px] mb-0.5"></i>
-                            <span class="text-[7px] font-bold text-gray-700">Bookstore</span>
+                            class="bg-blue-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
+                            <i class="fa-solid fa-book-open text-blue-600 text-xs mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-700">Bookstore</span>
                         </div>
                         <div
-                            class="bg-emerald-50 border border-emerald-100/50 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-bed text-emerald-600 text-[10px] mb-0.5"></i>
-                            <span class="text-[7px] font-bold text-gray-700">Rooms</span>
+                            class="bg-emerald-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
+                            <i class="fa-solid fa-bed text-emerald-600 text-xs mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-700">Rooms</span>
                         </div>
                         <div
-                            class="bg-amber-50 border border-amber-100/50 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-utensils text-amber-600 text-[10px] mb-0.5"></i>
-                            <span class="text-[7px] font-bold text-gray-700">Tiffin</span>
+                            class="bg-amber-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
+                            <i class="fa-solid fa-utensils text-amber-600 text-xs mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-700">Tiffin</span>
                         </div>
                         <div
-                            class="bg-purple-50 border border-purple-100/50 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-box-open text-purple-600 text-[10px] mb-0.5"></i>
-                            <span class="text-[7px] font-bold text-gray-700">Gears</span>
+                            class="bg-purple-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
+                            <i class="fa-solid fa-box-open text-purple-600 text-xs mb-1"></i>
+                            <span class="text-[8px] font-bold text-gray-700">Gears</span>
                         </div>
                     </div>
 
-                    <!-- App Brand Bottom Indicator -->
-                    <div class="text-center pb-1 border-t border-slate-100">
-                        <span class="text-[6px] font-black text-blue-600 tracking-wider">LIVE APP FRAME</span>
+                    <!-- App Bottom Badge -->
+                    <div class="text-center pb-0.5 border-t border-slate-100 pt-1.5">
+                        <span class="text-[7px] font-black text-[#1d5bf7] tracking-wider uppercase">Live App
+                            Frame</span>
                     </div>
                 </div>
 
@@ -144,6 +146,25 @@
                     class="fa-solid fa-box-open text-purple-500 text-xs"></i></div>
             <span class="text-[9px] font-bold text-gray-700">Gears</span>
         </a>
+    </div>
+</div>
+
+<!-- ==================== DYNAMIC LISTING ROLE OPTIONS MODAL POPUP ==================== -->
+<div id="listingOptionModal"
+    class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div
+        class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-gray-100 transition-all duration-300">
+        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+            <div>
+                <h3 class="text-sm font-black text-gray-900">Select Ad Category</h3>
+                <p class="text-[11px] text-gray-400 mt-0.5">Choose what you want to list on the platform</p>
+            </div>
+            <button onclick="closeListingModal()"
+                class="text-gray-400 hover:text-gray-600 text-xl cursor-pointer">&times;</button>
+        </div>
+
+        <!-- Dynamic Content Grid based on roles via JavaScript -->
+        <div class="p-5 grid grid-cols-1 gap-3" id="modalOptionsGrid"></div>
     </div>
 </div>
 
@@ -211,7 +232,66 @@
     </div>
 </div>
 
-<!-- TUMHARA REST CARD CORNER START FROM HERE -->
+<!-- DYNAMIC MODAL JAVASCRIPT LOGIC -->
+<script>
+    function openListingModal(role) {
+        const modal = document.getElementById('listingOptionModal');
+        const grid = document.getElementById('modalOptionsGrid');
+        grid.innerHTML = ''; // Clear previous fields
+
+        // Options available for everyone (Students & Owners)
+        const commonOptions = `
+            <a href="/upload_book" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-blue-50/50 transition group">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 text-xs"><i class="fa-solid fa-book"></i></div>
+                    <div><p class="text-xs font-bold text-gray-800">Sell Academic Books</p><p class="text-[10px] text-gray-400">List old semester or reference books</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-blue-500 text-xs transition"></i>
+            </a>
+            <a href="/upload_essential" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-purple-50/50 transition group">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 text-xs"><i class="fa-solid fa-box-open"></i></div>
+                    <div><p class="text-xs font-bold text-gray-800">Sell Student Essentials</p><p class="text-[10px] text-gray-400">List mattresses, coolants, laptops or gears</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-purple-500 text-xs transition"></i>
+            </a>
+        `;
+
+        // Extra Premium sections available only for Owners and Admins
+        const vendorOptions = `
+            <a href="/upload_room" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-emerald-50/50 transition group">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 text-xs"><i class="fa-solid fa-house-user"></i></div>
+                    <div><p class="text-xs font-bold text-gray-800">List Student Rooms / PGs</p><p class="text-[10px] text-gray-400">Rent flats or beds to local college students</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-emerald-500 text-xs transition"></i>
+            </a>
+            <a href="/upload_tiffin" class="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-amber-50/50 transition group">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 text-xs"><i class="fa-solid fa-bowl-food"></i></div>
+                    <div><p class="text-xs font-bold text-gray-800">List Tiffin Services</p><p class="text-[10px] text-gray-400">Publish monthly home-cooked meal plans</p></div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300 group-hover:text-amber-500 text-xs transition"></i>
+            </a>
+        `;
+
+        // Conditional Check
+        if (role === 'owner' || role === 'admin') {
+            grid.innerHTML = commonOptions + vendorOptions;
+        } else {
+            grid.innerHTML = commonOptions;
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeListingModal() {
+        const modal = document.getElementById('listingOptionModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+</script>
 
 <style>
     .founder-section {
