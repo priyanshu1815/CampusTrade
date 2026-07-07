@@ -3,115 +3,122 @@
 
 <!-- ==================== EXACT MATCH HIGH-FIDELITY HERO BANNER ==================== -->
 <div class="w-full max-w-7xl mx-auto px-4 pt-4 pb-6">
-    <!-- Exact Royal Blue Brand color and rounded-3xl layout from your image -->
+    <!-- Exact Royal Blue Gradient blend matching Image 1 -->
     <div
-        class="relative bg-[#1d5bf7] rounded-3xl overflow-hidden px-6 py-12 sm:px-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl min-h-[380px]">
+        class="relative bg-gradient-to-br from-[#0a46e4] via-[#1253f3] to-[#003bc4] rounded-[32px] overflow-hidden px-8 py-14 sm:px-12 lg:p-20 flex flex-col lg:flex-row items-center justify-between gap-12 shadow-xl min-h-[460px]">
 
-        <!-- Background Soft Floating Icons Layout exactly positioned from your image -->
-        <div class="absolute top-12 right-[42%] text-white/10 text-7xl pointer-events-none hidden lg:block">
+        <!-- Background Soft Floating Elements Layered Exactly as Image 1 -->
+        <!-- Graduation Cap (Top Left of Phone) -->
+        <div class="absolute top-12 right-[36%] text-white/15 text-8xl pointer-events-none hidden lg:block select-none">
             <i class="fa-solid fa-graduation-cap"></i>
         </div>
+        <!-- ID Card Badge (Left of Phone Center) -->
         <div
-            class="absolute bottom-12 right-[36%] bg-white/10 backdrop-blur-sm text-white p-3 rounded-2xl text-base pointer-events-none hidden lg:block shadow-sm">
-            <i class="fa-solid fa-id-card opacity-80"></i>
+            class="absolute top-[48%] right-[39%] bg-gradient-to-br from-white/20 to-white/5 border border-white/20 backdrop-blur-md text-white p-3.5 rounded-2xl text-xl pointer-events-none hidden lg:block shadow-lg">
+            <i class="fa-solid fa-id-card opacity-90"></i>
         </div>
+        <!-- Chat Bubble Icon (Right of Phone Top) -->
         <div
-            class="absolute top-20 right-10 bg-white/10 backdrop-blur-sm text-white p-3 rounded-2xl text-base pointer-events-none hidden lg:block shadow-sm">
-            <i class="fa-solid fa-comment-dots opacity-80"></i>
+            class="absolute top-[32%] right-[4%] bg-gradient-to-br from-white/20 to-white/5 border border-white/20 backdrop-blur-md text-white p-3 rounded-xl text-base pointer-events-none hidden lg:block shadow-lg">
+            <i class="fa-solid fa-comment-dots opacity-90"></i>
         </div>
-        <div
-            class="absolute bottom-16 right-12 text-[#ef4444] text-4xl pointer-events-none hidden lg:block drop-shadow-md">
+        <!-- Big Red Pin Drop Icon (Right of Phone Bottom) -->
+        <div class="absolute bottom-[20%] right-[8%] text-[#ff3b30] text-5xl pointer-events-none hidden lg:block drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)] animate-bounce"
+            style="animation-duration: 3s;">
             <i class="fa-solid fa-location-dot"></i>
         </div>
 
-        <!-- Left Column: Content Block -->
-        <div class="w-full lg:w-[55%] text-center lg:text-left z-10 flex flex-col justify-center">
-            <!-- Trust Badge Element -->
+        <!-- Left Column: Content Block Layout -->
+        <div class="w-full lg:w-[50%] text-center lg:text-left z-10 flex flex-col justify-center">
+            <!-- Hidden trust badge dynamically kept from original code structure -->
             <div
-                class="inline-flex items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1 rounded-full mb-6 w-fit mx-auto lg:mx-0">
+                class="hidden items-center gap-1.5 bg-white/15 text-white text-[11px] font-semibold px-3 py-1 rounded-full mb-6 w-fit mx-auto lg:mx-0">
                 <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
                 <span>Trusted by 10,000+ Campus Students</span>
             </div>
 
-            <h1 class="text-3xl sm:text-4xl lg:text-[45px] font-black tracking-tight text-white mb-4 leading-[1.15]">
-                The Ultimate Smart <br class="hidden sm:inline">Campus Marketplace
+            <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-black tracking-tight text-white mb-6 leading-[1.1]">
+                The Ultimate Smart <br>Campus Marketplace
             </h1>
-            <p class="text-xs sm:text-sm text-white/80 font-medium max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+            <p class="text-sm sm:text-base text-white/85 font-medium max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
                 Buy and sell textbooks, discover premium student rooms/PGs, find verified local tiffin services, and
                 switch essential gears smoothly.
             </p>
 
-            <!-- Operational Action Buttons -->
+            <!-- Exact Button Shapes & Typography From Image 1 -->
             <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <a href="/bookstore"
-                    class="w-full sm:w-auto text-center bg-white text-[#1d5bf7] font-black px-7 py-3.5 rounded-xl shadow-md hover:bg-gray-50 transition text-xs sm:text-sm">
+                    class="w-full sm:w-auto text-center bg-white text-[#1253f3] font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-gray-50 transition duration-200 text-sm tracking-wide">
                     Browse Marketplace
                 </a>
 
                 {% if session.get('user_id') %}
-                <!-- Dynamic Listing Opener via Clean HTML Data Attribute to stop VS Code Linter errors -->
                 <button onclick="openListingModal(this.getAttribute('data-role'))"
                     data-role="{{ session.get('user_role', '') | lower }}"
-                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/30 text-white font-black px-7 py-3.5 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-2">
+                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/40 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition duration-200 text-sm tracking-wide cursor-pointer flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus text-xs"></i> Post a New Listing
                 </button>
                 {% else %}
                 <a href="/register"
-                    class="w-full sm:w-auto text-center bg-transparent border border-white/30 text-white font-black px-7 py-3.5 rounded-xl hover:bg-white/10 transition text-xs sm:text-sm">
+                    class="w-full sm:w-auto text-center bg-transparent border-2 border-white/40 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition duration-200 text-sm tracking-wide">
                     Register as Student / Owner
                 </a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Right Column: Clean-Sleek In-Frame Mockup from your Image -->
-        <div class="w-full lg:w-[40%] hidden lg:flex relative items-center justify-center z-10">
-            <!-- Exact Angled Phone Structure from reference screenshot -->
+        <!-- Right Column: Premium High-Fidelity iPhone Mockup Screen Matching Image 1 -->
+        <div class="w-full lg:w-[45%] hidden lg:flex relative items-center justify-center z-10 select-none">
+            <!-- Premium Dark Blue Curved iPhone Body Structure -->
             <div
-                class="relative w-[210px] h-[320px] bg-[#111827] rounded-[38px] p-2.5 shadow-2xl transform rotate-[11deg] hover:rotate-0 transition-all duration-500 ease-out border-2 border-slate-800">
+                class="relative w-[280px] h-[440px] bg-[#0d2240] rounded-[48px] p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] transform rotate-[14deg] border-2 border-white/10 flex items-center justify-center">
 
-                <!-- Internal UI Canvas Screen -->
+                <!-- White Internal Screen Wrapper -->
                 <div
-                    class="w-full h-full bg-white rounded-[28px] p-3 flex flex-col justify-between overflow-hidden relative">
+                    class="w-full h-full bg-[#f4f7fc] rounded-[38px] overflow-hidden relative flex flex-col justify-between pt-5 pb-4 px-4 shadow-inner">
 
-                    <!-- Inside Search Mockup -->
+                    <!-- iPhone Dynamic Notch/Speaker Line -->
                     <div
-                        class="w-full bg-slate-100 rounded-md p-1.5 flex items-center justify-between text-[8px] text-gray-400 mt-1">
-                        <span>Search campus...</span>
-                        <i class="fa-solid fa-magnifying-glass text-[7px]"></i>
+                        class="absolute top-2.5 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-[#0d2240] rounded-b-xl z-20 flex items-center justify-center">
+                        <div class="w-8 h-1 bg-white/20 rounded-full mb-1"></div>
                     </div>
 
-                    <!-- Clean Flat Category Items Grid from Image -->
-                    <div class="grid grid-cols-2 gap-2 my-auto">
-                        <div
-                            class="bg-blue-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-book-open text-blue-600 text-xs mb-1"></i>
-                            <span class="text-[8px] font-bold text-gray-700">Bookstore</span>
+                    <!-- Internal Search Mockup Bar -->
+                    <div
+                        class="w-full bg-white rounded-xl py-2 px-3 flex items-center justify-between text-[11px] text-gray-300 shadow-sm mt-2 border border-gray-100">
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-4 h-1 bg-gray-200 rounded-full"></div>
                         </div>
+                        <i class="fa-solid fa-magnifying-glass text-gray-400 text-[10px]"></i>
+                    </div>
+
+                    <!-- High-Fidelity Category Cards Grid (Pure Icon Layout matching Image 1) -->
+                    <div class="grid grid-cols-2 gap-3.5 my-auto">
+                        <!-- Bookstore Block -->
                         <div
-                            class="bg-emerald-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-bed text-emerald-600 text-xs mb-1"></i>
-                            <span class="text-[8px] font-bold text-gray-700">Rooms</span>
+                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
+                            <i class="fa-solid fa-book-open text-[#1253f3] text-3xl"></i>
                         </div>
+                        <!-- Rooms Block -->
                         <div
-                            class="bg-amber-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-utensils text-amber-600 text-xs mb-1"></i>
-                            <span class="text-[8px] font-bold text-gray-700">Tiffin</span>
+                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
+                            <i class="fa-solid fa-bed text-[#10b981] text-3xl"></i>
                         </div>
+                        <!-- Tiffin Block -->
                         <div
-                            class="bg-purple-50/60 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
-                            <i class="fa-solid fa-box-open text-purple-600 text-xs mb-1"></i>
-                            <span class="text-[8px] font-bold text-gray-700">Gears</span>
+                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
+                            <i class="fa-solid fa-utensils text-[#f59e0b] text-3xl"></i>
+                        </div>
+                        <!-- Essentials Block -->
+                        <div
+                            class="bg-white rounded-2xl p-5 flex items-center justify-center aspect-square shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-gray-50 hover:scale-105 transition duration-300">
+                            <i class="fa-solid fa-box-open text-[#8b5cf6] text-3xl"></i>
                         </div>
                     </div>
 
-                    <!-- App Bottom Badge -->
-                    <div class="text-center pb-0.5 border-t border-slate-100 pt-1.5">
-                        <span class="text-[7px] font-black text-[#1d5bf7] tracking-wider uppercase">Live App
-                            Frame</span>
-                    </div>
+                    <!-- Apple Style Bottom Indicator Home Bar -->
+                    <div class="w-20 h-1 bg-gray-300 rounded-full mx-auto mt-auto"></div>
                 </div>
-
             </div>
         </div>
 
