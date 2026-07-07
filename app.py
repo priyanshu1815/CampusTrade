@@ -63,7 +63,26 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    unread_count = 0
+    user_id = session.get('user_id')
+    
+    if user_id:
+        # Supabase key aur project ID jo tumhare script mein upar defined hain unka use karke direct fetch
+        headers = {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+        }
+        # Notifications table se unread query filter karna
+        url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/rest/v1/notifications?user_id=eq.{user_id}&is_read=eq.false"
+        
+        try:
+            res = requests.get(url, headers=headers)
+            if res.status_code == 200:
+                unread_count = len(res.json())
+        except Exception as e:
+            print("Notification alert error:", e)
+
+    return render_template('index.html', unread_count=unread_count)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
