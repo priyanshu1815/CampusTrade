@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampusTrade | The Ultimate Smart Campus Marketplace</title>
+    <title>CampusTrade - Privacy Protected Campus Marketplace</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Plus Jakarta Sans for Premium Look) -->
+    <!-- Google Fonts (Plus Jakarta Sans for Tech Premium Look) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
@@ -20,52 +20,42 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f8fafc;
         }
-
-        /* Hide scrollbar for category selector on mobile */
-        .scrollbar-none::-webkit-scrollbar {
-            display: none;
-        }
-
-        .scrollbar-none {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 antialiased pb-20 md:pb-0">
+<body class="bg-[#f8fafc] text-gray-800 antialiased pb-20 md:pb-0">
 
-    <!-- ==================== MODERN HEADER (LAPTOP & MOBILE RESPONSIVE) ==================== -->
+    <!-- ==================== DESKTOP & MOBILE HEADER ==================== -->
     <header class="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
 
-            <!-- Logo Area -->
-            <a href="/" class="flex items-center space-x-2 text-xl font-black tracking-tight text-blue-600 shrink-0">
-                <svg class="w-7 h-7 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <!-- Logo Space -->
+            <a href="/"
+                class="flex items-center space-x-2 text-xl sm:text-2xl font-black tracking-tight text-blue-600 shrink-0">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
+                    <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2 2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"></path>
                     <path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"></path>
                     <circle cx="8" cy="12" r="2"></circle>
                 </svg>
                 <span>Campus<span class="text-gray-900">Trade</span></span>
             </a>
 
-            <!-- Global Search Bar (Laptop Mode - Hidden on Mobile Top) -->
+            <!-- Global Search Bar (Laptop Only) -->
             <div class="hidden md:flex items-center flex-grow max-w-xl relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400 text-sm"></i>
                 <input type="text" placeholder="Search books, rooms, tiffin, essentials..."
                     class="w-full bg-gray-50 border border-gray-200 rounded-full pl-11 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition">
             </div>
 
-            <!-- Dynamic Header Actions -->
+            <!-- Header Actions & Dropdown -->
             <div class="flex items-center space-x-3 sm:space-x-4">
 
-                <!-- Dynamic Location Selector (Integrated seamlessly) -->
+                <!-- Dynamic Location Selector Selector (Laptop Only) -->
                 <div
-                    class="flex items-center space-x-1 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-700">
+                    class="hidden sm:flex items-center space-x-1 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-700">
                     <i class="fa-solid fa-location-dot text-red-500"></i>
-                    <select id="locationSelector"
-                        class="bg-transparent text-xs font-bold text-gray-700 focus:outline-none cursor-pointer">
+                    <select id="locationSelector" class="bg-transparent focus:outline-none cursor-pointer pr-1">
                         <option value="all">All Locations</option>
                         {% for city in available_cities %}
                         <option value="{{ city | lower }}">{{ city }}</option>
@@ -73,96 +63,104 @@
                     </select>
                 </div>
 
-                <!-- Inbox Icon (Laptop & Mobile Icons match screenshot) -->
+                <!-- Chat & Notification Action Icons -->
+                {% if session.get('user_id') %}
                 <a href="/inbox" class="relative p-2 text-gray-600 hover:text-blue-600 transition">
                     <i class="fa-regular fa-comment-dots text-xl"></i>
                 </a>
-
-                <!-- Notifications Dummy -->
                 <button class="relative p-2 text-gray-600 hover:text-blue-600 transition">
                     <i class="fa-regular fa-bell text-xl"></i>
                     <span
                         class="absolute top-1 right-1 w-4 h-4 bg-blue-600 text-[9px] font-bold text-white rounded-full flex items-center justify-center">3</span>
                 </button>
+                {% endif %}
 
-                <!-- Profile Menu Button (Kept your old dropdown function intact) -->
-                <div class="relative inline-block text-left">
-                    <button id="menuButton"
-                        class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200 focus:outline-none">
-                        {% if session.get('user_id') %}
-                        {{ session.get('user_name')[:2].upper() }}
-                        {% else %}
-                        <i class="fa-regular fa-user text-sm"></i>
-                        {% endif %}
-                    </button>
+                <!-- Authentication Display Check -->
+                {% if session.get('user_id') %}
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200 uppercase cursor-pointer"
+                    id="menuButton">
+                    {{ session.get('user_name')[:2] }}
+                </div>
+                {% else %}
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <a href="/login"
+                        class="text-xs sm:text-sm font-semibold text-gray-600 hover:text-blue-600 transition px-2 py-1">Sign
+                        In</a>
+                    <a href="/register"
+                        class="bg-blue-600 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl hover:bg-blue-700 transition shadow-sm">Sign
+                        Up</a>
+                </div>
+                <button id="menuButton"
+                    class="p-2 text-gray-500 hover:text-gray-800 rounded-full hover:bg-gray-100 transition focus:outline-none">
+                    <i class="fa-solid fa-ellipsis-vertical text-lg sm:text-xl"></i>
+                </button>
+                {% endif %}
 
-                    <!-- Dropdown Menu items -->
-                    <div id="dropdownMenu"
-                        class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50">
-                        <div class="py-2">
-                            <span
-                                class="block px-4 py-1 text-[10px] font-bold tracking-wider text-gray-400 uppercase">Student
-                                Privileges</span>
-                            <a href="/upload_book"
-                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
-                                <i class="fa-solid fa-book mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell Books
-                            </a>
-                            <a href="/upload_essential"
-                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
-                                <i class="fa-solid fa-laptop mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell
-                                Essentials
-                            </a>
-                        </div>
-                        <div class="py-2">
-                            <span
-                                class="block px-4 py-1 text-[10px] font-bold tracking-wider text-purple-400 uppercase">Owner
-                                Privileges</span>
-                            <a href="/upload_room"
-                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
-                                <i class="fa-solid fa-house-user mr-3 text-gray-400 group-hover:text-purple-500"></i>
-                                List Rooms / PGs
-                            </a>
-                            <a href="/upload_tiffin"
-                                class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
-                                <i class="fa-solid fa-bowl-food mr-3 text-gray-400 group-hover:text-purple-500"></i>
-                                List Tiffin Center
-                            </a>
-                        </div>
-                        <div class="py-1">
-                            {% if session.get('user_id') %}
-                            <a href="/logout"
-                                class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                                <i class="fa-solid fa-right-from-bracket mr-3 text-red-400"></i> Logout
-                            </a>
-                            {% else %}
-                            <a href="/login"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Login</a>
-                            <a href="/register"
-                                class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">Register</a>
-                            {% endif %}
-                        </div>
+                <!-- Premium Menu Dropdown Dropdown Layout -->
+                <div id="dropdownMenu"
+                    class="hidden absolute right-4 mt-12 w-56 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 top-6">
+                    <div class="py-2">
+                        <span
+                            class="block px-4 py-1 text-[10px] font-bold tracking-wider text-gray-400 uppercase">Student
+                            Privileges</span>
+                        <a href="/upload_book"
+                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                            <i class="fa-solid fa-book mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell Books
+                        </a>
+                        <a href="/upload_essential"
+                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                            <i class="fa-solid fa-laptop mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell
+                            Essentials
+                        </a>
                     </div>
+                    <div class="py-2">
+                        <span
+                            class="block px-4 py-1 text-[10px] font-bold tracking-wider text-purple-400 uppercase">Owner
+                            Privileges</span>
+                        <a href="/upload_room"
+                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
+                            <i class="fa-solid fa-house-user mr-3 text-gray-400 group-hover:text-purple-500"></i> List
+                            Rooms / PGs
+                        </a>
+                        <a href="/upload_tiffin"
+                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
+                            <i class="fa-solid fa-bowl-food mr-3 text-gray-400 group-hover:text-purple-500"></i> List
+                            Tiffin Center
+                        </a>
+                    </div>
+                    {% if session.get('user_id') %}
+                    <div class="py-1">
+                        <a href="/logout"
+                            class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                            <i class="fa-solid fa-right-from-bracket mr-3 text-red-400"></i> Logout
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Secondary Navigation (Categories Selector) - Laptop/Desktop Only -->
-        <div class="hidden md:block w-full border-t border-gray-100 bg-white">
-            <div class="max-w-7xl mx-auto px-6 h-12 flex items-center justify-between">
+        <!-- Secondary Sub-Navbar (Categories & Post Ad) - Laptop Only -->
+        <div class="hidden md:block w-full border-t border-gray-50 bg-white">
+            <div class="max-w-7xl mx-auto px-4 h-12 flex items-center justify-between">
                 <nav class="flex items-center space-x-6 text-xs font-bold text-gray-600">
                     <a href="/bookstore" class="hover:text-blue-600 transition flex items-center"><i
                             class="fa-solid fa-book-open mr-1.5 text-blue-500"></i> Bookstore</a>
                     <a href="/rooms" class="hover:text-blue-600 transition flex items-center"><i
-                            class="fa-solid fa-bed mr-1.5 text-emerald-500"></i> Rooms</a>
+                            class="fa-solid fa-bed mr-1.5 text-emerald-500"></i> Rooms / PGs</a>
                     <a href="/tiffin" class="hover:text-blue-600 transition flex items-center"><i
-                            class="fa-solid fa-utensils mr-1.5 text-amber-500"></i> Tiffin</a>
+                            class="fa-solid fa-utensils mr-1.5 text-amber-500"></i> Tiffin Centers</a>
                     <a href="/essentials" class="hover:text-blue-600 transition flex items-center"><i
                             class="fa-solid fa-box-open mr-1.5 text-purple-500"></i> Essentials</a>
                 </nav>
+                <button onclick="document.getElementById('menuButton').click()"
+                    class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-plus"></i> Post an Ad
+                </button>
             </div>
         </div>
 
-        <!-- Mobile Dynamic Search Input Bar (Mobile App Style) -->
+        <!-- Mobile Sub-Header Search Bar (Mobile Only) -->
         <div class="block md:hidden px-4 pb-3 pt-1 bg-white">
             <div class="relative flex items-center">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-gray-400 text-xs"></i>
@@ -172,7 +170,7 @@
         </div>
     </header>
 
-    <!-- ==================== FLASH SYSTEM MESSAGES ==================== -->
+    <!-- Flash Alert Messaging Queue -->
     <div class="max-w-4xl mx-auto px-4 mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -186,12 +184,12 @@
         {% endwith %}
     </div>
 
-    <!-- ==================== CORE CONTENT AREA ==================== -->
+    <!-- ==================== MAIN CONTENT DISPLAY CONTAINER ==================== -->
     <main class="w-full">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ==================== MOBILE PHONE APP-STYLE BOTTOM NAVIGATION ==================== -->
+    <!-- ==================== MOBILE APP-STYLE STICKY BOTTOM NAVIGATION ==================== -->
     <div
         class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center justify-around px-2 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
         <a href="/" class="flex flex-col items-center gap-1 text-blue-600">
@@ -202,23 +200,23 @@
             <i class="fa-regular fa-comment text-lg"></i>
             <span class="text-[10px] font-medium">Chats</span>
         </a>
-        <!-- Floating Universal Plus Upload Button -->
-        <button onclick="document.getElementById('menuButton').click();"
-            class="flex flex-col items-center justify-center -mt-6 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg border-4 border-white hover:bg-blue-700 transition">
+        <!-- Central Trigger Custom Menu Function -->
+        <button onclick="document.getElementById('menuButton').click()"
+            class="flex flex-col items-center justify-center -mt-6 bg-blue-600 text-white w-12 h-12 rounded-full shadow-lg border-4 border-white hover:bg-blue-700 transition cursor-pointer">
             <i class="fa-solid fa-plus text-lg"></i>
         </button>
-        <a href="/inbox" class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
+        <a href="/dashboard" class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
             <i class="fa-regular fa-file-lines text-lg"></i>
             <span class="text-[10px] font-medium">Listings</span>
         </a>
-        <button onclick="document.getElementById('menuButton').click();"
+        <button onclick="document.getElementById('menuButton').click()"
             class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
             <i class="fa-regular fa-user text-lg"></i>
             <span class="text-[10px] font-medium">Profile</span>
         </button>
     </div>
 
-    <!-- ==================== ZOOM MODAL FRAMEWORK (SECURED FROM OLD CODE) ==================== -->
+    <!-- ==================== PRO LOOK ZOOM MODAL FUNCTION (RESTORED) ==================== -->
     <div id="proZoomModal"
         class="fixed inset-0 bg-black/90 hidden z-50 flex flex-col items-center justify-center p-4 transition-all duration-300"
         onclick="closeZoomModal()">
@@ -230,9 +228,9 @@
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT LOGIC ENGINE ==================== -->
+    <!-- ==================== ALL CORE JS CODE SCRIPTS ==================== -->
     <script>
-        // Dropdown Menu Toggle
+        // Dropdown Menu Toggler Logic
         const menuButton = document.getElementById('menuButton');
         const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -249,7 +247,7 @@
             });
         }
 
-        // Image Slider & Modal Zoom Controls (Your original functional engine preserved)
+        // Image Slider State Handler Script (Restored)
         const itemSlideState = {};
 
         function changeSlide(itemId, direction, imagesList) {
@@ -279,10 +277,9 @@
             }
         }
 
+        // Zoom Modal Controllers (Restored)
         function openFullZoomModal(itemId) {
-            const imgElem = document.getElementById(`main-img-${itemId}`);
-            if (!imgElem) return;
-            const currentSrc = imgElem.src;
+            const currentSrc = document.getElementById(`main-img-${itemId}`).src;
             const modal = document.getElementById('proZoomModal');
             const modalImg = document.getElementById('modalZoomImg');
 
