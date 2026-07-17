@@ -337,7 +337,7 @@ def essentials():
             FROM items 
             LEFT JOIN users ON items.user_id = users.id 
             LEFT JOIN item_images img ON items.id = img.item_id
-            WHERE items.category='Essential' 
+            WHERE items.category='essential' 
             GROUP BY items.id, users.name
             ORDER BY items.id DESC
         """)
