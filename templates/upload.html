@@ -20,12 +20,13 @@
             <div>
                 <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Expected Price
                     (INR)</label>
-                <input type="number" name="price" required placeholder="e.g., 500"
+                <input type="number" name="price" placeholder="e.g., 500 (Optional)"
                     class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition">
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Target City /
                     Location</label>
+                <!-- Yahan type="text" hona chahiye aur name="city" -->
                 <input type="text" name="city" required placeholder="e.g., Kota, Delhi"
                     class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition">
             </div>
@@ -70,27 +71,28 @@
 <script>
     function validateAndPreviewMultiple(input) {
         const fileListContainer = document.getElementById('file-list');
-        fileListContainer.innerHTML = ""; // Clear old selections
+        fileListContainer.innerHTML = "";
+
+        // Agar user ne files select hi nahi ki, toh function yahi ruk jayega (normal behaviour)
+        if (input.files.length === 0) return;
 
         if (input.files.length > 3) {
             alert("Bhai, aap maximum 3 images hi select kar sakte ho!");
-            input.value = ""; // Reset file selection
+            input.value = "";
             return;
         }
 
-        // Check size of each selected file
         for (let i = 0; i < input.files.length; i++) {
             const file = input.files[i];
             const fileSizeMB = file.size / (1024 * 1024);
 
             if (fileSizeMB > 5) {
                 alert(`"${file.name}" ka size 5MB se bada hai! Kripya choti file select karein.`);
-                input.value = ""; // Reset everything if even one file fails
+                input.value = "";
                 fileListContainer.innerHTML = "";
                 return;
             }
 
-            // Append each valid file info dynamically
             fileListContainer.innerHTML += `<div><i class="fa-solid fa-circle-check"></i> Selected: ${file.name}</div>`;
         }
     }

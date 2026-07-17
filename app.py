@@ -199,12 +199,17 @@ def upload_item(category):
         city = request.form.get('city', '').strip()
         description = request.form.get('description', '').strip()
         
-        # 🔥 MULTIPLE FILES FETCH: 'images' naam ki list nikalenge frontend se
+        # 🔥 MULTIPLE FILES FETCH
         files = request.files.getlist('images')
         
-        if not title or not price or not city:
-            flash("Title, Price, and City are required!", "danger")
+        # Yahan Indentation (spaces) ka dhyan rakhna
+        if not title or not city:
+            flash("Title and City are required!", "danger")
             return render_template('upload.html', category=mapped_category)
+            
+        # Agar price nahi hai toh 0 set karo
+        if not price:
+            price = 0
             
         uploaded_image_urls = []
         

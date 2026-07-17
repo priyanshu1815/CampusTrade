@@ -84,7 +84,7 @@
                         <div
                             class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
                             <i class="fa-solid fa-laptop text-purple-600 text-sm mb-1"></i>
-                            <span class="text-[8px] font-bold text-gray-600">Gears</span>
+                            <span class="text-[8px] font-bold text-gray-600">Essential</span>
                         </div>
                     </div>
 
@@ -98,30 +98,31 @@
 
 <div class="block md:hidden w-full px-4 pb-4">
     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Explore Categories</p>
-    <div class="grid grid-cols-4 gap-2">
+    <!-- grid-cols-4 ko grid-cols-2 kiya aur gap badha diya -->
+    <div class="grid grid-cols-2 gap-3">
         <a href="/bookstore"
-            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
-            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mb-1"><i
-                    class="fa-solid fa-book text-blue-500 text-xs"></i></div>
-            <span class="text-[9px] font-bold text-gray-700">Books</span>
+            class="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-book text-blue-500 text-sm"></i></div>
+            <span class="text-xs font-bold text-gray-700">Books</span>
         </a>
         <a href="/rooms"
-            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center mb-1"><i
-                    class="fa-solid fa-bed text-emerald-500 text-xs"></i></div>
-            <span class="text-[9px] font-bold text-gray-700">Rooms</span>
+            class="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-bed text-emerald-500 text-sm"></i></div>
+            <span class="text-xs font-bold text-gray-700">Rooms</span>
         </a>
         <a href="/tiffin"
-            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
-            <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center mb-1"><i
-                    class="fa-solid fa-utensils text-amber-500 text-xs"></i></div>
-            <span class="text-[9px] font-bold text-gray-700">Tiffin</span>
+            class="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-utensils text-amber-500 text-sm"></i></div>
+            <span class="text-xs font-bold text-gray-700">Tiffin</span>
         </a>
-        <a href="/essentials"
-            class="bg-white border border-gray-100 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
-            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center mb-1"><i
-                    class="fa-solid fa-laptop text-purple-500 text-xs"></i></div>
-            <span class="text-[9px] font-bold text-gray-700">Gears</span>
+        <a href="/essential"
+            class="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center shrink-0"><i
+                    class="fa-solid fa-box-open text-purple-500 text-sm"></i></div>
+            <span class="text-xs font-bold text-gray-700">Essential</span>
         </a>
     </div>
 </div>
