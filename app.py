@@ -331,13 +331,14 @@ def essentials():
     try:
         db = get_db()
         cursor = db.cursor()
+        # Yahan LOWER() ka use karo taaki 'Essential' ho ya 'essential', dono match ho jayein
         cursor.execute("""
             SELECT items.*, users.name,
                    COALESCE(json_agg(img.image_url) FILTER (WHERE img.image_url IS NOT NULL), '[]') as all_images
             FROM items 
             LEFT JOIN users ON items.user_id = users.id 
             LEFT JOIN item_images img ON items.id = img.item_id
-            WHERE items.category='essential' 
+            WHERE LOWER(items.category) = 'essential' 
             GROUP BY items.id, users.name
             ORDER BY items.id DESC
         """)
