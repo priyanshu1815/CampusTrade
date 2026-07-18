@@ -79,9 +79,10 @@
 
         <!-- Captcha Field (Submit button ke upar) -->
         <div>
-            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Verification (What is 5 +
-                3?)</label>
-            <input type="text" name="captcha" required placeholder="Enter answer"
+            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
+                Verify: What is {{ n1 }} + {{ n2 }}?
+            </label>
+            <input type="number" name="captcha" required placeholder="Enter answer"
                 class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
         </div>
 

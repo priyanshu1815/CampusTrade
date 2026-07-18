@@ -1,4 +1,5 @@
 import os
+import random 
 from flask import Flask, render_template, request, redirect, url_for, session, g, flash, jsonify
 import psycopg2
 from psycopg2.extras import DictCursor
@@ -86,12 +87,19 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'GET':
+        # Naya sawal generate karo
+        n1 = random.randint(1, 9)
+        n2 = random.randint(1, 9)
+        session['captcha_ans'] = n1 + n2
+        return render_template('register.html', n1=n1, n2=n2)
+
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
         mobile = request.form.get('mobile', '').strip()
         password = request.form.get('password', '')
-        confirm_password = request.form.get('confirm_password', '') 
-        captcha = request.form.get('captcha', '')                 
+        confirm_password = request.form.get('confirm_password', '')
+        user_captcha = request.form.get('captcha', '')
         city = request.form.get('city', '').strip()
         role = request.form.get('role', 'Student')
         terms = request.form.get('terms')
@@ -99,26 +107,28 @@ def register():
         university_name = request.form.get('university_name', '').strip()
         course_name = request.form.get('course_name', '').strip()
         
-        # 1. Basic Fields Check
-        if not name or not mobile or not password or not confirm_password or not captcha or not city or not role:
+        # 1. Basic Validation
+        if not name or not mobile or not password or not confirm_password or not user_captcha or not city or not role:
             flash("All fields are required!", "danger")
             return redirect(url_for('register'))
             
-        # 2. Confirm Password Match Check
+        # 2. Password Match Check
         if password != confirm_password:
             flash("Passwords do not match!", "danger")
             return redirect(url_for('register'))
             
-        # 3. Simple Captcha Check
-        if captcha != '8':
-            flash("Wrong verification answer! Please enter 8.", "danger")
+        # 3. Dynamic Captcha Check
+        actual_ans = session.get('captcha_ans')
+        if not user_captcha.isdigit() or int(user_captcha) != actual_ans:
+            flash("Incorrect verification answer. Please try again.", "danger")
             return redirect(url_for('register'))
         
-        # 4. Checkbox validation
+        # 4. Terms Checkbox
         if not terms:
             flash("You must agree to the Terms and Conditions!", "danger")
             return redirect(url_for('register'))
         
+        # Role Logic
         if role == 'Student':
             if not university_name or not course_name:
                 flash("University and Course details are required for Students!", "danger")
@@ -152,8 +162,6 @@ def register():
             print(f"Registration Error: {e}")
             flash("Database issue. Please try again later.", "danger")
             return redirect(url_for('register'))
-            
-    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
