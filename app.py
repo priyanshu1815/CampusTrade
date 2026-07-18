@@ -90,16 +90,35 @@ def register():
         name = request.form.get('name', '').strip()
         mobile = request.form.get('mobile', '').strip()
         password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '') 
+        captcha = request.form.get('captcha', '')                 
         city = request.form.get('city', '').strip()
         role = request.form.get('role', 'Student')
-        
+        terms = request.form.get('terms')
+
         university_name = request.form.get('university_name', '').strip()
         course_name = request.form.get('course_name', '').strip()
         
-        if not name or not mobile or not password or not city or not role:
-            flash("All common fields are required!", "danger")
+        # 1. Basic Fields Check
+        if not name or not mobile or not password or not confirm_password or not captcha or not city or not role:
+            flash("All fields are required!", "danger")
             return redirect(url_for('register'))
             
+        # 2. Confirm Password Match Check
+        if password != confirm_password:
+            flash("Passwords do not match!", "danger")
+            return redirect(url_for('register'))
+            
+        # 3. Simple Captcha Check
+        if captcha != '8':
+            flash("Wrong verification answer! Please enter 8.", "danger")
+            return redirect(url_for('register'))
+        
+        # 4. Checkbox validation
+        if not terms:
+            flash("You must agree to the Terms and Conditions!", "danger")
+            return redirect(url_for('register'))
+        
         if role == 'Student':
             if not university_name or not course_name:
                 flash("University and Course details are required for Students!", "danger")
@@ -113,7 +132,6 @@ def register():
         try:
             db = get_db()
             cursor = db.cursor()
-            
             query = """
                 INSERT INTO users (name, mobile, password, city, role, university_name, course_name) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s)

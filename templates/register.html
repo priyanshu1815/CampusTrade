@@ -69,6 +69,33 @@
                 class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
         </div>
 
+        <!-- Password Field ke niche ye code add karo -->
+        <div>
+            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Confirm Password</label>
+            <input type="password" name="confirm_password" id="confirm_password" required
+                placeholder="Re-enter password"
+                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
+        </div>
+
+        <!-- Captcha Field (Submit button ke upar) -->
+        <div>
+            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">Verification (What is 5 +
+                3?)</label>
+            <input type="text" name="captcha" required placeholder="Enter answer"
+                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition">
+        </div>
+
+        <!-- Terms and Conditions Checkbox -->
+        <div class="flex items-center mt-4">
+            <input type="checkbox" name="terms" id="terms" required
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+            <label for="terms" class="ml-2 block text-sm text-gray-700">
+                I agree to the <a href="/terms" class="text-blue-600 font-semibold hover:underline">Terms and
+                    Conditions</a> and <a href="/privacy" class="text-blue-600 font-semibold hover:underline">Privacy
+                    Policy</a>
+            </label>
+        </div>
+
         <button type="submit"
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-blue-200 text-sm mt-2">
             Sign Up
