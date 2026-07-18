@@ -48,7 +48,7 @@
             <!-- RIGHT CONTROLS -->
             <div class="flex items-center space-x-2 sm:space-x-4 relative">
 
-                <!-- LOCATION (DESKTOP) -->
+                <!-- LOCATION (DESKTOP) - Ye hamesha dikhega -->
                 <div
                     class="hidden sm:flex items-center space-x-1 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-700">
                     <i class="fa-solid fa-location-dot text-red-500"></i>
@@ -60,33 +60,25 @@
                     </select>
                 </div>
 
-                <!-- ONLY SHOW MESSAGES & NOTIFICATIONS IF USER IS LOGGED IN -->
+                <!-- LOGGED IN VIEW -->
                 {% if session.get('user_id') %}
-                <a href="/inbox" class="relative p-2 text-gray-600 hover:text-blue-600 transition">
-                    <i class="fa-regular fa-comment-dots text-xl"></i>
-                </a>
-
-                <a href="/inbox" class="relative p-2 text-gray-600 hover:text-blue-600 transition cursor-pointer">
+                <a href="/notifications"
+                    class="relative p-2 text-gray-600 hover:text-blue-600 transition cursor-pointer">
                     <i class="fa-solid fa-bell text-xl"></i>
-                    {% if unread_count and unread_count > 0 %}
+                    {% if unread_notifications and unread_notifications > 0 %}
                     <span
-                        class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-[9px] font-bold text-white rounded-full flex items-center justify-center animate-pulse">
-                        {{ unread_count }}
+                        class="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-red-500 text-white text-[8px] font-bold rounded-full border border-white">
+                        {{ unread_notifications }}
                     </span>
-                    {% else %}
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-600 rounded-full"></span>
                     {% endif %}
                 </a>
-
-                <!-- User Profile Circle Trigger for Logged In User -->
                 <button id="menuButton"
-                    class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200 uppercase cursor-pointer focus:outline-none">
+                    class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200 uppercase cursor-pointer">
                     {{ session.get('user_name')[:2] }}
                 </button>
 
+                <!-- LOGGED OUT VIEW -->
                 {% else %}
-
-                <!-- Clean Inline Sign In / Sign Up Layout When Logged Out -->
                 <div class="flex items-center space-x-1 sm:space-x-2">
                     <a href="/login"
                         class="text-xs sm:text-sm font-semibold text-gray-600 hover:text-blue-600 transition px-2 py-1.5">Sign
@@ -95,56 +87,54 @@
                         class="bg-blue-600 text-white text-xs sm:text-sm font-semibold px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl hover:bg-blue-700 transition shadow-sm whitespace-nowrap">Sign
                         Up</a>
                 </div>
-
-                <!-- Dropdown Trigger for Logged Out User (Three Dots) -->
-                <button id="menuButton"
+                <button id="menuButtonLoggedOut"
                     class="p-2 text-gray-500 hover:text-gray-800 rounded-full hover:bg-gray-100 transition focus:outline-none">
                     <i class="fa-solid fa-ellipsis-vertical text-lg sm:text-xl"></i>
                 </button>
                 {% endif %}
 
-                <!-- CENTRAL DROPDOWN MENU POPUP -->
-                <div id="dropdownMenu"
-                    class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 top-12">
-                    <div class="py-2">
-                        <span
-                            class="block px-4 py-1 text-[10px] font-bold tracking-wider text-gray-400 uppercase">Student
-                            Privileges</span>
-                        <a href="/upload_book"
-                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
-                            <i class="fa-solid fa-book mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell Books
-                        </a>
-                        <a href="/upload_essential"
-                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
-                            <i class="fa-solid fa-laptop mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell
-                            Essentials
-                        </a>
-                    </div>
-                    <div class="py-2">
-                        <span
-                            class="block px-4 py-1 text-[10px] font-bold tracking-wider text-purple-400 uppercase">Owner
-                            Privileges</span>
-                        <a href="/upload_room"
-                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
-                            <i class="fa-solid fa-house-user mr-3 text-gray-400 group-hover:text-purple-500"></i> List
-                            Rooms / PGs
-                        </a>
-                        <a href="/upload_tiffin"
-                            class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
-                            <i class="fa-solid fa-bowl-food mr-3 text-gray-400 group-hover:text-purple-500"></i> List
-                            Tiffin Center
-                        </a>
-                    </div>
-                    {% if session.get('user_id') %}
-                    <div class="py-1">
-                        <a href="/logout"
-                            class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
-                            <i class="fa-solid fa-right-from-bracket mr-3 text-red-400"></i> Logout
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
             </div>
+
+            <!-- CENTRAL DROPDOWN MENU POPUP -->
+            <div id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-50 top-12">
+                <div class="py-2">
+                    <span class="block px-4 py-1 text-[10px] font-bold tracking-wider text-gray-400 uppercase">Student
+                        Privileges</span>
+                    <a href="/upload_book"
+                        class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                        <i class="fa-solid fa-book mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell Books
+                    </a>
+                    <a href="/upload_essential"
+                        class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                        <i class="fa-solid fa-laptop mr-3 text-gray-400 group-hover:text-blue-500"></i> Sell
+                        Essentials
+                    </a>
+                </div>
+                <div class="py-2">
+                    <span class="block px-4 py-1 text-[10px] font-bold tracking-wider text-purple-400 uppercase">Owner
+                        Privileges</span>
+                    <a href="/upload_room"
+                        class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
+                        <i class="fa-solid fa-house-user mr-3 text-gray-400 group-hover:text-purple-500"></i> List
+                        Rooms / PGs
+                    </a>
+                    <a href="/upload_tiffin"
+                        class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 transition">
+                        <i class="fa-solid fa-bowl-food mr-3 text-gray-400 group-hover:text-purple-500"></i> List
+                        Tiffin Center
+                    </a>
+                </div>
+                {% if session.get('user_id') %}
+                <div class="py-1">
+                    <a href="/logout"
+                        class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+                        <i class="fa-solid fa-right-from-bracket mr-3 text-red-400"></i> Logout
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
         </div>
 
         <!-- SUB-NAVBAR -->
@@ -220,32 +210,34 @@
 
     <!-- PREMIUM BOTTOM NAVIGATION -->
     <div
-        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center justify-around px-2 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
-        <a href="/" class="flex flex-col items-center gap-1 text-blue-600 flex-1">
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 h-16 flex items-center justify-around px-2 z-50">
+        <a href="/"
+            class="flex flex-col items-center gap-1 {{ 'text-blue-600' if request.path == '/' else 'text-gray-400' }} flex-1">
             <i class="fa-solid fa-house text-lg"></i>
-            <span class="text-[10px] font-bold tracking-tight">Home</span>
+            <span class="text-[10px] font-bold">Home</span>
         </a>
-        <a href="/inbox" class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition flex-1">
+        <a href="/inbox"
+            class="flex flex-col items-center gap-1 {{ 'text-blue-600' if request.path == '/inbox' else 'text-gray-400' }} flex-1">
             <i class="fa-solid fa-comment text-lg"></i>
-            <span class="text-[10px] font-semibold tracking-tight">Chats</span>
+            <span class="text-[10px] font-semibold">Chats</span>
         </a>
 
-        <!-- Premium Centered Blue Floating Button (+ Icon Popup Fixed Trigger) -->
         <div class="flex-1 flex justify-center -mt-6 relative z-50">
             <button id="floatingPlusBtn"
-                class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-[0_4px_14px_rgba(29,91,247,0.4)] hover:bg-blue-700 active:scale-90 transition-all duration-200 cursor-pointer border-none outline-none">
+                class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700">
                 <i class="fa-solid fa-plus text-xl"></i>
             </button>
         </div>
 
         <a href="/listings"
-            class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition flex-1">
+            class="flex flex-col items-center gap-1 {{ 'text-blue-600' if request.path == '/listings' else 'text-gray-400' }} flex-1">
             <i class="fa-solid fa-list-ul text-lg"></i>
-            <span class="text-[10px] font-semibold tracking-tight">Listings</span>
+            <span class="text-[10px] font-semibold">Listings</span>
         </a>
-        <a href="/profile" class="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition flex-1">
+        <a href="/profile"
+            class="flex flex-col items-center gap-1 {{ 'text-blue-600' if request.path == '/profile' else 'text-gray-400' }} flex-1">
             <i class="fa-solid fa-user text-lg"></i>
-            <span class="text-[10px] font-semibold tracking-tight">Profile</span>
+            <span class="text-[10px] font-semibold">Profile</span>
         </a>
     </div>
 
@@ -275,10 +267,16 @@
         if (menuButton) menuButton.addEventListener('click', toggleDropdown);
         if (floatingPlusBtn) floatingPlusBtn.addEventListener('click', toggleDropdown);
         if (postAdDesktopBtn) postAdDesktopBtn.addEventListener('click', toggleDropdown);
+        if (document.getElementById('menuButtonLoggedOut')) document.getElementById('menuButtonLoggedOut').addEventListener('click', toggleDropdown);
 
+        // Click outside to close
         document.addEventListener('click', (e) => {
             if (dropdownMenu && !dropdownMenu.contains(e.target)) {
-                if ((menuButton && menuButton.contains(e.target)) || (floatingPlusBtn && floatingPlusBtn.contains(e.target)) || (postAdDesktopBtn && postAdDesktopBtn.contains(e.target))) {
+                // Yahan 'menuButtonLoggedOut' add kiya hai
+                if ((menuButton && menuButton.contains(e.target)) ||
+                    (floatingPlusBtn && floatingPlusBtn.contains(e.target)) ||
+                    (postAdDesktopBtn && postAdDesktopBtn.contains(e.target)) ||
+                    (document.getElementById('menuButtonLoggedOut') && document.getElementById('menuButtonLoggedOut').contains(e.target))) {
                     return;
                 }
                 dropdownMenu.classList.add('hidden');
@@ -354,76 +352,6 @@
             }, 200);
         }
 
-        // Global Multi-Language Dictionary
-        const translations = {
-            'en': {
-                'nav_home': 'Home',
-                'nav_listings': 'Listings',
-                'nav_profile': 'Profile',
-                'verified_badge': 'Verified',
-                'student_member': 'Student Member',
-                'property_owner': 'Property Owner',
-                'account_privacy': 'Account & Privacy',
-                'phone_title': 'Phone Number',
-                'change_pass': 'Change Password',
-                'preferences': 'Preferences',
-                'app_lang': 'App Language',
-                'dark_mode': 'Dark Mode',
-                'support_help': 'Support & Help',
-                'mail_support': 'Official Mail Support',
-                'tg_community': 'Telegram Community',
-                'logout_acc': 'Log Out Account',
-                'sub_nav_bookstore': 'Bookstore',
-                'sub_nav_rooms': 'Rooms / PGs',
-                'sub_nav_tiffin': 'Tiffin Centers',
-                'sub_nav_essentials': 'Essentials',
-                'sub_nav_postad': 'Post an Ad',
-            },
-            'hi': {
-                'nav_home': 'होम',
-                'nav_listings': 'मेरी लिस्टिंग्स',
-                'nav_profile': 'प्रोफ़ाइल',
-                'verified_badge': 'सत्यापित',
-                'student_member': 'छात्र सदस्य',
-                'property_owner': 'प्रॉपर्टी ओनर',
-                'account_privacy': 'खाता और गोपनीयता',
-                'phone_title': 'फ़ोन नंबर',
-                'change_pass': 'पासवर्ड बदलें',
-                'preferences': 'वरीयताएँ',
-                'app_lang': 'ऐप की भाषा',
-                'dark_mode': 'डार्क मोड',
-                'support_help': 'सहायता और सपोर्ट',
-                'mail_support': 'आधिकारिक मेल सपोर्ट',
-                'tg_community': 'टेलीग्राम कम्युनिटी',
-                'logout_acc': 'खाता लॉग आउट करें',
-                'sub_nav_bookstore': 'किताबों की दुकान',
-                'sub_nav_rooms': 'कमरे / पीजी',
-                'sub_nav_tiffin': 'टिफिन सेंटर्स',
-                'sub_nav_essentials': 'आवश्यक चीजें',
-                'sub_nav_postad': 'विज्ञापन डालें',
-            }
-        };
-
-        function applyGlobalLanguage(lang) {
-            localStorage.setItem('appLanguage', lang);
-            document.querySelectorAll('[data-translate]').forEach(el => {
-                const key = el.getAttribute('data-translate');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerText = translations[lang][key];
-                }
-            });
-        }
-
-        function applyGlobalDarkMode(isDark) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('globalTheme', 'light');
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            applyGlobalDarkMode(false);
-            const savedLang = localStorage.getItem('appLanguage') || 'en';
-            applyGlobalLanguage(savedLang);
-        });
     </script>
 
 </body>
