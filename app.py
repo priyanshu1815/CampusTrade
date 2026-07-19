@@ -75,7 +75,7 @@ def register():
         n1 = random.randint(1, 9)
         n2 = random.randint(1, 9)
         session['captcha_ans'] = n1 + n2
-        return render_template('register.html', n1=n1, n2=n2)
+        return render_template('register.html', n1=n1, n2=n2, is_auth_page=True)
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -174,7 +174,7 @@ def login():
             flash("Unable to connect to database right now. Try again.", "danger")
             return redirect(url_for('login'))
             
-    return render_template('login.html')
+    return render_template('login.html', is_auth_page=True)
 
 @app.route('/logout')
 def logout():
