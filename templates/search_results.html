@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">Results for: <span class="text-blue-600">{{ query }}</span></h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {% for item in results %}
+        <!-- Card ko clickable banane ke liye a tag -->
+        <a href="/item/{{ item.id }}" class="group">
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all">
+                <!-- Image section (agar tumhare table mein image_url column hai) -->
+                <div class="w-full h-40 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                    {% if item.image_url %}
+                    <img src="{{ item.image_url }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                    {% endif %}
+                </div>
+
+                <h3 class="font-bold text-gray-800 group-hover:text-blue-600">{{ item.title }}</h3>
+                <p class="text-sm text-gray-500">Price: ₹{{ item.price }}</p>
+                <p class="text-xs text-blue-600 font-semibold mt-1">{{ item.city }}</p>
+            </div>
+        </a>
+        {% else %}
+        <p class="text-gray-500 col-span-full">No results found for "{{ query }}". Try searching for something else.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

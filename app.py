@@ -5,6 +5,7 @@ import psycopg2
 from psycopg2.extras import DictCursor
 import requests  # Image upload karne ke liye backend requests
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'campustrade_super_secure_key_2026'
@@ -46,14 +47,15 @@ def inject_locations():
     try:
         db = get_db()
         cursor = db.cursor()
+        # Sirf city column le rahe hain, lekin agar data galat hai toh yahan filter lagao
         cursor.execute("SELECT DISTINCT city FROM items")
-        cities = [row['city'] for row in cursor.fetchall() if row['city']]
+        # Yahan .split(',')[0] laga do taaki agar kisi ne address likha ho, toh sirf city name aaye
+        cities = [row['city'].split(',')[0].strip() for row in cursor.fetchall() if row['city']]
         cursor.close()
     except Exception as e:
         print(f"Context Processor City Load Warning: {e}")
     
-    if not cities:
-        cities = ["Delhi", "Mumbai", "Bangalore", "Pune", "Kota", "Patna"]
+    # Unique cities return karo
     return dict(available_cities=sorted(list(set(cities))))
 
 def allowed_file(filename):
@@ -180,6 +182,56 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('index'))
 
+@app.route('/search')
+def search():
+    query = request.args.get('query', '').strip()
+    if not query:
+        return redirect('/')
+
+    headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+    }
+
+    # Yahan 'or' query ka use kiya hai jo title, category aur description teeno mein search karega
+    url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/rest/v1/items?or=(title.ilike.%{query}%,category.ilike.%{query}%,description.ilike.%{query}%)"
+    
+    results = []
+    try:
+        res = requests.get(url, headers=headers)
+        if res.status_code == 200:
+            results = res.json()
+    except Exception as e:
+        print("Search error:", e)
+
+    return render_template('search_results.html', query=query, results=results)
+
+@app.route('/item/<item_id>')
+def item_detail(item_id):
+    headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
+    }
+    
+    # 1. Pehle main item details lo
+    item_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/rest/v1/items?id=eq.{item_id}"
+    item_res = requests.get(item_url, headers=headers)
+    
+    # 2. Phir us item se related saari images lo
+    images_url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/rest/v1/item_images?item_id=eq.{item_id}"
+    images_res = requests.get(images_url, headers=headers)
+    
+    if item_res.status_code == 200 and item_res.json():
+        item = item_res.json()[0]
+        
+        # Images ko list mein daalo
+        images_data = images_res.json() if images_res.status_code == 200 else []
+        item['image_list'] = [img['image_url'] for img in images_data]
+        
+        return render_template('item_detail.html', item=item)
+    else:
+        return "Item not found!", 404
+
 
 # --- UPLOAD SYSTEM ROUTES WITH PERMANENT SUPABASE STORAGE ---
 
@@ -223,10 +275,7 @@ def upload_item(category):
         # 🔥 MULTIPLE IMAGES UPLOAD LOOP
         for file in files:
             if file and allowed_file(file.filename):
-                try:
-                    from datetime import datetime
-                    import requests
-                    
+                try:   
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S%f") # %f microsecond tak unique rakhega
                     safe_filename = file.filename.replace(" ", "_")
                     clean_filename = f"user_{session['user_id']}_{timestamp}_{safe_filename}"
@@ -633,8 +682,6 @@ def profile():
 
     return render_template('profile.html')
 
-    return render_template('profile.html')
-
 @app.route('/update_password', methods=['POST'])
 def update_password():
     user_id = session.get('user_id')
@@ -671,6 +718,7 @@ def update_password():
         
     return redirect(url_for('profile'))
 
+# --- Ye code app.py mein bilkul neeche paste karo ---
 @app.context_processor
 def inject_notifications():
     unread_count = 0
@@ -681,19 +729,25 @@ def inject_notifications():
             "apikey": SUPABASE_ANON_KEY,
             "Authorization": f"Bearer {SUPABASE_ANON_KEY}"
         }
-        # Supabase se count fetch karne ka logic
         url = f"https://{SUPABASE_PROJECT_ID}.supabase.co/rest/v1/notifications?user_id=eq.{user_id}&is_read=eq.false&select=id&count=exact"
         
         try:
             res = requests.get(url, headers=headers)
             if res.status_code == 200:
-                # Content-Range header se count nikalna
                 range_header = res.headers.get("Content-Range", "0/0")
                 unread_count = int(range_header.split('/')[-1])
         except Exception as e:
             print("Notification alert error:", e)
             
     return dict(unread_notifications=unread_count)
+
+# --- Naya Route add karo (404 fix karne ke liye) ---
+@app.route('/notifications')
+def notifications():
+    if 'user_id' not in session:
+        return redirect('/login')
+    # Agar tumne notification page nahi banaya hai, toh 'inbox.html' render kar lo
+    return render_template('inbox.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

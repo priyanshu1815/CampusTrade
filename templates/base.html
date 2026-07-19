@@ -39,11 +39,11 @@
             </a>
 
             <!-- SEARCH BAR (DESKTOP) -->
-            <div class="hidden md:flex items-center flex-grow max-w-xl relative">
+            <form action="/search" method="GET" class="hidden md:flex items-center flex-grow max-w-xl relative z-40">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400 text-sm"></i>
-                <input type="text" placeholder="Search books, rooms, tiffin, essentials..."
+                <input type="text" name="query" placeholder="Search books, rooms, tiffin, essentials..."
                     class="w-full bg-gray-50 border border-gray-200 rounded-full pl-11 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition">
-            </div>
+            </form>
 
             <!-- RIGHT CONTROLS -->
             <div class="flex items-center space-x-2 sm:space-x-4 relative">
@@ -182,11 +182,12 @@
                     </select>
                 </div>
 
-                <div class="relative flex-grow">
+                <!-- MOBILE SEARCH BAR (Updated) -->
+                <form action="/search" method="GET" class="relative flex-grow z-40">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
-                    <input type="text" id="mobileSearchInput" placeholder="Search books, rooms, tiffin..."
-                        class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none">
-                </div>
+                    <input type="text" name="query" id="mobileSearchInput" placeholder="Search..."
+                        class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500">
+                </form>
             </div>
         </div>
     </header>
@@ -353,6 +354,83 @@
         }
 
     </script>
+
+    <footer class="bg-gray-900 text-gray-300 pt-12 pb-6 mt-16 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <!-- Column 1: Logo, Name & Description -->
+            <div>
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="/static/logo.png" alt="Logo" class="h-16 w-16">
+                    <h3 class="text-white text-3xl font-extrabold">CampusTrade</h3>
+                </div>
+                <p class="text-gray-400 text-sm mb-6">
+                    CampusTrade is a dedicated peer-to-peer marketplace built exclusively for college students.
+                </p>
+                <!-- Social Icons -->
+                <div class="flex gap-4">
+                    <a href="https://www.instagram.com/campustrade.pro" target="_blank"
+                        class="text-pink-500 text-2xl hover:text-white"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/share/1JPYraYjwj/" target="_blank"
+                        class="text-blue-600 text-2xl hover:text-white"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://t.me/campustrade" target="_blank"
+                        class="text-blue-400 text-2xl hover:text-white"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="mailto:support@campustrade.pro" class="text-red-500 text-2xl hover:text-white"><i
+                            class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2: About (Ab ye vertical ho gaya) -->
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Company</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/about" class="hover:text-indigo-400">👉 About Us</a></li>
+                    <li><a href="/terms" class="hover:text-indigo-400">📄 Terms & Conditions</a></li>
+                    <li><a href="/privacy" class="hover:text-indigo-400">🔒 Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Our Services -->
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Our Services</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/bookstore" class="hover:text-indigo-400">📚 Books Marketplace</a></li>
+                    <li><a href="/rooms" class="hover:text-indigo-400">🏠 Verified Rooms & PGs</a></li>
+                    <li><a href="/tiffin" class="hover:text-indigo-400">🍱 Local Tiffin Services</a></li>
+                    <li><a href="/essentials" class="hover:text-indigo-400">🎒 Student Essentials</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Contact Us -->
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <!-- Email Link -->
+                    <li class="flex items-center gap-2">
+                        <a href="mailto:support@campustrade.pro" class="hover:text-white transition">
+                            <i class="fa-solid fa-envelope"></i> support@campustrade.pro
+                        </a>
+                    </li>
+                    <!-- Instagram Link -->
+                    <li class="flex items-center gap-2">
+                        <a href="https://www.instagram.com/campustrade.pro" target="_blank" rel="noopener noreferrer"
+                            class="hover:text-white transition">
+                            <i class="fa-brands fa-instagram"></i> @campustrade.pro
+                        </a>
+                    </li>
+                    <!-- Location (Ye clickable nahi hota) -->
+                    <li class="flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-red-400"></i> Kaimur, Bihar, India
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-gray-800 text-center text-sm text-gray-500">
+            <p>© 2026 CampusTrade. All rights reserved. | Made with ❤️ for Students</p>
+        </div>
+    </footer>
 
 </body>
 

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Title Section -->
+    <h1 class="text-3xl font-bold text-gray-800">{{ item.title }}</h1>
+
+    <!-- Image Gallery Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        {# Agar item_images table se images aa rahi hain #}
+        {% if item.image_list and item.image_list|length > 0 %}
+        {% for img in item.image_list %}
+        <img src="{{ img }}" class="w-full h-64 object-cover rounded-xl shadow-md border"
+            alt="Room Image {{ loop.index }}">
+        {% endfor %}
+        {# Agar images nahi hain to fallback check #}
+        {% elif item.image_url %}
+        <img src="{{ item.image_url }}" class="w-full h-64 object-cover rounded-xl shadow-md border" alt="Main Image">
+        {% else %}
+        <div class="w-full h-64 bg-gray-100 flex items-center justify-center rounded-xl text-gray-400 border">
+            No Image Available
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Details Section -->
+    <div class="mt-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <p class="text-2xl font-bold text-gray-900">Price: ₹{{ item.price }}</p>
+        <p class="text-gray-600 mt-4 leading-relaxed">{{ item.description }}</p>
+        <div class="mt-4 flex items-center">
+            <span class="text-blue-600 font-bold bg-blue-50 px-3 py-1 rounded-full text-sm">
+                📍 Location: {{ item.city }}
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}
